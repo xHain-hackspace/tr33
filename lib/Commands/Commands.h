@@ -1,29 +1,28 @@
 // #define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
 
-// strip config
+// trunk config
 #define TRUNK_PIN_1 27
 #define TRUNK_PIN_2 25
+#define HW_TRUNK_PIXEL_COUNT 100
+#define HW_TRUNK_STRIP_COUNT 2
 #define TRUNK_PIXEL_COUNT 50
 #define TRUNK_STRIP_COUNT 4
 
-#define HW_TRUNK_PIXEL_COUNT 100
-#define HW_TRUNK_STRIP_COUNT 2
 
-#define PIXEL_DENSITY 100.0
-
-// color config
+// effect config
 #define DEFAULT_SATURATION 255
 #define DEFAULT_VALUE 255
+#define PIXEL_DENSITY 100
 
 // colors
-// #define RED CHSV(0, SATURATION, VALUE)
-// #define YELLOW CHSV(42, SATURATION, VALUE)
-// #define GREEN CHSV(85, SATURATION, VALUE)
-// #define BLUE CHSV(171, SATURATION, VALUE)
-// #define PINK CHSV(213, SATURATION, VALUE)
-// #define BLACK CHSV(0, 0, 0)
-// #define WHITE CRGB(255, 255, 255)
+#define HUE_RED 0
+#define HUE_YELLOW 42
+#define HUE_GREEN 85
+#define HUE_BLUE  171
+#define HUE_PINK 213
+#define BLACK CHSV(0, 0, 0)
+#define WHITE CRGB(255, 255, 255)
 
 // effects
 // #define DELAY 10
@@ -47,17 +46,21 @@ struct Command {
 #define SINGLE_HUE    1   // 0: hue
 #define SINGLE_COLOR  2   // 0: hue, 1: saturation 2: value
 #define COLOR_WIPE    3   // 0: hue, 1: rate (pixel/s) 2: offset (pixel)
-#define RAINBOW_SINE  4   // 0: rate (pixel/s) 2: wavelength (pixel)
+#define RAINBOW_SINE  4   // 0: rate (pixel/s) 1: wavelength (pixel)
+#define PING_PONG     5   // 0: trunk_index 1: hue, 2: rate (pixel/s) 3: size (1/10 pixel)
+
 
 class Commands {
    public:
      Commands();
-     void process_command(char* command);
-     void initial_commands();
-     void show();
+     void process(char* command);
+     void initial();
+     void run();
 
-   // private:
-   //   void single_hue(char* data);
-   //   void single_color(char * data);
-   //   void color_wipe(char * data);
+   private:
+     void single_hue(char* data);
+     void single_color(char * data);
+     void color_wipe(char * data);
+     void rainbow_sine(char * data);
+     void ping_pong(char * data);
 };

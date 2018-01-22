@@ -1,11 +1,10 @@
+#include <Secrets.h>
 #include <Arduino.h>
 #include <Commands.h>
 #include <WiFi.h>
 #include <WiFiUdp.h>
 
 // wifi settings
-const char* ssid     = "";
-const char* password = "";
 IPAddress ip(192, 168, 0, 42);
 IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255,255,255,0);
@@ -44,7 +43,7 @@ void setup() {
 
   Serial.println("Startup complete");
 
-  commands.initial_commands();
+  commands.initial();
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
@@ -61,8 +60,8 @@ void loop() {
     }
     Serial.printf("UDP packet contents: %s\n", udp_buffer);
 
-    commands.process_command((char *) udp_buffer);
+    commands.process((char *) udp_buffer);
   }
 
-  commands.show();
+  commands.run();
 }
