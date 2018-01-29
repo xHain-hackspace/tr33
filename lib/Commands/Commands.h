@@ -9,11 +9,14 @@
 #define TRUNK_PIXEL_COUNT 50
 #define TRUNK_STRIP_COUNT 4
 
+// branch config
+#define BRANCH_PIN_1 26
+#define BRANCH_PIXEL_COUNT 300
+#define BRANCH_STRIP_COUNT 1
 
 // effect config
 #define DEFAULT_SATURATION 255
 #define DEFAULT_VALUE 255
-#define PIXEL_DENSITY 100
 
 // colors
 #define HUE_RED 0
@@ -46,9 +49,8 @@ struct Command {
 #define SINGLE_HUE    1   // 0: hue
 #define SINGLE_COLOR  2   // 0: hue, 1: saturation 2: value
 #define COLOR_WIPE    3   // 0: hue, 1: rate (pixel/s) 2: offset (pixel)
-#define RAINBOW_SINE  4   // 0: rate (pixel/s) 1: wavelength (pixel)
-#define PING_PONG     5   // 0: trunk_index 1: hue, 2: rate (pixel/s) 3: size (1/10 pixel)
-
+#define RAINBOW_SINE  4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
+#define PING_PONG     5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
 
 class Commands {
    public:
@@ -59,8 +61,8 @@ class Commands {
 
    private:
      void single_hue(char* data);
-     void single_color(char * data);
-     void color_wipe(char * data);
-     void rainbow_sine(char * data);
-     void ping_pong(char * data);
+     void single_color(char* data);
+     void color_wipe(char* data);
+     void rainbow_sine(char* data);
+     void ping_pong(char* data);
 };

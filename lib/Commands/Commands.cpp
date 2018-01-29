@@ -2,30 +2,33 @@
 #include <Commands.h>
 
 CRGB trunk_leds[HW_TRUNK_STRIP_COUNT][HW_TRUNK_PIXEL_COUNT];
-// CRGB branch_leds[BRANCH_STRIP_COUNT][BRANCH_PIXEL_COUNT];
+CRGB branch_leds[BRANCH_STRIP_COUNT][BRANCH_PIXEL_COUNT];
 
 Command command_buffer[COMMAND_BUFFER_SIZE];
 
 Commands::Commands(void) {
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_1>(trunk_leds[0], HW_TRUNK_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_2>(trunk_leds[1], HW_TRUNK_PIXEL_COUNT);
+
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_1>(branch_leds[0], BRANCH_PIXEL_COUNT);
 }
 
 void Commands::initial() {
-    // command_buffer[0].type = SINGLE_HUE;
+    // command_buffer[0].type = SINGLE_COLOR;
     // command_buffer[0].data[0] = 0;
     // command_buffer[0].data[1] = 0;
     // command_buffer[0].data[2] = 0;
 
     command_buffer[0].type = RAINBOW_SINE;
-    command_buffer[0].data[0] = 15;
-    command_buffer[0].data[1] = 20;
+    command_buffer[0].data[0] = 5;
+    command_buffer[0].data[1] = 70;
+    command_buffer[0].data[2] = 200;
 
     command_buffer[1].type = PING_PONG;
-    command_buffer[1].data[0] = 2;
+    command_buffer[1].data[0] = 4;
     command_buffer[1].data[1] = 0;
-    command_buffer[1].data[2] = 20;
-    command_buffer[1].data[3] = 2;
+    command_buffer[1].data[2] = 8;
+    command_buffer[1].data[3] = 50;
 }
 
 void Commands::process(char* command_bin) {
@@ -49,12 +52,54 @@ void Commands::run() {
   FastLED.show();
 }
 
-// -- trunk strip transformation ----------------------------------------
+// -- Set leds ----------------------------------------
+
 void set_trunk_led(int trunk, int led, CRGB color) {
   if(trunk < HW_TRUNK_STRIP_COUNT) {
     trunk_leds[trunk][led] = color;
   } else {
     trunk_leds[trunk-HW_TRUNK_STRIP_COUNT][HW_TRUNK_PIXEL_COUNT-led-1] = color;
+  }
+}
+
+CRGB get_trunk_led(int trunk, int led) {
+  if(trunk < HW_TRUNK_STRIP_COUNT) {
+    return trunk_leds[trunk][led];
+  } else {
+    return trunk_leds[trunk-HW_TRUNK_STRIP_COUNT][HW_TRUNK_PIXEL_COUNT-led-1];
+  }
+}
+
+// strip_index: 0-3 => trunk, 4-10 => branch
+void set_led(int strip_index, int led, CRGB color) {
+  if(strip_index < TRUNK_STRIP_COUNT) {
+    set_trunk_led(strip_index, led, color);
+  } else {
+    branch_leds[strip_index-TRUNK_STRIP_COUNT][led] = color;
+  }
+}
+
+CRGB get_led(int strip_index, int led) {
+  if(strip_index < TRUNK_STRIP_COUNT) {
+    return get_trunk_led(strip_index, led);
+  } else {
+    return branch_leds[strip_index-TRUNK_STRIP_COUNT][led];
+  }
+}
+
+// value: min: 0.0, max: 1.0
+void fade_led_to_red(int strip_index, int led, float value) {
+  CRGB color = get_led(strip_index, led);
+  color = color + CRGB(value*255.0, 0, 0) - CRGB(0, value*255.0, value*255.0);
+  set_led(strip_index, led, color);
+}
+
+// strip_index 0-3 => trunk, 4-10 => branch
+int index_strip_length(int strip_index) {
+  if(strip_index < TRUNK_STRIP_COUNT) {
+    return TRUNK_PIXEL_COUNT;
+  } else {
+    return BRANCH_PIXEL_COUNT;
   }
 }
 
@@ -80,12 +125,22 @@ void Commands::single_hue(char * data) {
       set_trunk_led(i, j, CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE));
     }
   }
+  for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
+    for(int j=0; j< BRANCH_PIXEL_COUNT; j++) {
+      branch_leds[i][j] = CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE);
+    }
+  }
 }
 
 void Commands::single_color(char * data) {
   for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
     for(int j=0; j< TRUNK_PIXEL_COUNT; j++) {
       set_trunk_led(i, j, CHSV(data[0], data[1], data[2]));
+    }
+  }
+  for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
+    for(int j=0; j< BRANCH_PIXEL_COUNT; j++) {
+      branch_leds[i][j] = CHSV(data[0], data[1], data[2]);
     }
   }
 }
@@ -102,46 +157,63 @@ void Commands::rainbow_sine(char * data) {
   int min_value = 30;
   int max_value = DEFAULT_VALUE;
   int value = 0;
+  int hue = 0;
 
-  for(int i=0; i<TRUNK_STRIP_COUNT; i++) {
-    for(int j=0; j<TRUNK_PIXEL_COUNT; j++) {
-      value = min_value + wave_propagation(j, 0, data[0], data[1]) * (max_value-min_value);
-      set_trunk_led(i, j, CHSV(j*5, DEFAULT_SATURATION, value));
+  for(int i=0; i<TRUNK_PIXEL_COUNT; i++) {
+    value = min_value + wave_propagation(i, 0, data[0], data[1]) * (max_value-min_value);
+    for(int j=0; j<TRUNK_STRIP_COUNT; j++) {
+      hue = float(i%data[2])/float(data[2])*255.0;
+      set_trunk_led(j, i, CHSV(hue, DEFAULT_SATURATION, value));
+    }
+  }
+
+  for(int i=0; i<BRANCH_PIXEL_COUNT; i++) {
+    // todo add branch offset
+    value = min_value + wave_propagation(i, 0, data[0], data[1]) * (max_value-min_value);
+    for(int j=0; j<BRANCH_STRIP_COUNT; j++) {
+      hue = float(i%data[2])/float(data[2])*255.0;
+      branch_leds[j][i] = CHSV(hue, DEFAULT_SATURATION, value);
     }
   }
 }
 
-int render_ball(int pixel, int center, int radius) {
-  float separation = abs((pixel * PIXEL_DENSITY) - center);
-  if (separation < radius) {
-    return sinf(2.0*3.1415*((separation+radius)/(float(radius*4.0))))*200.0;
+// ping_pong effect
+float render_ball(int pixel, float center, float width) {
+  if (pixel > center-width/2.0 && pixel < center+width/2.0) {
+    return 0.5*sinf(2.0*3.1415*((float(pixel)-center)/width+0.25))+0.5;
+  } else {
+    return 0.0;
   }
 }
 
-int ping_pong_center(float rate, int length) {
-  int position = float(millis()) / 1000.0 * rate * float(PIXEL_DENSITY);
-  int rem = position % (length * 2);
+float ping_pong_center(float rate, float length) {
+  float position = float(millis()) / 1000.0 * rate;
+  float rem = fmod(position, (length * 2.0));
 
   if (rem < length) {
     return rem;
   } else {
-    return 2*(length-1)-rem;
+    return 2.0*(length-1.0)-rem;
   }
 }
 
 void Commands::ping_pong(char * data) {
-  int trunk_index = data[0];
+  int strip_index = data[0];
   int hue = data[1];
   int rate = data[2];
-  int radius = data[3] * PIXEL_DENSITY / 10;
+  float width = float(data[3]) / 10.0;
 
-  int center = ping_pong_center(rate, TRUNK_PIXEL_COUNT * PIXEL_DENSITY);
-  int first_pixel = (center / PIXEL_DENSITY) - (radius / PIXEL_DENSITY) - 2;
-  int last_pixel = first_pixel + (radius / PIXEL_DENSITY) * 2 + 4;
+  int strip_length = index_strip_length(strip_index);
+  float center = ping_pong_center(rate, strip_length);
 
-  // for (int i = first_pixel; i <= last_pixel; i++) {
-  for (int i = first_pixel; i <= last_pixel; i++) {
-    // set_trunk_led(trunk_index, i, CHSV(0, 255, render_ball(i, ping_pong_center(rate, TRUNK_PIXEL_COUNT), radius)));
-    set_trunk_led(trunk_index, i, CHSV(0, 255, render_ball(i, center, radius)));
+  float brightness = 0;
+
+  for (int i=0; i<strip_length; i++) {
+    brightness = render_ball(i, center, width);
+
+    if (brightness>0) {
+      // set_led(strip_index, i, CHSV(0,255,255));
+      fade_led_to_red(strip_index, i, brightness);
+    }
   }
 }

@@ -5,9 +5,11 @@
 #include <WiFiUdp.h>
 
 // wifi settings
-IPAddress ip(192, 168, 0, 42);
-IPAddress gateway(192, 168, 0, 1);
-IPAddress subnet(255,255,255,0);
+// IPAddress ip(192, 168, 0, 42);
+// IPAddress gateway(192, 168, 0, 1);
+IPAddress ip(192, 168, 1, 142);
+IPAddress gateway(192, 168, 1, 1);
+IPAddress subnet(255, 255, 255, 0);
 
 // udp settings
 #define UDP_BUFFER_SIZE 256
@@ -29,7 +31,6 @@ void setup() {
   Serial.printf("Connecting to %s\n", ssid);
   WiFi.config(ip, gateway, subnet);
   WiFi.begin(ssid, password);
-  // WiFi..setSleepMode(WIFI_NONE_SLEEP);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -41,12 +42,12 @@ void setup() {
   udp.begin(LISTEN_PORT);
   Serial.printf("Listening on port %d\n", LISTEN_PORT);
 
-  Serial.println("Startup complete");
-
   commands.initial();
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
+  
+  Serial.println("Startup complete");
 }
 
 void loop() {
