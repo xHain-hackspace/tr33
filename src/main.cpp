@@ -9,6 +9,7 @@
 // IPAddress gateway(192, 168, 0, 1);
 IPAddress ip(192, 168, 1, 142);
 IPAddress gateway(192, 168, 1, 1);
+
 IPAddress subnet(255, 255, 255, 0);
 
 // udp settings
@@ -46,7 +47,7 @@ void setup() {
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
-  
+
   Serial.println("Startup complete");
 }
 

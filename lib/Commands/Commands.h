@@ -2,17 +2,18 @@
 #include <FastLED.h>
 
 // trunk config
-#define TRUNK_PIN_1 27
-#define TRUNK_PIN_2 25
+#define TRUNK_PIN_1 21
+#define TRUNK_PIN_2 4
 #define HW_TRUNK_PIXEL_COUNT 100
 #define HW_TRUNK_STRIP_COUNT 2
 #define TRUNK_PIXEL_COUNT 50
 #define TRUNK_STRIP_COUNT 4
 
 // branch config
-#define BRANCH_PIN_1 26
-#define BRANCH_PIXEL_COUNT 300
-#define BRANCH_STRIP_COUNT 1
+#define BRANCH_PIN_1 14
+#define BRANCH_PIN_2 15
+#define BRANCH_PIXEL_COUNT 100
+#define BRANCH_STRIP_COUNT 2
 
 // effect config
 #define DEFAULT_SATURATION 255
@@ -28,7 +29,7 @@
 #define WHITE CRGB(255, 255, 255)
 
 // effects
-// #define DELAY 10
+#define PING_PONG_MAX_BALLS 100
 // #define SPARKLE_COUNT 3
 
 // commands
@@ -45,12 +46,13 @@ struct Command {
 // All commands take a pointer to a buffer with its parameters.
 // The comments indicate which data is expected at a certain byte index
 
-#define DISABLE       0   // none
-#define SINGLE_HUE    1   // 0: hue
-#define SINGLE_COLOR  2   // 0: hue, 1: saturation 2: value
-#define COLOR_WIPE    3   // 0: hue, 1: rate (pixel/s) 2: offset (pixel)
-#define RAINBOW_SINE  4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
-#define PING_PONG     5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
+#define DISABLE             0   // none
+#define SINGLE_HUE          1   // 0: hue
+#define SINGLE_COLOR        2   // 0: hue, 1: saturation 2: value
+#define COLOR_WIPE          3   // 0: hue, 1: rate (pixel/s) 2: offset (pixel)
+#define RAINBOW_SINE        4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
+#define PING_PONG           5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
+#define PING_PONG_ADD_BALL  6   // 0:
 
 class Commands {
    public:
@@ -65,4 +67,5 @@ class Commands {
      void color_wipe(char* data);
      void rainbow_sine(char* data);
      void ping_pong(char* data);
+     void ping_pong_add_ball(char* data);
 };

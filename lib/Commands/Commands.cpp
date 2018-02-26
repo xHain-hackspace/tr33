@@ -11,6 +11,7 @@ Commands::Commands(void) {
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_2>(trunk_leds[1], HW_TRUNK_PIXEL_COUNT);
 
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_1>(branch_leds[0], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_2>(branch_leds[1], BRANCH_PIXEL_COUNT);
 }
 
 void Commands::initial() {
@@ -20,20 +21,29 @@ void Commands::initial() {
     // command_buffer[0].data[2] = 0;
 
     command_buffer[0].type = RAINBOW_SINE;
-    command_buffer[0].data[0] = 5;
-    command_buffer[0].data[1] = 70;
-    command_buffer[0].data[2] = 200;
+    command_buffer[0].data[0] = 10;
+    command_buffer[0].data[1] = 50;
+    command_buffer[0].data[2] = 150;
 
-    command_buffer[1].type = PING_PONG;
-    command_buffer[1].data[0] = 4;
-    command_buffer[1].data[1] = 0;
-    command_buffer[1].data[2] = 8;
-    command_buffer[1].data[3] = 50;
+    // command_buffer[1].type = PING_PONG;
+    // command_buffer[1].data[0] = 4;
+    // command_buffer[1].data[1] = 0;
+    // command_buffer[1].data[2] = 30;
+    // command_buffer[1].data[3] = 30;
+
+    // for(int i=1; i<7; i++) {
+    //   command_buffer[i].type = PING_PONG;
+    //   command_buffer[i].data[0] = i-1;
+    //   command_buffer[i].data[1] = 0;
+    //   command_buffer[i].data[2] = 10;
+    //   command_buffer[i].data[3] = 30;
+    // }
 }
 
 void Commands::process(char* command_bin) {
   Command command = *(Command *) command_bin;
   if (command.index < COMMAND_BUFFER_SIZE) {
+    // command.start_time = millis();
     command_buffer[command.index] = command;
   }
 }
@@ -158,6 +168,7 @@ void Commands::rainbow_sine(char * data) {
   int max_value = DEFAULT_VALUE;
   int value = 0;
   int hue = 0;
+  int branch_offset = 50;
 
   for(int i=0; i<TRUNK_PIXEL_COUNT; i++) {
     value = min_value + wave_propagation(i, 0, data[0], data[1]) * (max_value-min_value);
@@ -168,16 +179,18 @@ void Commands::rainbow_sine(char * data) {
   }
 
   for(int i=0; i<BRANCH_PIXEL_COUNT; i++) {
-    // todo add branch offset
-    value = min_value + wave_propagation(i, 0, data[0], data[1]) * (max_value-min_value);
+    value = min_value + wave_propagation(i+branch_offset, 0, data[0], data[1]) * (max_value-min_value);
     for(int j=0; j<BRANCH_STRIP_COUNT; j++) {
-      hue = float(i%data[2])/float(data[2])*255.0;
+      hue = float(i+branch_offset%data[2])/float(data[2])*255.0;
       branch_leds[j][i] = CHSV(hue, DEFAULT_SATURATION, value);
     }
   }
 }
 
 // ping_pong effect
+char ping_pong_balls[PING_PONG_MAX_BALLS][COMMAND_MAX_DATA];
+int last_ball = 0;
+
 float render_ball(int pixel, float center, float width) {
   if (pixel > center-width/2.0 && pixel < center+width/2.0) {
     return 0.5*sinf(2.0*3.1415*((float(pixel)-center)/width+0.25))+0.5;
@@ -217,3 +230,11 @@ void Commands::ping_pong(char * data) {
     }
   }
 }
+
+// void Command::ping_pong_add_ball(char * data) {
+//   if (last_ball++ >= PING_PONG_MAX_BALLS) {
+//     last_ball = 0;
+//   }
+//
+//   ping_pong_balls[index] = data;
+// }
