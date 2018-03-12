@@ -20,13 +20,17 @@ void Commands::initial() {
     // command_buffer[0].data[1] = 0;
     // command_buffer[0].data[2] = 0;
 
-    command_buffer[0].type = RAINBOW_SINE;
-    command_buffer[0].data[0] = 10;
-    command_buffer[0].data[1] = 50;
-    command_buffer[0].data[2] = 150;
+    // command_buffer[0].type = RAINBOW_SINE;
+    // command_buffer[0].data[0] = 10;
+    // command_buffer[0].data[1] = 50;
+    // command_buffer[0].data[2] = 150;
+
+    command_buffer[0].type = SINGLE_HUE;
+    command_buffer[0].data[0] = HUE_BLUE;
 
     // command_buffer[1].type = PING_PONG;
-    // command_buffer[1].data[0] = 4;
+
+    // command_buffer[1].data[0] = 3;
     // command_buffer[1].data[1] = 0;
     // command_buffer[1].data[2] = 30;
     // command_buffer[1].data[3] = 30;
@@ -42,9 +46,12 @@ void Commands::initial() {
 
 void Commands::process(char* command_bin) {
   Command command = *(Command *) command_bin;
-  if (command.index < COMMAND_BUFFER_SIZE) {
-    // command.start_time = millis();
-    command_buffer[command.index] = command;
+  if (command.type == ADD_BALL) {
+    add_ball(command.data);
+  } else {
+    if (command.index < COMMAND_BUFFER_SIZE) {
+      command_buffer[command.index] = command;
+    }
   }
 }
 
@@ -58,6 +65,8 @@ void Commands::run() {
       case PING_PONG    : ping_pong(command_buffer[i].data); break;
     }
   }
+
+  draw_balls();
 
   FastLED.show();
 }
@@ -187,11 +196,7 @@ void Commands::rainbow_sine(char * data) {
   }
 }
 
-// ping_pong effect
-char ping_pong_balls[PING_PONG_MAX_BALLS][COMMAND_MAX_DATA];
-int last_ball = 0;
-
-float render_ball(int pixel, float center, float width) {
+float ball_brightness(int pixel, float center, float width) {
   if (pixel > center-width/2.0 && pixel < center+width/2.0) {
     return 0.5*sinf(2.0*3.1415*((float(pixel)-center)/width+0.25))+0.5;
   } else {
@@ -199,7 +204,20 @@ float render_ball(int pixel, float center, float width) {
   }
 }
 
-float ping_pong_center(float rate, float length) {
+void render_ball(int strip_index, float center, float width) {
+  int strip_length = index_strip_length(strip_index);
+
+  for (int i=0; i<strip_length; i++) {
+    float brightness = ball_brightness(i, center, width);
+    if (brightness>0) {
+      fade_led_to_red(strip_index, i, brightness);
+    }
+  }
+}
+
+// ping_pong effect
+float ping_pong_center(float rate, int strip_index) {
+  float length = index_strip_length(strip_index);
   float position = float(millis()) / 1000.0 * rate;
   float rem = fmod(position, (length * 2.0));
 
@@ -216,25 +234,55 @@ void Commands::ping_pong(char * data) {
   int rate = data[2];
   float width = float(data[3]) / 10.0;
 
-  int strip_length = index_strip_length(strip_index);
-  float center = ping_pong_center(rate, strip_length);
+  float center = ping_pong_center(rate, strip_index);
 
-  float brightness = 0;
+  render_ball(strip_index, center, width);
+}
 
-  for (int i=0; i<strip_length; i++) {
-    brightness = render_ball(i, center, width);
+// Ball effect
+struct Ball {
+  int start_millis;
 
-    if (brightness>0) {
-      // set_led(strip_index, i, CHSV(0,255,255));
-      fade_led_to_red(strip_index, i, brightness);
-    }
+  uint8_t strip_index;
+  uint8_t width;
+  uint8_t height;
+  uint8_t rate;
+  uint8_t gravity;
+
+  char data[COMMAND_MAX_DATA];
+};
+
+Ball balls[MAX_BALLS];
+int next_ball = 0;
+
+float damped_ball_center(float time_seconds, float height, float rate, float gravity) {
+  return fabs(sinf(time_seconds*time_seconds*rate/float(50)))*(height-time_seconds*100/gravity);
+}
+
+void Commands::add_ball(char * data) {
+  Ball ball;
+  ball.start_millis = millis();
+  ball.strip_index = data[0];
+  ball.width = data[2];
+  ball.height = data[3];
+  ball.rate = data[4];
+  ball.gravity = data[5];
+
+  balls[next_ball] = ball;
+  if (next_ball++ >= MAX_BALLS) {
+    next_ball = 0;
   }
 }
 
-// void Command::ping_pong_add_ball(char * data) {
-//   if (last_ball++ >= PING_PONG_MAX_BALLS) {
-//     last_ball = 0;
-//   }
-//
-//   ping_pong_balls[index] = data;
-// }
+void Commands::draw_balls() {
+  int now = millis();
+
+  for (int i=0; i<next_ball; i++) {
+    float time_seconds = float(now - balls[i].start_millis)/1000.0;
+    if (time_seconds < balls[i].gravity/2) {
+      float center = damped_ball_center(time_seconds, balls[i].height, balls[i].rate, balls[i].gravity);
+      Serial.printf("Index %d Center %f \n", i, center);
+      render_ball(balls[i].strip_index, center, float(balls[i].width) / 10.0);
+    }
+  }
+}

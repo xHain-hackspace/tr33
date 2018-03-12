@@ -5,11 +5,8 @@
 #include <WiFiUdp.h>
 
 // wifi settings
-// IPAddress ip(192, 168, 0, 42);
-// IPAddress gateway(192, 168, 0, 1);
-IPAddress ip(192, 168, 1, 142);
-IPAddress gateway(192, 168, 1, 1);
-
+IPAddress ip(192, 168, 0, 42);
+IPAddress gateway(192, 168, 0, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 // udp settings
@@ -37,7 +34,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("WiFi connected");
+  Serial.printf("WiFi connected to %s\n", ssid);
   Serial.println(WiFi.localIP());
 
   udp.begin(LISTEN_PORT);
