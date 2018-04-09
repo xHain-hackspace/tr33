@@ -20,13 +20,13 @@ void Commands::initial() {
     // command_buffer[0].data[1] = 0;
     // command_buffer[0].data[2] = 0;
 
-    // command_buffer[0].type = RAINBOW_SINE;
-    // command_buffer[0].data[0] = 10;
-    // command_buffer[0].data[1] = 50;
-    // command_buffer[0].data[2] = 150;
+    command_buffer[0].type = RAINBOW_SINE;
+    command_buffer[0].data[0] = 10;
+    command_buffer[0].data[1] = 30;
+    command_buffer[0].data[2] = 150;
 
-    command_buffer[0].type = SINGLE_HUE;
-    command_buffer[0].data[0] = HUE_BLUE;
+    // command_buffer[0].type = SINGLE_HUE;
+    // command_buffer[0].data[0] = HUE_BLUE;
 
     // command_buffer[1].type = PING_PONG;
 
@@ -35,13 +35,13 @@ void Commands::initial() {
     // command_buffer[1].data[2] = 30;
     // command_buffer[1].data[3] = 30;
 
-    // for(int i=1; i<7; i++) {
-    //   command_buffer[i].type = PING_PONG;
-    //   command_buffer[i].data[0] = i-1;
-    //   command_buffer[i].data[1] = 0;
-    //   command_buffer[i].data[2] = 10;
-    //   command_buffer[i].data[3] = 30;
-    // }
+    for(int i=1; i<5; i++) {
+      command_buffer[i].type = PING_PONG;
+      command_buffer[i].data[0] = i-1;
+      command_buffer[i].data[1] = 0;
+      command_buffer[i].data[2] = 10;
+      command_buffer[i].data[3] = 30;
+    }
 }
 
 void Commands::process(char* command_bin) {
@@ -179,18 +179,23 @@ void Commands::rainbow_sine(char * data) {
   int hue = 0;
   int branch_offset = 50;
 
+  int rate = data[0];
+  int wavelength = data[1];
+  int width = data[2];
+  if (width == 0) width = 1;
+
   for(int i=0; i<TRUNK_PIXEL_COUNT; i++) {
-    value = min_value + wave_propagation(i, 0, data[0], data[1]) * (max_value-min_value);
+    value = min_value + wave_propagation(i, 0, rate, wavelength) * (max_value-min_value);
     for(int j=0; j<TRUNK_STRIP_COUNT; j++) {
-      hue = float(i%data[2])/float(data[2])*255.0;
+      hue = float(i%width)/float(width)*255.0;
       set_trunk_led(j, i, CHSV(hue, DEFAULT_SATURATION, value));
     }
   }
 
   for(int i=0; i<BRANCH_PIXEL_COUNT; i++) {
-    value = min_value + wave_propagation(i+branch_offset, 0, data[0], data[1]) * (max_value-min_value);
+    value = min_value + wave_propagation(i+branch_offset, 0, rate, wavelength) * (max_value-min_value);
     for(int j=0; j<BRANCH_STRIP_COUNT; j++) {
-      hue = float(i+branch_offset%data[2])/float(data[2])*255.0;
+      hue = float(i+branch_offset%width)/float(width)*255.0;
       branch_leds[j][i] = CHSV(hue, DEFAULT_SATURATION, value);
     }
   }
@@ -241,32 +246,47 @@ void Commands::ping_pong(char * data) {
 
 // Ball effect
 struct Ball {
-  int start_millis;
+  bool enabled;
+  int last_update;
+  float position;
+  float rate;
 
+  uint8_t hue;
   uint8_t strip_index;
   uint8_t width;
-  uint8_t height;
-  uint8_t rate;
   uint8_t gravity;
-
-  char data[COMMAND_MAX_DATA];
+  uint8_t damping;
 };
 
 Ball balls[MAX_BALLS];
 int next_ball = 0;
 
-float damped_ball_center(float time_seconds, float height, float rate, float gravity) {
-  return fabs(sinf(time_seconds*time_seconds*rate/float(50)))*(height-time_seconds*100/gravity);
+void update_ball(int i) {
+  int now = millis();
+  float interval = float(now - balls[i].last_update)/1000.0;
+
+  balls[i].last_update = now;
+  balls[i].position = float(balls[i].position) + float(balls[i].rate) * interval + 0.5 * balls[i].gravity * interval * interval;
+  balls[i].rate = balls[i].rate - float(balls[i].gravity) * interval;
+
+  if (balls[i].position < 0) {
+    balls[i].enabled = fabs(balls[i].rate) > 12;
+    balls[i].position = fabs(balls[i].position);
+    balls[i].rate = fabs(balls[i].rate) * (1.0 - float(balls[i].damping)/255.0);
+  }
 }
 
 void Commands::add_ball(char * data) {
   Ball ball;
-  ball.start_millis = millis();
+  ball.enabled = true;
+  ball.last_update = millis();
+  ball.position = 0;
   ball.strip_index = data[0];
+  ball.hue = data[1];
   ball.width = data[2];
-  ball.height = data[3];
-  ball.rate = data[4];
-  ball.gravity = data[5];
+  ball.rate = data[3];
+  ball.gravity = data[4];
+  ball.damping = data[5];
 
   balls[next_ball] = ball;
   if (next_ball++ >= MAX_BALLS) {
@@ -275,14 +295,10 @@ void Commands::add_ball(char * data) {
 }
 
 void Commands::draw_balls() {
-  int now = millis();
-
   for (int i=0; i<next_ball; i++) {
-    float time_seconds = float(now - balls[i].start_millis)/1000.0;
-    if (time_seconds < balls[i].gravity/2) {
-      float center = damped_ball_center(time_seconds, balls[i].height, balls[i].rate, balls[i].gravity);
-      Serial.printf("Index %d Center %f \n", i, center);
-      render_ball(balls[i].strip_index, center, float(balls[i].width) / 10.0);
+    if (balls[i].enabled) {
+      update_ball(i);
+      render_ball(balls[i].strip_index, balls[i].position, balls[i].width);
     }
   }
 }
