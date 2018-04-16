@@ -28,20 +28,18 @@ void Commands::initial() {
     // command_buffer[0].type = SINGLE_HUE;
     // command_buffer[0].data[0] = HUE_BLUE;
 
-    // command_buffer[1].type = PING_PONG;
+    command_buffer[1].type = PING_PONG_RING;
+    command_buffer[1].data[0] = 0;
+    command_buffer[1].data[1] = 10;
+    command_buffer[1].data[2] = 50;
 
-    // command_buffer[1].data[0] = 3;
-    // command_buffer[1].data[1] = 0;
-    // command_buffer[1].data[2] = 30;
-    // command_buffer[1].data[3] = 30;
-
-    for(int i=1; i<5; i++) {
-      command_buffer[i].type = PING_PONG;
-      command_buffer[i].data[0] = i-1;
-      command_buffer[i].data[1] = 0;
-      command_buffer[i].data[2] = 10;
-      command_buffer[i].data[3] = 30;
-    }
+    // for(int i=1; i<5; i++) {
+    //   command_buffer[i].type = PING_PONG;
+    //   command_buffer[i].data[0] = i-1;
+    //   command_buffer[i].data[1] = 0;
+    //   command_buffer[i].data[2] = 10;
+    //   command_buffer[i].data[3] = 30;
+    // }
 }
 
 void Commands::process(char* command_bin) {
@@ -58,11 +56,12 @@ void Commands::process(char* command_bin) {
 void Commands::run() {
   for (int i=0; i<COMMAND_BUFFER_SIZE; i++) {
     switch(command_buffer[i].type) {
-      case SINGLE_HUE   : single_hue(command_buffer[i].data); break;
-      case SINGLE_COLOR : single_color(command_buffer[i].data); break;
-      case COLOR_WIPE   : color_wipe(command_buffer[i].data); break;
-      case RAINBOW_SINE : rainbow_sine(command_buffer[i].data); break;
-      case PING_PONG    : ping_pong(command_buffer[i].data); break;
+      case SINGLE_HUE        : single_hue(command_buffer[i].data); break;
+      case SINGLE_COLOR      : single_color(command_buffer[i].data); break;
+      case COLOR_WIPE        : color_wipe(command_buffer[i].data); break;
+      case RAINBOW_SINE      : rainbow_sine(command_buffer[i].data); break;
+      case PING_PONG         : ping_pong(command_buffer[i].data); break;
+      case PING_PONG_RING    : ping_pong_ring(command_buffer[i].data); break;
     }
   }
 
@@ -106,12 +105,17 @@ CRGB get_led(int strip_index, int led) {
   }
 }
 
-// value: min: 0.0, max: 1.0
-void fade_led_to_red(int strip_index, int led, float value) {
-  CRGB color = get_led(strip_index, led);
-  color = color + CRGB(value*255.0, 0, 0) - CRGB(0, value*255.0, value*255.0);
-  set_led(strip_index, led, color);
+// fade_value: min: 0.0, max: 1.0
+void fade_led(int strip_index, int led, CRGB target, float intensity) {
+  CRGB current = get_led(strip_index, led);
+
+  int red = current.r + float(target.r-current.r)*intensity;
+  int blue = current.b + float(target.b-current.b)*intensity;
+  int green = current.g + float(target.g-current.g)*intensity;
+
+  set_led(strip_index, led, CRGB(red, blue, green));
 }
+
 
 // strip_index 0-3 => trunk, 4-10 => branch
 int index_strip_length(int strip_index) {
@@ -209,20 +213,19 @@ float ball_brightness(int pixel, float center, float width) {
   }
 }
 
-void render_ball(int strip_index, float center, float width) {
+void render_ball(int strip_index, float center, float width, int hue) {
   int strip_length = index_strip_length(strip_index);
 
   for (int i=0; i<strip_length; i++) {
     float brightness = ball_brightness(i, center, width);
     if (brightness>0) {
-      fade_led_to_red(strip_index, i, brightness);
+      fade_led(strip_index, i, CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE), brightness);
     }
   }
 }
 
 // ping_pong effect
-float ping_pong_center(float rate, int strip_index) {
-  float length = index_strip_length(strip_index);
+float ping_pong_center(float rate, float length) {
   float position = float(millis()) / 1000.0 * rate;
   float rem = fmod(position, (length * 2.0));
 
@@ -238,10 +241,26 @@ void Commands::ping_pong(char * data) {
   int hue = data[1];
   int rate = data[2];
   float width = float(data[3]) / 10.0;
+  float length = index_strip_length(strip_index);
+  float center = ping_pong_center(rate, length);
 
-  float center = ping_pong_center(rate, strip_index);
+  render_ball(strip_index, center, width, hue);
+}
 
-  render_ball(strip_index, center, width);
+void Commands::ping_pong_ring(char * data) {
+  int hue = data[0];
+  int rate = data[1];
+  float width = float(data[2]) / 10.0;
+  float center = ping_pong_center(rate, BRANCH_PIXEL_COUNT + TRUNK_PIXEL_COUNT);
+  float branch_offset = 50.0;
+
+  for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
+    render_ball(i, center, width, hue);
+  }
+
+  for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
+    render_ball(i+TRUNK_STRIP_COUNT, center - branch_offset, width, hue);
+  }
 }
 
 // Ball effect
@@ -250,10 +269,10 @@ struct Ball {
   int last_update;
   float position;
   float rate;
+  float width;
 
   uint8_t hue;
   uint8_t strip_index;
-  uint8_t width;
   uint8_t gravity;
   uint8_t damping;
 };
@@ -263,6 +282,7 @@ int next_ball = 0;
 
 void update_ball(int i) {
   int now = millis();
+  int diff = now - balls[i].last_update;
   float interval = float(now - balls[i].last_update)/1000.0;
 
   balls[i].last_update = now;
@@ -270,7 +290,7 @@ void update_ball(int i) {
   balls[i].rate = balls[i].rate - float(balls[i].gravity) * interval;
 
   if (balls[i].position < 0) {
-    balls[i].enabled = fabs(balls[i].rate) > 12;
+    balls[i].enabled = fabs(balls[i].rate) > 12 && diff < 60000;
     balls[i].position = fabs(balls[i].position);
     balls[i].rate = fabs(balls[i].rate) * (1.0 - float(balls[i].damping)/255.0);
   }
@@ -283,7 +303,7 @@ void Commands::add_ball(char * data) {
   ball.position = 0;
   ball.strip_index = data[0];
   ball.hue = data[1];
-  ball.width = data[2];
+  ball.width = data[2]/10.0;
   ball.rate = data[3];
   ball.gravity = data[4];
   ball.damping = data[5];
@@ -298,7 +318,7 @@ void Commands::draw_balls() {
   for (int i=0; i<next_ball; i++) {
     if (balls[i].enabled) {
       update_ball(i);
-      render_ball(balls[i].strip_index, balls[i].position, balls[i].width);
+      render_ball(balls[i].strip_index, balls[i].position, balls[i].width, balls[i].hue);
     }
   }
 }
