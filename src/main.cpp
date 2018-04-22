@@ -81,12 +81,12 @@ void loop() {
       // wifi and upd is up, check if we received a UDP packet
       int packet_size = udp.parsePacket();
       if (packet_size) {
-        Serial.printf("Received command with size %d from %s, port %d\n", packet_size, udp.remoteIP().toString().c_str(), udp.remotePort());
+        // Serial.printf("Received command with size %d from %s, port %d\n", packet_size, udp.remoteIP().toString().c_str(), udp.remotePort());
         int len = udp.read(udp_buffer, UDP_BUFFER_SIZE);
         if (len > 0) {
           udp_buffer[len] = 0;
         }
-        Serial.printf("UDP packet contents: %s\n", udp_buffer);
+        // Serial.printf("UDP packet contents: %s\n", udp_buffer);
 
         commands.process((char *) udp_buffer);
       }

@@ -54,7 +54,7 @@ struct Command {
 #define RAINBOW_SINE        4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
 #define PING_PONG           5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
 #define PING_PONG_RING      6   // 0: hue, 1: rate (pixel/s) 2: width (1/10 pixel)
-#define ADD_BALL            7   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: height (pixel) 4: rate 5: gravity
+#define ADD_BALL            7   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: rate (pixel) 4: gravity 5: damping
 
 class Commands {
    public:

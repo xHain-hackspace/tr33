@@ -20,10 +20,10 @@ void Commands::init() {
     // command_buffer[0].data[1] = 0;
     // command_buffer[0].data[2] = 0;
 
-    command_buffer[0].type = RAINBOW_SINE;
-    command_buffer[0].data[0] = 10;
-    command_buffer[0].data[1] = 30;
-    command_buffer[0].data[2] = 150;
+    // command_buffer[0].type = RAINBOW_SINE;
+    // command_buffer[0].data[0] = 10;
+    // command_buffer[0].data[1] = 30;
+    // command_buffer[0].data[2] = 150;
 
     // command_buffer[0].type = SINGLE_HUE;
     // command_buffer[0].data[0] = HUE_BLUE;
@@ -126,7 +126,7 @@ void fade_led(int strip_index, int led, CRGB target, float intensity) {
   int blue = current.b + float(target.b-current.b)*intensity;
   int green = current.g + float(target.g-current.g)*intensity;
 
-  set_led(strip_index, led, CRGB(red, blue, green));
+  set_led(strip_index, led, CRGB(red, green, blue));
 }
 
 
@@ -284,6 +284,7 @@ void Commands::ping_pong_ring(char * data) {
 // Ball effect
 struct Ball {
   bool enabled;
+  int start;
   int last_update;
   float position;
   float rate;
@@ -308,7 +309,7 @@ void update_ball(int i) {
   balls[i].rate = balls[i].rate - float(balls[i].gravity) * interval;
 
   if (balls[i].position < 0) {
-    balls[i].enabled = fabs(balls[i].rate) > 12 && diff < 60000;
+    balls[i].enabled = fabs(balls[i].rate) > 12 && now - balls[i].start < 30000;
     balls[i].position = fabs(balls[i].position);
     balls[i].rate = fabs(balls[i].rate) * (1.0 - float(balls[i].damping)/255.0);
   }
@@ -318,6 +319,7 @@ void Commands::add_ball(char * data) {
   Ball ball;
   ball.enabled = true;
   ball.last_update = millis();
+  ball.start = millis();
   ball.position = 0;
   ball.strip_index = data[0];
   ball.hue = data[1];
