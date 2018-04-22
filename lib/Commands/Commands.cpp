@@ -14,7 +14,7 @@ Commands::Commands(void) {
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_2>(branch_leds[1], BRANCH_PIXEL_COUNT);
 }
 
-void Commands::initial() {
+void Commands::init() {
     // command_buffer[0].type = SINGLE_COLOR;
     // command_buffer[0].data[0] = 0;
     // command_buffer[0].data[1] = 0;
@@ -28,10 +28,10 @@ void Commands::initial() {
     // command_buffer[0].type = SINGLE_HUE;
     // command_buffer[0].data[0] = HUE_BLUE;
 
-    command_buffer[1].type = PING_PONG_RING;
-    command_buffer[1].data[0] = 0;
-    command_buffer[1].data[1] = 10;
-    command_buffer[1].data[2] = 50;
+    // command_buffer[1].type = PING_PONG_RING;
+    // command_buffer[1].data[0] = 0;
+    // command_buffer[1].data[1] = 10;
+    // command_buffer[1].data[2] = 50;
 
     // for(int i=1; i<5; i++) {
     //   command_buffer[i].type = PING_PONG;
@@ -66,6 +66,19 @@ void Commands::run() {
   }
 
   draw_balls();
+
+  FastLED.show();
+}
+
+void Commands::start_sequence() {
+  char data[64];
+  data[0] = HUE_BLUE;
+  single_hue(data);
+
+  data[0] = HUE_RED;
+  data[1] = 10;
+  data[2] = 0;
+  color_wipe(data);
 
   FastLED.show();
 }
@@ -169,9 +182,14 @@ void Commands::single_color(char * data) {
 }
 
 void Commands::color_wipe(char * data) {
-  for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
-    for(int j=0; j<((millis()*data[1]/1000) + data[2]) % TRUNK_PIXEL_COUNT; j++) {
-      set_trunk_led(i, j, CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE));
+  // for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
+  //   for(int j=0; j<((millis()*data[1]/1000) + data[2]) % TRUNK_PIXEL_COUNT; j++) {
+  //     set_trunk_led(i, j, CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE));
+  //   }
+  // }
+  for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
+    for(int j=0; j<((millis()*data[1]/1000) + data[2]) % BRANCH_PIXEL_COUNT; j++) {
+      branch_leds[i][j] = CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE);
     }
   }
 }

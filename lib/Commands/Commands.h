@@ -12,8 +12,8 @@
 // branch config
 #define BRANCH_PIN_1 14
 #define BRANCH_PIN_2 15
-#define BRANCH_PIXEL_COUNT 100
-// #define BRANCH_PIXEL_COUNT 300
+// #define BRANCH_PIXEL_COUNT 100
+#define BRANCH_PIXEL_COUNT 300
 #define BRANCH_STRIP_COUNT 2
 
 // effect config
@@ -60,7 +60,8 @@ class Commands {
    public:
      Commands();
      void process(char* command);
-     void initial();
+     void init();
+     void start_sequence();
      void run();
 
    private:
