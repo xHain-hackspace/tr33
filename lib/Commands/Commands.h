@@ -30,7 +30,9 @@
 #define WHITE CRGB(255, 255, 255)
 
 // effects
-#define MAX_BALLS 100
+#define MAX_GRAVITY_BALLS 100
+#define GRAVITY 50
+#define GRAVITY_DAMPING 50
 // #define SPARKLE_COUNT 3
 
 // commands
@@ -54,7 +56,7 @@ struct Command {
 #define RAINBOW_SINE        4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
 #define PING_PONG           5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
 #define PING_PONG_RING      6   // 0: hue, 1: rate (pixel/s) 2: width (1/10 pixel)
-#define ADD_BALL            7   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: rate (pixel) 4: gravity 5: damping
+#define ADD_GRAVITY_BALL    7   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: initial rate (pixel\s)
 
 class Commands {
    public:
@@ -71,6 +73,6 @@ class Commands {
      void rainbow_sine(char* data);
      void ping_pong(char* data);
      void ping_pong_ring(char* data);
-     void add_ball(char* data);
-     void draw_balls();
+     void add_gravity_ball(char* data);
+     void draw_gravity_balls();
 };

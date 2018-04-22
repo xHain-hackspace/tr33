@@ -44,8 +44,8 @@ void Commands::init() {
 
 void Commands::process(char* command_bin) {
   Command command = *(Command *) command_bin;
-  if (command.type == ADD_BALL) {
-    add_ball(command.data);
+  if (command.type == ADD_GRAVITY_BALL) {
+    add_gravity_ball(command.data);
   } else {
     if (command.index < COMMAND_BUFFER_SIZE) {
       command_buffer[command.index] = command;
@@ -65,7 +65,7 @@ void Commands::run() {
     }
   }
 
-  draw_balls();
+  draw_gravity_balls();
 
   FastLED.show();
 }
@@ -292,11 +292,9 @@ struct Ball {
 
   uint8_t hue;
   uint8_t strip_index;
-  uint8_t gravity;
-  uint8_t damping;
 };
 
-Ball balls[MAX_BALLS];
+Ball balls[MAX_GRAVITY_BALLS];
 int next_ball = 0;
 
 void update_ball(int i) {
@@ -305,17 +303,17 @@ void update_ball(int i) {
   float interval = float(now - balls[i].last_update)/1000.0;
 
   balls[i].last_update = now;
-  balls[i].position = float(balls[i].position) + float(balls[i].rate) * interval + 0.5 * balls[i].gravity * interval * interval;
-  balls[i].rate = balls[i].rate - float(balls[i].gravity) * interval;
+  balls[i].position = float(balls[i].position) + float(balls[i].rate) * interval + 0.5 * float(GRAVITY) * interval * interval;
+  balls[i].rate = balls[i].rate - float(GRAVITY) * interval;
 
   if (balls[i].position < 0) {
-    balls[i].enabled = fabs(balls[i].rate) > 12 && now - balls[i].start < 30000;
+    balls[i].enabled = fabs(balls[i].rate) > 20 && now - balls[i].start < 60000;
     balls[i].position = fabs(balls[i].position);
-    balls[i].rate = fabs(balls[i].rate) * (1.0 - float(balls[i].damping)/255.0);
+    balls[i].rate = fabs(balls[i].rate) * (1.0 - GRAVITY_DAMPING/255.0);
   }
 }
 
-void Commands::add_ball(char * data) {
+void Commands::add_gravity_ball(char * data) {
   Ball ball;
   ball.enabled = true;
   ball.last_update = millis();
@@ -325,16 +323,14 @@ void Commands::add_ball(char * data) {
   ball.hue = data[1];
   ball.width = data[2]/10.0;
   ball.rate = data[3];
-  ball.gravity = data[4];
-  ball.damping = data[5];
 
   balls[next_ball] = ball;
-  if (next_ball++ >= MAX_BALLS) {
+  if (next_ball++ >= MAX_GRAVITY_BALLS) {
     next_ball = 0;
   }
 }
 
-void Commands::draw_balls() {
+void Commands::draw_gravity_balls() {
   for (int i=0; i<next_ball; i++) {
     if (balls[i].enabled) {
       update_ball(i);
