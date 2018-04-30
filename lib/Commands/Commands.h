@@ -12,8 +12,8 @@
 // branch config
 #define BRANCH_PIN_1 14
 #define BRANCH_PIN_2 15
-// #define BRANCH_PIXEL_COUNT 100
-#define BRANCH_PIXEL_COUNT 300
+#define BRANCH_PIXEL_COUNT 100
+// #define BRANCH_PIXEL_COUNT 300
 #define BRANCH_STRIP_COUNT 2
 
 // effect config
@@ -55,8 +55,7 @@ struct Command {
 #define COLOR_WIPE          3   // 0: hue, 1: rate (pixel/s) 2: offset (pixel)
 #define RAINBOW_SINE        4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
 #define PING_PONG           5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
-#define PING_PONG_RING      6   // 0: hue, 1: rate (pixel/s) 2: width (1/10 pixel)
-#define ADD_GRAVITY_BALL    7   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: initial rate (pixel\s)
+#define ADD_GRAVITY_BALL    6   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: initial rate (pixel\s)
 
 class Commands {
    public:
@@ -72,7 +71,6 @@ class Commands {
      void color_wipe(char* data);
      void rainbow_sine(char* data);
      void ping_pong(char* data);
-     void ping_pong_ring(char* data);
      void add_gravity_ball(char* data);
      void draw_gravity_balls();
 };

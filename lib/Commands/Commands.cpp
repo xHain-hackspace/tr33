@@ -20,10 +20,10 @@ void Commands::init() {
     // command_buffer[0].data[1] = 0;
     // command_buffer[0].data[2] = 0;
 
-    // command_buffer[0].type = RAINBOW_SINE;
-    // command_buffer[0].data[0] = 10;
-    // command_buffer[0].data[1] = 30;
-    // command_buffer[0].data[2] = 150;
+    command_buffer[0].type = RAINBOW_SINE;
+    command_buffer[0].data[0] = 10;
+    command_buffer[0].data[1] = 30;
+    command_buffer[0].data[2] = 150;
 
     // command_buffer[0].type = SINGLE_HUE;
     // command_buffer[0].data[0] = HUE_BLUE;
@@ -61,7 +61,6 @@ void Commands::run() {
       case COLOR_WIPE        : color_wipe(command_buffer[i].data); break;
       case RAINBOW_SINE      : rainbow_sine(command_buffer[i].data); break;
       case PING_PONG         : ping_pong(command_buffer[i].data); break;
-      case PING_PONG_RING    : ping_pong_ring(command_buffer[i].data); break;
     }
   }
 
@@ -101,20 +100,36 @@ CRGB get_trunk_led(int trunk, int led) {
   }
 }
 
-// strip_index: 0-3 => trunk, 4-10 => branch
+// strip_index: 0-3 => trunk, 4-10 => branch, 11 => ring
 void set_led(int strip_index, int led, CRGB color) {
   if(strip_index < TRUNK_STRIP_COUNT) {
     set_trunk_led(strip_index, led, color);
-  } else {
+  } else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT){
     branch_leds[strip_index-TRUNK_STRIP_COUNT][led] = color;
+  } else if (strip_index == 11) {
+    if (led < TRUNK_PIXEL_COUNT) {
+      for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
+        set_trunk_led(i, led, color);
+      }
+    } else {
+      for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
+        branch_leds[i][led-TRUNK_PIXEL_COUNT] = color;
+      }
+    }
   }
 }
 
 CRGB get_led(int strip_index, int led) {
   if(strip_index < TRUNK_STRIP_COUNT) {
     return get_trunk_led(strip_index, led);
-  } else {
+  } else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT){
     return branch_leds[strip_index-TRUNK_STRIP_COUNT][led];
+  } else if (strip_index == 11) {
+    if (led < TRUNK_PIXEL_COUNT) {
+      return get_trunk_led(0, led);
+    } else {
+      return branch_leds[0][led - TRUNK_PIXEL_COUNT];
+    }
   }
 }
 
@@ -134,8 +149,10 @@ void fade_led(int strip_index, int led, CRGB target, float intensity) {
 int index_strip_length(int strip_index) {
   if(strip_index < TRUNK_STRIP_COUNT) {
     return TRUNK_PIXEL_COUNT;
-  } else {
+  } else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT){
     return BRANCH_PIXEL_COUNT;
+  } else {
+    return TRUNK_PIXEL_COUNT + BRANCH_PIXEL_COUNT;
   }
 }
 
@@ -182,14 +199,17 @@ void Commands::single_color(char * data) {
 }
 
 void Commands::color_wipe(char * data) {
-  // for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
-  //   for(int j=0; j<((millis()*data[1]/1000) + data[2]) % TRUNK_PIXEL_COUNT; j++) {
-  //     set_trunk_led(i, j, CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE));
-  //   }
-  // }
-  for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
-    for(int j=0; j<((millis()*data[1]/1000) + data[2]) % BRANCH_PIXEL_COUNT; j++) {
-      branch_leds[i][j] = CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE);
+  int trunk_index = 0;
+  int branch_index = 0;
+  for(int j=0; j<((millis()*data[1]/1000) + data[2]) % (TRUNK_PIXEL_COUNT+BRANCH_PIXEL_COUNT); j++) {
+    if (j < TRUNK_PIXEL_COUNT) {
+      for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
+        set_trunk_led(i, j, CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE));
+      }
+    } else {
+      for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
+        branch_leds[i][j-TRUNK_PIXEL_COUNT] = CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE);
+      }
     }
   }
 }
@@ -263,22 +283,6 @@ void Commands::ping_pong(char * data) {
   float center = ping_pong_center(rate, length);
 
   render_ball(strip_index, center, width, hue);
-}
-
-void Commands::ping_pong_ring(char * data) {
-  int hue = data[0];
-  int rate = data[1];
-  float width = float(data[2]) / 10.0;
-  float center = ping_pong_center(rate, BRANCH_PIXEL_COUNT + TRUNK_PIXEL_COUNT);
-  float branch_offset = 50.0;
-
-  for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
-    render_ball(i, center, width, hue);
-  }
-
-  for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
-    render_ball(i+TRUNK_STRIP_COUNT, center - branch_offset, width, hue);
-  }
 }
 
 // Ball effect
