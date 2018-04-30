@@ -44,8 +44,8 @@ void Commands::init() {
 
 void Commands::process(char* command_bin) {
   Command command = *(Command *) command_bin;
-  if (command.type == ADD_GRAVITY_BALL) {
-    add_gravity_ball(command.data);
+  if (command.type == GRAVITY_EVENT) {
+    gravity_event();
   } else {
     if (command.index < COMMAND_BUFFER_SIZE) {
       command_buffer[command.index] = command;
@@ -61,10 +61,9 @@ void Commands::run() {
       case COLOR_WIPE        : color_wipe(command_buffer[i].data); break;
       case RAINBOW_SINE      : rainbow_sine(command_buffer[i].data); break;
       case PING_PONG         : ping_pong(command_buffer[i].data); break;
+      case GRAVITY           : gravity(command_buffer[i].data); break;
     }
   }
-
-  draw_gravity_balls();
 
   FastLED.show();
 }
@@ -285,7 +284,13 @@ void Commands::ping_pong(char * data) {
   render_ball(strip_index, center, width, hue);
 }
 
-// Ball effect
+// Gravity effect
+uint8_t gravity_hue = 0;
+uint8_t gravity_width = 0;
+uint8_t gravity_rate = 0;
+uint8_t gravity_strip_index = 0;
+int gravity_last_ball = 0;
+
 struct Ball {
   bool enabled;
   int start;
@@ -307,8 +312,8 @@ void update_ball(int i) {
   float interval = float(now - balls[i].last_update)/1000.0;
 
   balls[i].last_update = now;
-  balls[i].position = float(balls[i].position) + float(balls[i].rate) * interval + 0.5 * float(GRAVITY) * interval * interval;
-  balls[i].rate = balls[i].rate - float(GRAVITY) * interval;
+  balls[i].position = float(balls[i].position) + float(balls[i].rate) * interval + 0.5 * float(GRAVITY_VALUE) * interval * interval;
+  balls[i].rate = balls[i].rate - float(GRAVITY_VALUE) * interval;
 
   if (balls[i].position < 0) {
     balls[i].enabled = fabs(balls[i].rate) > 20 && now - balls[i].start < 60000;
@@ -317,16 +322,27 @@ void update_ball(int i) {
   }
 }
 
-void Commands::add_gravity_ball(char * data) {
+uint8_t random_or_value(uint8_t value, uint8_t max) {
+  if (value == 0) {
+    return random8(max);
+  } else {
+    return value;
+  }
+}
+
+void Commands::gravity_event() {
   Ball ball;
   ball.enabled = true;
   ball.last_update = millis();
   ball.start = millis();
   ball.position = 0;
-  ball.strip_index = data[0];
-  ball.hue = data[1];
-  ball.width = data[2]/10.0;
-  ball.rate = data[3];
+
+  ball.strip_index = gravity_strip_index;
+  ball.width = float(random_or_value(gravity_width, 255))/10.0;
+  ball.rate = random_or_value(gravity_rate, 120);
+  ball.hue = random_or_value(gravity_hue, 255);
+
+  gravity_last_ball = millis();
 
   balls[next_ball] = ball;
   if (next_ball++ >= MAX_GRAVITY_BALLS) {
@@ -334,7 +350,17 @@ void Commands::add_gravity_ball(char * data) {
   }
 }
 
-void Commands::draw_gravity_balls() {
+void Commands::gravity(char * data) {
+  gravity_strip_index = data[0];
+  gravity_hue = data[1];
+  gravity_width = data[2];
+  gravity_rate = data[3];
+  int frequency = data[4];
+
+  if (frequency > 0 && float(millis() - gravity_last_ball) / 1000.0 > 100.0 / float(frequency)) {
+    gravity_event();
+  }
+
   for (int i=0; i<next_ball; i++) {
     if (balls[i].enabled) {
       update_ball(i);

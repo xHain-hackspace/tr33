@@ -31,7 +31,7 @@
 
 // effects
 #define MAX_GRAVITY_BALLS 100
-#define GRAVITY 50
+#define GRAVITY_VALUE 50
 #define GRAVITY_DAMPING 50
 // #define SPARKLE_COUNT 3
 
@@ -55,7 +55,11 @@ struct Command {
 #define COLOR_WIPE          3   // 0: hue, 1: rate (pixel/s) 2: offset (pixel)
 #define RAINBOW_SINE        4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
 #define PING_PONG           5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
-#define ADD_GRAVITY_BALL    6   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: initial rate (pixel\s)
+#define GRAVITY             6   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: initial rate (pixel\s) 4: new balls frequency
+
+// -- EVENTS --------------------------------------------------------------------------
+
+#define GRAVITY_EVENT       100
 
 class Commands {
    public:
@@ -66,11 +70,14 @@ class Commands {
      void run();
 
    private:
+     // commands
      void single_hue(char* data);
      void single_color(char* data);
      void color_wipe(char* data);
      void rainbow_sine(char* data);
      void ping_pong(char* data);
-     void add_gravity_ball(char* data);
-     void draw_gravity_balls();
+     void gravity(char* data);
+
+     // events
+     void gravity_event();
 };
