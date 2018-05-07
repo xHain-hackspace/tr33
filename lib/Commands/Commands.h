@@ -10,11 +10,15 @@
 #define TRUNK_STRIP_COUNT 4
 
 // branch config
-#define BRANCH_PIN_1 14
-#define BRANCH_PIN_2 15
+#define BRANCH_PIN_1 12
+#define BRANCH_PIN_2 13
+#define BRANCH_PIN_3 14
+#define BRANCH_PIN_4 15
+#define BRANCH_PIN_5 25
+#define BRANCH_PIN_6 26
 #define BRANCH_PIXEL_COUNT 100
 // #define BRANCH_PIXEL_COUNT 300
-#define BRANCH_STRIP_COUNT 2
+#define BRANCH_STRIP_COUNT 6
 
 // effect config
 #define DEFAULT_SATURATION 255
@@ -32,7 +36,9 @@
 // effects
 #define MAX_GRAVITY_BALLS 100
 #define GRAVITY_VALUE 50
-#define GRAVITY_DAMPING 50
+#define GRAVITY_DAMPING 70
+// #define GRAVITY_VALUE 18
+// #define GRAVITY_DAMPING 100
 // #define SPARKLE_COUNT 3
 
 // commands

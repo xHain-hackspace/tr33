@@ -12,6 +12,10 @@ Commands::Commands(void) {
 
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_1>(branch_leds[0], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_2>(branch_leds[1], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_3>(branch_leds[2], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_4>(branch_leds[3], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_5>(branch_leds[4], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_6>(branch_leds[5], BRANCH_PIXEL_COUNT);
 }
 
 void Commands::init() {
@@ -22,8 +26,8 @@ void Commands::init() {
 
     command_buffer[0].type = RAINBOW_SINE;
     command_buffer[0].data[0] = 10;
-    command_buffer[0].data[1] = 30;
-    command_buffer[0].data[2] = 150;
+    command_buffer[0].data[1] = 150;
+    command_buffer[0].data[2] = 255;
 
     // command_buffer[0].type = SINGLE_HUE;
     // command_buffer[0].data[0] = HUE_BLUE;
@@ -316,15 +320,15 @@ void update_ball(int i) {
   balls[i].rate = balls[i].rate - float(GRAVITY_VALUE) * interval;
 
   if (balls[i].position < 0) {
-    balls[i].enabled = fabs(balls[i].rate) > 20 && now - balls[i].start < 60000;
+    balls[i].enabled = fabs(balls[i].rate) > 20 && now - balls[i].start < 40000;
     balls[i].position = fabs(balls[i].position);
     balls[i].rate = fabs(balls[i].rate) * (1.0 - GRAVITY_DAMPING/255.0);
   }
 }
 
-uint8_t random_or_value(uint8_t value, uint8_t max) {
+uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max) {
   if (value == 0) {
-    return random8(max);
+    return random8(min, max);
   } else {
     return value;
   }
@@ -338,9 +342,9 @@ void Commands::gravity_event() {
   ball.position = 0;
 
   ball.strip_index = gravity_strip_index;
-  ball.width = float(random_or_value(gravity_width, 255))/10.0;
-  ball.rate = random_or_value(gravity_rate, 120);
-  ball.hue = random_or_value(gravity_hue, 255);
+  ball.width = float(random_or_value(gravity_width, 0, 255))/10.0;
+  ball.rate = random_or_value(gravity_rate, 50, 110);
+  ball.hue = random_or_value(gravity_hue, 0, 255);
 
   gravity_last_ball = millis();
 
