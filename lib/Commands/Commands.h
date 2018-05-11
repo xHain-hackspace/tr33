@@ -16,8 +16,8 @@
 #define BRANCH_PIN_4 15
 #define BRANCH_PIN_5 25
 #define BRANCH_PIN_6 26
-#define BRANCH_PIXEL_COUNT 100
-// #define BRANCH_PIXEL_COUNT 300
+// #define BRANCH_PIXEL_COUNT 100
+#define BRANCH_PIXEL_COUNT 300
 #define BRANCH_STRIP_COUNT 6
 
 // effect config
@@ -30,8 +30,8 @@
 #define HUE_GREEN 85
 #define HUE_BLUE  171
 #define HUE_PINK 213
-#define BLACK CHSV(0, 0, 0)
-#define WHITE CRGB(255, 255, 255)
+#define COLOR_BLACK CHSV(0, 0, 0)
+#define COLOR_WHITE CRGB(255, 255, 255)
 
 // effects
 #define MAX_GRAVITY_BALLS 100
@@ -39,10 +39,10 @@
 #define GRAVITY_DAMPING 70
 // #define GRAVITY_VALUE 18
 // #define GRAVITY_DAMPING 100
-// #define SPARKLE_COUNT 3
+#define MAX_SPARKLES 50
 
 // commands
-#define COMMAND_MAX_DATA 64
+#define COMMAND_MAX_DATA 8
 #define COMMAND_BUFFER_SIZE 16
 
 struct Command {
@@ -62,6 +62,9 @@ struct Command {
 #define RAINBOW_SINE        4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
 #define PING_PONG           5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
 #define GRAVITY             6   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: initial rate (pixel\s) 4: new balls frequency
+#define OFF                 7   // none
+#define WHITE               8   // 0: color temperature, 1: value
+#define SPARKLE             9   // 0: hue 1: saturation 2: width (1/10 pixel) 3: sparkle every x 1/10 seconds
 
 // -- EVENTS --------------------------------------------------------------------------
 
@@ -83,6 +86,9 @@ class Commands {
      void rainbow_sine(char* data);
      void ping_pong(char* data);
      void gravity(char* data);
+     void off(char* data);
+     void white(char* data);
+     void sparkle(char* data);
 
      // events
      void gravity_event();

@@ -31,6 +31,11 @@ void Commands::init() {
 
     // command_buffer[0].type = SINGLE_HUE;
     // command_buffer[0].data[0] = HUE_BLUE;
+    //
+    // command_buffer[1].type = SPARKLE;
+    // command_buffer[1].data[0] = 1;
+    // command_buffer[1].data[1] = 50;
+    // command_buffer[1].data[2] = 1;
 
     // command_buffer[1].type = PING_PONG_RING;
     // command_buffer[1].data[0] = 0;
@@ -66,6 +71,9 @@ void Commands::run() {
       case RAINBOW_SINE      : rainbow_sine(command_buffer[i].data); break;
       case PING_PONG         : ping_pong(command_buffer[i].data); break;
       case GRAVITY           : gravity(command_buffer[i].data); break;
+      case OFF               : off(command_buffer[i].data); break;
+      case WHITE             : white(command_buffer[i].data); break;
+      case SPARKLE           : sparkle(command_buffer[i].data); break;
     }
   }
 
@@ -217,6 +225,16 @@ void Commands::color_wipe(char * data) {
   }
 }
 
+void Commands::off(char * data) {
+  char args[3] = {0,0,0};
+  single_color(args);
+}
+
+void Commands::white(char * data) {
+  char args[3] = {0,0,data[1]};
+  single_color(args);
+}
+
 void Commands::rainbow_sine(char * data) {
   int min_value = 30;
   int max_value = DEFAULT_VALUE;
@@ -246,6 +264,8 @@ void Commands::rainbow_sine(char * data) {
   }
 }
 
+
+// ping_pong effect
 float ball_brightness(int pixel, float center, float width) {
   if (pixel > center-width/2.0 && pixel < center+width/2.0) {
     return 0.5*sinf(2.0*3.1415*((float(pixel)-center)/width+0.25))+0.5;
@@ -254,18 +274,17 @@ float ball_brightness(int pixel, float center, float width) {
   }
 }
 
-void render_ball(int strip_index, float center, float width, int hue) {
+void render_ball(int strip_index, float center, float width, CRGB color, float brightness) {
   int strip_length = index_strip_length(strip_index);
 
   for (int i=0; i<strip_length; i++) {
-    float brightness = ball_brightness(i, center, width);
-    if (brightness>0) {
-      fade_led(strip_index, i, CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE), brightness);
+    float led_brightness = ball_brightness(i, center, width) * brightness;
+    if (led_brightness>0) {
+      fade_led(strip_index, i, color, led_brightness);
     }
   }
 }
 
-// ping_pong effect
 float ping_pong_center(float rate, float length) {
   float position = float(millis()) / 1000.0 * rate;
   float rem = fmod(position, (length * 2.0));
@@ -285,7 +304,7 @@ void Commands::ping_pong(char * data) {
   float length = index_strip_length(strip_index);
   float center = ping_pong_center(rate, length);
 
-  render_ball(strip_index, center, width, hue);
+  render_ball(strip_index, center, width, CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE), 1);
 }
 
 // Gravity effect
@@ -368,7 +387,58 @@ void Commands::gravity(char * data) {
   for (int i=0; i<next_ball; i++) {
     if (balls[i].enabled) {
       update_ball(i);
-      render_ball(balls[i].strip_index, balls[i].position, balls[i].width, balls[i].hue);
+      CRGB color = CHSV(balls[i].hue, DEFAULT_SATURATION, DEFAULT_VALUE);
+      render_ball(balls[i].strip_index, balls[i].position, balls[i].width, color, 1);
+    }
+  }
+}
+
+// sparkle effect
+uint8_t dim_rate = 50;
+uint8_t sparkle_index = 0;
+
+struct Sparkle {
+  bool enabled;
+  CRGB color;
+  float width;
+  float brightness;
+  uint8_t strip_index;
+  int center;
+  int start_time;
+};
+
+Sparkle sparkles[MAX_SPARKLES];
+
+void Commands::sparkle(char * data) {
+  uint8_t hue = random_or_value(data[0], 0, 255);
+  uint8_t saturation = data[1];
+  float width = float(random_or_value(data[2], 0, 255))/10.0;
+  uint8_t period = data[3];  // sparkle every x 1/10 seconds
+  int now = millis();
+
+  if ((now - sparkles[sparkle_index].start_time) / 10 > period){
+    if (sparkle_index ++ >= MAX_SPARKLES) {
+      sparkle_index = 0;
+    }
+    sparkles[sparkle_index].enabled = true;
+    sparkles[sparkle_index].color = CHSV(hue, saturation, DEFAULT_VALUE);
+    sparkles[sparkle_index].width = width;
+    sparkles[sparkle_index].brightness = float(random(10))/20.0 + 0.5;
+    sparkles[sparkle_index].strip_index = 4;//random(TRUNK_PIXEL_COUNT, TRUNK_PIXEL_COUNT + BRANCH_PIXEL_COUNT);
+    sparkles[sparkle_index].center = random(0, index_strip_length(sparkles[sparkle_index].strip_index)-1);
+    sparkles[sparkle_index].start_time = now;
+  }
+
+  for (int i=0; i<MAX_SPARKLES; i++) {
+    if (sparkles[i].enabled) {
+      float brightness = sparkles[i].brightness - float(now - sparkles[i].start_time) / (100.0 * float(dim_rate));
+
+      if (brightness > 0) {
+        // Serial.printf("render %f", brightness);
+        render_ball(sparkles[i].strip_index, sparkles[i].center, sparkles[i].width,sparkles[i].color , brightness);
+      } else {
+        sparkles[i].enabled = false;
+      }
     }
   }
 }
