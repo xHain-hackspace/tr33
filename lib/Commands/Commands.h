@@ -16,8 +16,7 @@
 #define BRANCH_PIN_4 15
 #define BRANCH_PIN_5 25
 #define BRANCH_PIN_6 26
-// #define BRANCH_PIXEL_COUNT 100
-#define BRANCH_PIXEL_COUNT 300
+#define BRANCH_PIXEL_COUNT 100
 #define BRANCH_STRIP_COUNT 6
 
 // effect config

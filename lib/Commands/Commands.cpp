@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <Commands.h>
+#include <Overrides.h>
 
 CRGB trunk_leds[HW_TRUNK_STRIP_COUNT][HW_TRUNK_PIXEL_COUNT];
 CRGB branch_leds[BRANCH_STRIP_COUNT][BRANCH_PIXEL_COUNT];
@@ -111,13 +112,13 @@ CRGB get_trunk_led(int trunk, int led) {
   }
 }
 
-// strip_index: 0-3 => trunk, 4-10 => branch, 11 => ring
+// strip_index: 0-3 => trunk, 4-9 => branch, 10 => ring
 void set_led(int strip_index, int led, CRGB color) {
   if(strip_index < TRUNK_STRIP_COUNT) {
     set_trunk_led(strip_index, led, color);
   } else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT){
     branch_leds[strip_index-TRUNK_STRIP_COUNT][led] = color;
-  } else if (strip_index == 11) {
+  } else if (strip_index == TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT) {
     if (led < TRUNK_PIXEL_COUNT) {
       for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
         set_trunk_led(i, led, color);
@@ -135,7 +136,7 @@ CRGB get_led(int strip_index, int led) {
     return get_trunk_led(strip_index, led);
   } else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT){
     return branch_leds[strip_index-TRUNK_STRIP_COUNT][led];
-  } else if (strip_index == 11) {
+  } else if (strip_index == TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT) {
     if (led < TRUNK_PIXEL_COUNT) {
       return get_trunk_led(0, led);
     } else {
@@ -424,7 +425,7 @@ void Commands::sparkle(char * data) {
     sparkles[sparkle_index].color = CHSV(hue, saturation, DEFAULT_VALUE);
     sparkles[sparkle_index].width = width;
     sparkles[sparkle_index].brightness = float(random(10))/20.0 + 0.5;
-    sparkles[sparkle_index].strip_index = 4;//random(TRUNK_PIXEL_COUNT, TRUNK_PIXEL_COUNT + BRANCH_PIXEL_COUNT);
+    sparkles[sparkle_index].strip_index = random8(4, 9);
     sparkles[sparkle_index].center = random(0, index_strip_length(sparkles[sparkle_index].strip_index)-1);
     sparkles[sparkle_index].start_time = now;
   }
