@@ -1,4 +1,3 @@
-#define FASTLED_ALLOW_INTERRUPTS 0
 #include <FastLED.h>
 
 // trunk config
