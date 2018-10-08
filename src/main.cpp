@@ -21,7 +21,7 @@ Commands commands = Commands();
 void setup() {
   delay(1000);
 
-  Serial.begin(9600);
+  Serial.begin(921600);
   while (!Serial) {
     ; // wait for serial port to connect.
   }

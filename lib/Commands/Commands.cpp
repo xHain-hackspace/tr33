@@ -27,8 +27,8 @@ void Commands::init() {
 
     command_buffer[0].type = RAINBOW_SINE;
     command_buffer[0].data[0] = 10;
-    command_buffer[0].data[1] = 150;
-    command_buffer[0].data[2] = 255;
+    command_buffer[0].data[1] = 100;
+    command_buffer[0].data[2] = 200;
 
     // command_buffer[0].type = SINGLE_HUE;
     // command_buffer[0].data[0] = HUE_BLUE;
@@ -38,10 +38,23 @@ void Commands::init() {
     // command_buffer[1].data[1] = 50;
     // command_buffer[1].data[2] = 1;
 
-    // command_buffer[1].type = PING_PONG_RING;
-    // command_buffer[1].data[0] = 0;
-    // command_buffer[1].data[1] = 10;
-    // command_buffer[1].data[2] = 50;
+    // command_buffer[1].type = PING_PONG;
+    // command_buffer[1].data[0] = 10;
+    // command_buffer[1].data[1] = 0;
+    // command_buffer[1].data[2] = 10;
+    // command_buffer[1].data[3] = 50;
+    //
+    // command_buffer[2].type = PING_PONG;
+    // command_buffer[2].data[0] = 10;
+    // command_buffer[2].data[1] = 0;
+    // command_buffer[2].data[2] = 13;
+    // command_buffer[2].data[3] = 50;
+    //
+    // command_buffer[3].type = PING_PONG;
+    // command_buffer[3].data[0] = 10;
+    // command_buffer[3].data[1] = 0;
+    // command_buffer[3].data[2] = 15;
+    // command_buffer[3].data[3] = 50;
 
     // for(int i=1; i<5; i++) {
     //   command_buffer[i].type = PING_PONG;
