@@ -1,4 +1,3 @@
-#include <Secrets.h>
 #include <Arduino.h>
 #include <Commands.h>
 
@@ -10,7 +9,7 @@ Commands commands = Commands();
 
 void setup() {
 
-  Serial.begin(921600);
+  Serial.begin(9600);
   while (!Serial) {
     ; // wait for serial port to connect.
   }
@@ -26,15 +25,18 @@ void setup() {
 
 
 void loop() {
-
-  uint8_t size;
-
+  int size;
   Serial.println("READY");
-
   size = Serial.read();
-  if(size) {
+  Serial.print("Command size:");
+  Serial.println(size);
+  if(size > 0) {
     Serial.readBytes(serial_buffer, size);
+    Serial.print("Command read: ");
+    Serial.println(serial_buffer);
     commands.process((char *) serial_buffer);
-    // handle the new data that came in
+    Serial.println("Command processed");
   }
+
+  commands.run();
 }
