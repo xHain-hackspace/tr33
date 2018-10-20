@@ -32,7 +32,7 @@
 #define COLOR_WHITE CRGB(255, 255, 255)
 
 // effects
-#define MAX_GRAVITY_BALLS 100
+#define MAX_GRAVITY_BALLS 50
 #define GRAVITY_VALUE 50
 #define GRAVITY_DAMPING 70
 // #define GRAVITY_VALUE 18

@@ -7,47 +7,43 @@ char serial_buffer[SERIAL_BUFFER_SIZE];
 
 Commands commands = Commands();
 
+HardwareSerial DebugSerial(0);
+HardwareSerial CommandSerial(0);
+
 void setup() {
 
-  Serial.begin(230400);
-  while (!Serial) {}
+  DebugSerial.begin(230400);
+  while (!DebugSerial) {}
 
-  Serial2.begin(230400);
-  while (!Serial2) {}
+  CommandSerial.begin(230400);
+  while (!CommandSerial) {}
 
-  Serial.println("Starting up...");
+  DebugSerial.println("Starting up...");
 
   commands.init();
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
 
-  Serial.println("Startup complete");
+  DebugSerial.println("Startup complete");
 }
 
 
 void loop() {
   int size;
 
-  while(Serial2.available()) {
-    int byte = Serial2.read();
-    // Serial.println("Cleared 1 Byte from serial buffer");
-    // Serial.println(byte);
-  }
+  // while(CommandSerial.available()) {
+  //   CommandSerial.read();
+  // }
 
-  Serial2.println("OK");
-  Serial2.readBytes(serial_buffer, 1);
-  size = serial_buffer[0];
+  // CommandSerial.println("OK");
+  // CommandSerial.readBytes(serial_buffer, 1);
+  // size = serial_buffer[0];
 
-  // Serial.print("Command size:");
-  // Serial.println(size);
-  if(size > 0) {
-    Serial2.readBytes(serial_buffer, size);
-    // Serial.println("Command read: ");
-    // Serial.println(serial_buffer);
-    commands.process((char *) serial_buffer);
-    // Serial.println("Command processed");
-  }
+  // if(size > 0) {
+  //   CommandSerial.readBytes(serial_buffer, size);
+  //   commands.process((char *) serial_buffer);
+  // }
 
   commands.run();
 }

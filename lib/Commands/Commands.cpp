@@ -25,15 +25,25 @@ void Commands::init() {
     // command_buffer[0].data[1] = 0;
     // command_buffer[0].data[2] = 0;
 
-    // command_buffer[0].type = RAINBOW_SINE;
-    // command_buffer[0].data[0] = 10;
-    // command_buffer[0].data[1] = 100;
-    // command_buffer[0].data[2] = 200;
+    command_buffer[0].type = RAINBOW_SINE;
+    command_buffer[0].data[0] = 10;
+    command_buffer[0].data[1] = 100;
+    command_buffer[0].data[2] = 200;
 
-    command_buffer[0].type = SINGLE_HUE;
-    command_buffer[0].data[0] = HUE_RED;
+    // command_buffer[0].type = SINGLE_HUE;
+    // command_buffer[0].data[0] = HUE_RED;
 
-    //
+    // command_buffer[1].type = COLOR_WIPE;
+    // command_buffer[1].data[0] = HUE_BLUE;
+    // command_buffer[1].data[1] = 50;
+
+    command_buffer[1].type = GRAVITY;
+    command_buffer[1].data[0] = 10;
+    command_buffer[1].data[1] = 1;
+    command_buffer[1].data[2] = 25;
+    command_buffer[1].data[3] = 100;
+    command_buffer[1].data[4] = 1;
+
     // command_buffer[1].type = SPARKLE;
     // command_buffer[1].data[0] = 1;
     // command_buffer[1].data[1] = 50;
@@ -64,6 +74,8 @@ void Commands::init() {
     //   command_buffer[i].data[2] = 10;
     //   command_buffer[i].data[3] = 30;
     // }
+
+
 }
 
 void Commands::process(char* command_bin) {
@@ -126,7 +138,7 @@ CRGB get_trunk_led(int trunk, int led) {
   }
 }
 
-// strip_index: 0-3 => trunk, 4-9 => branch, 10 => ring
+// strip_index: 0-3 => trunk, 4-9 => branch, 10 => all_branches, 11 => all_trunk, 10 => all, 
 void set_led(int strip_index, int led, CRGB color) {
   if(strip_index < TRUNK_STRIP_COUNT) {
     set_trunk_led(strip_index, led, color);
@@ -171,8 +183,8 @@ void fade_led(int strip_index, int led, CRGB target, float intensity) {
 }
 
 
-// strip_index 0-3 => trunk, 4-10 => branch
-int index_strip_length(int strip_index) {
+// strip_index 0-3 => trunk, 4-10 => branch, 
+int strip_index_length(int strip_index) {
   if(strip_index < TRUNK_STRIP_COUNT) {
     return TRUNK_PIXEL_COUNT;
   } else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT){
@@ -290,7 +302,7 @@ float ball_brightness(int pixel, float center, float width) {
 }
 
 void render_ball(int strip_index, float center, float width, CRGB color, float brightness) {
-  int strip_length = index_strip_length(strip_index);
+  int strip_length = strip_index_length(strip_index);
 
   for (int i=0; i<strip_length; i++) {
     float led_brightness = ball_brightness(i, center, width) * brightness;
@@ -316,7 +328,7 @@ void Commands::ping_pong(char * data) {
   int hue = data[1];
   int rate = data[2];
   float width = float(data[3]) / 10.0;
-  float length = index_strip_length(strip_index);
+  float length = strip_index_length(strip_index);
   float center = ping_pong_center(rate, length);
 
   render_ball(strip_index, center, width, CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE), 1);
@@ -377,13 +389,14 @@ void Commands::gravity_event() {
 
   ball.strip_index = gravity_strip_index;
   ball.width = float(random_or_value(gravity_width, 0, 255))/10.0;
-  ball.rate = random_or_value(gravity_rate, 50, 110);
+  ball.rate = random_or_value(gravity_rate, 30, strip_index_length(ball.strip_index) + 10);
   ball.hue = random_or_value(gravity_hue, 0, 255);
 
   gravity_last_ball = millis();
 
   balls[next_ball] = ball;
-  if (next_ball++ >= MAX_GRAVITY_BALLS) {
+  next_ball++;
+  if (next_ball >= MAX_GRAVITY_BALLS) {
     next_ball = 0;
   }
 }
@@ -395,11 +408,11 @@ void Commands::gravity(char * data) {
   gravity_rate = data[3];
   int frequency = data[4];
 
-  if (frequency > 0 && float(millis() - gravity_last_ball) / 1000.0 > 100.0 / float(frequency)) {
+  if (frequency > 0 && 10000 / (millis() - gravity_last_ball) < frequency){
     gravity_event();
   }
 
-  for (int i=0; i<next_ball; i++) {
+  for (int i=0; i<MAX_GRAVITY_BALLS; i++) {
     if (balls[i].enabled) {
       update_ball(i);
       CRGB color = CHSV(balls[i].hue, DEFAULT_SATURATION, DEFAULT_VALUE);
@@ -428,10 +441,10 @@ void Commands::sparkle(char * data) {
   uint8_t hue = random_or_value(data[0], 0, 255);
   uint8_t saturation = data[1];
   float width = float(random_or_value(data[2], 0, 255))/10.0;
-  uint8_t period = data[3];  // sparkle every x 1/10 seconds
+  uint8_t frequency = data[3];  // sparkle every x 1/10 seconds
   int now = millis();
 
-  if ((now - sparkles[sparkle_index].start_time) / 10 > period){
+  if (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency){
     if (sparkle_index ++ >= MAX_SPARKLES) {
       sparkle_index = 0;
     }
@@ -440,7 +453,7 @@ void Commands::sparkle(char * data) {
     sparkles[sparkle_index].width = width;
     sparkles[sparkle_index].brightness = float(random(10))/20.0 + 0.5;
     sparkles[sparkle_index].strip_index = random8(4, 9);
-    sparkles[sparkle_index].center = random(0, index_strip_length(sparkles[sparkle_index].strip_index)-1);
+    sparkles[sparkle_index].center = random(0, strip_index_length(sparkles[sparkle_index].strip_index)-1);
     sparkles[sparkle_index].start_time = now;
   }
 
@@ -449,7 +462,6 @@ void Commands::sparkle(char * data) {
       float brightness = sparkles[i].brightness - float(now - sparkles[i].start_time) / (100.0 * float(dim_rate));
 
       if (brightness > 0) {
-        // Serial.printf("render %f", brightness);
         render_ball(sparkles[i].strip_index, sparkles[i].center, sparkles[i].width,sparkles[i].color , brightness);
       } else {
         sparkles[i].enabled = false;
