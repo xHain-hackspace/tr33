@@ -25,13 +25,14 @@ void Commands::init() {
     // command_buffer[0].data[1] = 0;
     // command_buffer[0].data[2] = 0;
 
-    command_buffer[0].type = RAINBOW_SINE;
-    command_buffer[0].data[0] = 10;
-    command_buffer[0].data[1] = 100;
-    command_buffer[0].data[2] = 200;
+    // command_buffer[0].type = RAINBOW_SINE;
+    // command_buffer[0].data[0] = 10;
+    // command_buffer[0].data[1] = 100;
+    // command_buffer[0].data[2] = 200;
 
-    // command_buffer[0].type = SINGLE_HUE;
-    // command_buffer[0].data[0] = HUE_BLUE;
+    command_buffer[0].type = SINGLE_HUE;
+    command_buffer[0].data[0] = HUE_RED;
+
     //
     // command_buffer[1].type = SPARKLE;
     // command_buffer[1].data[0] = 1;

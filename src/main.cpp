@@ -10,9 +10,11 @@ Commands commands = Commands();
 void setup() {
 
   Serial.begin(230400);
-  while (!Serial) {
-    ; // wait for serial port to connect.
-  }
+  while (!Serial) {}
+
+  Serial2.begin(230400);
+  while (!Serial2) {}
+
   Serial.println("Starting up...");
 
   commands.init();
@@ -27,20 +29,20 @@ void setup() {
 void loop() {
   int size;
 
-  while(Serial.available()) {
-    int byte = Serial.read();
+  while(Serial2.available()) {
+    int byte = Serial2.read();
     // Serial.println("Cleared 1 Byte from serial buffer");
     // Serial.println(byte);
   }
 
-  Serial.println("OK");
-  Serial.readBytes(serial_buffer, 1);
+  Serial2.println("OK");
+  Serial2.readBytes(serial_buffer, 1);
   size = serial_buffer[0];
 
   // Serial.print("Command size:");
   // Serial.println(size);
   if(size > 0) {
-    Serial.readBytes(serial_buffer, size);
+    Serial2.readBytes(serial_buffer, size);
     // Serial.println("Command read: ");
     // Serial.println(serial_buffer);
     commands.process((char *) serial_buffer);
