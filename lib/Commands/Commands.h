@@ -19,10 +19,6 @@
 #define BRANCH_STRIP_COUNT 6
 #define BRANCH_OFFSET 50
 
-// effect config
-#define DEFAULT_SATURATION 255
-#define DEFAULT_VALUE 255
-
 // colors
 #define HUE_RED 0
 #define HUE_YELLOW 42
@@ -32,17 +28,20 @@
 #define COLOR_BLACK CHSV(0, 0, 0)
 #define COLOR_WHITE CRGB(255, 255, 255)
 
-// effects
+// commands
+#define COMMAND_MAX_DATA 8
+#define COMMAND_BUFFER_SIZE 16
+
+// effect config
+#define DEFAULT_SATURATION 255
+#define DEFAULT_VALUE 255
+
 #define MAX_GRAVITY_BALLS 50
 #define GRAVITY_VALUE 50
 #define GRAVITY_DAMPING 70
 // #define GRAVITY_VALUE 18
 // #define GRAVITY_DAMPING 100
 #define MAX_SPARKLES 50
-
-// commands
-#define COMMAND_MAX_DATA 8
-#define COMMAND_BUFFER_SIZE 16
 
 struct Command {
   uint8_t index;

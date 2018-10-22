@@ -11,7 +11,7 @@ HardwareSerial DebugSerial(0);
 HardwareSerial CommandSerial(0);
 
 void setup() {
-
+  Serial.begin(230400);
   DebugSerial.begin(230400);
   while (!DebugSerial) {}
 
