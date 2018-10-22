@@ -28,7 +28,8 @@ void Commands::init() {
     command_buffer[0].type = RAINBOW_SINE;
     command_buffer[0].data[0] = 10;
     command_buffer[0].data[1] = 100;
-    command_buffer[0].data[2] = 200;
+    command_buffer[0].data[2] = 100;
+    command_buffer[0].data[3] = 255;
 
     // command_buffer[0].type = SINGLE_HUE;
     // command_buffer[0].data[0] = HUE_RED;
@@ -263,29 +264,29 @@ void Commands::white(char * data) {
 }
 
 void Commands::rainbow_sine(char * data) {
-  int min_value = 30;
-  int max_value = DEFAULT_VALUE;
   int value = 0;
   int hue = 0;
-  int branch_offset = 50;
 
   int rate = data[0];
   int wavelength = data[1];
-  int width = data[2];
-  if (width == 0) width = 1;
+  int width_percent = max(1, data[2]);
+  int min_value = 75;
+  int max_value = data[3];
+
+  int width_pixel = float(BRANCH_OFFSET + BRANCH_PIXEL_COUNT) * float(width_percent) / 100.0;
 
   for(int i=0; i<TRUNK_PIXEL_COUNT; i++) {
     value = min_value + wave_propagation(i, 0, rate, wavelength) * (max_value-min_value);
     for(int j=0; j<TRUNK_STRIP_COUNT; j++) {
-      hue = float(i%width)/float(width)*255.0;
+      hue = float(i%width_pixel)/float(width_pixel)*255.0;
       set_trunk_led(j, i, CHSV(hue, DEFAULT_SATURATION, value));
     }
   }
 
   for(int i=0; i<BRANCH_PIXEL_COUNT; i++) {
-    value = min_value + wave_propagation(i+branch_offset, 0, rate, wavelength) * (max_value-min_value);
+    value = min_value + wave_propagation(i+BRANCH_OFFSET, 0, rate, wavelength) * (max_value-min_value);
     for(int j=0; j<BRANCH_STRIP_COUNT; j++) {
-      hue = float(i+branch_offset%width)/float(width)*255.0;
+      hue = float(i+BRANCH_OFFSET%width_pixel)/float(width_pixel)*255.0;
       branch_leds[j][i] = CHSV(hue, DEFAULT_SATURATION, value);
     }
   }

@@ -17,6 +17,7 @@
 #define BRANCH_PIN_6 21
 #define BRANCH_PIXEL_COUNT 100
 #define BRANCH_STRIP_COUNT 6
+#define BRANCH_OFFSET 50
 
 // effect config
 #define DEFAULT_SATURATION 255
