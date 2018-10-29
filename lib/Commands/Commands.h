@@ -19,6 +19,11 @@
 #define BRANCH_STRIP_COUNT 6
 #define BRANCH_OFFSET 50
 
+// strip index
+#define STRIP_INDEX_ALL_TRUNKS 10
+#define STRIP_INDEX_ALL_BRANCHES 11
+#define STRIP_INDEX_ALL 12
+
 // colors
 #define HUE_RED 0
 #define HUE_YELLOW 42
@@ -41,7 +46,7 @@
 #define GRAVITY_DAMPING 70
 // #define GRAVITY_VALUE 18
 // #define GRAVITY_DAMPING 100
-#define MAX_SPARKLES 50
+#define MAX_SPARKLES 200
 
 struct Command {
   uint8_t index;
@@ -53,16 +58,16 @@ struct Command {
 // All commands take a pointer to a buffer with its parameters.
 // The comments indicate which data is expected at a certain byte index
 
-#define DISABLE             0   // none
-#define SINGLE_HUE          1   // 0: hue
-#define SINGLE_COLOR        2   // 0: hue, 1: saturation 2: value
-#define COLOR_WIPE          3   // 0: hue, 1: rate (pixel/s) 2: offset (pixel)
-#define RAINBOW_SINE        4   // 0: rate (pixel/s) 1: wavelength (pixel) 2: width of rainbox (pixel)
-#define PING_PONG           5   // 0: strip_index 1: hue, 2: rate (pixel/s) 3: width (1/10 pixel)
-#define GRAVITY             6   // 0: strip_index 1: hue, 2: width (1/10 pixel) 3: initial rate (pixel\s) 4: new balls frequency
-#define OFF                 7   // none
-#define WHITE               8   // 0: color temperature, 1: value
-#define SPARKLE             9   // 0: hue 1: saturation 2: width (1/10 pixel) 3: sparkle every x 1/10 seconds
+#define DISABLE             0   
+#define SINGLE_HUE          1   
+#define SINGLE_COLOR        2   
+#define COLOR_WIPE          3   
+#define RAINBOW_SINE        4   
+#define PING_PONG           5   
+#define GRAVITY             6   
+#define OFF                 7   
+#define WHITE               8   
+#define SPARKLE             9   
 
 // -- EVENTS --------------------------------------------------------------------------
 

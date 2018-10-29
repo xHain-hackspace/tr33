@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Commands.h>
-#include <Overrides.h>
+// #include <Overrides.h>
 
 CRGB trunk_leds[HW_TRUNK_STRIP_COUNT][HW_TRUNK_PIXEL_COUNT];
 CRGB branch_leds[BRANCH_STRIP_COUNT][BRANCH_PIXEL_COUNT];
@@ -20,10 +20,10 @@ Commands::Commands(void) {
 }
 
 void Commands::init() {
-    command_buffer[0].type = SINGLE_COLOR;
-    command_buffer[0].data[0] = 0;
-    command_buffer[0].data[1] = 0;
-    command_buffer[0].data[2] = 0;
+    // command_buffer[0].type = SINGLE_COLOR;
+    // command_buffer[0].data[0] = 0;
+    // command_buffer[0].data[1] = 0;
+    // command_buffer[0].data[2] = 0;
 
     // command_buffer[0].type = RAINBOW_SINE;
     // command_buffer[0].data[0] = 10;
@@ -31,19 +31,21 @@ void Commands::init() {
     // command_buffer[0].data[2] = 100;
     // command_buffer[0].data[3] = 255;
 
-    // command_buffer[0].type = SINGLE_HUE;
-    // command_buffer[0].data[0] = HUE_RED;
+    command_buffer[0].type = SINGLE_HUE;
+    command_buffer[0].data[0] = STRIP_INDEX_ALL;
+    command_buffer[0].data[1] = HUE_RED;
 
-    // command_buffer[1].type = COLOR_WIPE;
-    // command_buffer[1].data[0] = HUE_BLUE;
-    // command_buffer[1].data[1] = 50;
+    // command_buffer[0].type = COLOR_WIPE;
+    // command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
+    // command_buffer[0].data[1] = HUE_BLUE;
+    // command_buffer[0].data[2] = 50;
 
-    command_buffer[1].type = GRAVITY;
-    command_buffer[1].data[0] = 11;
-    command_buffer[1].data[1] = 0;
-    command_buffer[1].data[2] = 25;
-    command_buffer[1].data[3] = 100;
-    command_buffer[1].data[4] = 2;
+    // command_buffer[1].type = GRAVITY;
+    // command_buffer[1].data[0] = 11;
+    // command_buffer[1].data[1] = 0;
+    // command_buffer[1].data[2] = 25;
+    // command_buffer[1].data[3] = 100;
+    // command_buffer[1].data[4] = 2;
 
     // command_buffer[1].type = SPARKLE;
     // command_buffer[1].data[0] = 0;
@@ -51,11 +53,11 @@ void Commands::init() {
     // command_buffer[1].data[2] = 15;
     // command_buffer[1].data[3] = 10;
 
-    // command_buffer[1].type = PING_PONG;
-    // command_buffer[1].data[0] = 10;
-    // command_buffer[1].data[1] = 0;
-    // command_buffer[1].data[2] = 10;
-    // command_buffer[1].data[3] = 50;
+    // command_buffer[0].type = PING_PONG;
+    // command_buffer[0].data[0] = 12;
+    // command_buffer[0].data[1] = 0;
+    // command_buffer[0].data[2] = 10;
+    // command_buffer[0].data[3] = 50;
     //
     // command_buffer[2].type = PING_PONG;
     // command_buffer[2].data[0] = 10;
@@ -92,6 +94,10 @@ void Commands::process(char* command_bin) {
 }
 
 void Commands::run() {
+  
+  char args[1] = {0};
+  off(args);
+
   for (int i=0; i<COMMAND_BUFFER_SIZE; i++) {
     switch(command_buffer[i].type) {
       case SINGLE_HUE        : single_hue(command_buffer[i].data); break;
@@ -218,7 +224,7 @@ int strip_index_length(int strip_index) {
   } else if (strip_index < total_count || strip_index == total_count + 1){
     return BRANCH_PIXEL_COUNT;
   } else {
-    return total_count;
+    return TRUNK_PIXEL_COUNT + BRANCH_PIXEL_COUNT;
   }
 }
 
@@ -239,52 +245,44 @@ float wave_propagation(float pixel_pos,float phase_offset, float phase_shift_spe
 // -- Effects ------------------------------------------------
 
 void Commands::single_hue(char * data) {
-  for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
-    for(int j=0; j< TRUNK_PIXEL_COUNT; j++) {
-      set_trunk_led(i, j, CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE));
-    }
-  }
-  for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
-    for(int j=0; j< BRANCH_PIXEL_COUNT; j++) {
-      branch_leds[i][j] = CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE);
-    }
+  int strip_index = data[0];
+  int hue = data[1];
+
+  for (int i=0; i<strip_index_length(strip_index); i++) {
+    set_led(strip_index, i, CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE));
   }
 }
 
 void Commands::single_color(char * data) {
-  for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
-    for(int j=0; j< TRUNK_PIXEL_COUNT; j++) {
-      set_trunk_led(i, j, CHSV(data[0], data[1], data[2]));
-    }
-  }
-  for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
-    for(int j=0; j< BRANCH_PIXEL_COUNT; j++) {
-      branch_leds[i][j] = CHSV(data[0], data[1], data[2]);
-    }
+  int strip_index = data[0];
+  int hue = data[1];
+  int saturation = data[2];
+  int value = data[3];
+
+  for (int i=0; i<strip_index_length(strip_index); i++) {
+    set_led(strip_index, i, CHSV(hue, saturation, value));
   }
 }
 
 void Commands::color_wipe(char * data) {
-  for(int j=0; j<((millis()*data[1]/1000) + data[2]) % (TRUNK_PIXEL_COUNT+BRANCH_PIXEL_COUNT); j++) {
-    if (j < TRUNK_PIXEL_COUNT) {
-      for (int i=0; i<TRUNK_STRIP_COUNT; i++) {
-        set_trunk_led(i, j, CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE));
-      }
-    } else {
-      for (int i=0; i<BRANCH_STRIP_COUNT; i++) {
-        branch_leds[i][j-TRUNK_PIXEL_COUNT] = CHSV(data[0], DEFAULT_SATURATION, DEFAULT_VALUE);
-      }
-    }
+  int strip_index = data[0];
+  int hue = data[1];
+  int rate = data[2]; // pixel/second
+  int offset = data[3]; // pixel
+
+  for(int i=0; i<((millis()*rate/1000) + offset) % (strip_index_length(strip_index)); i++) {
+    set_led(strip_index, i, CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE));
   }
 }
 
 void Commands::off(char * data) {
-  char args[3] = {0,0,0};
+  char args[4] = {STRIP_INDEX_ALL, 0,0, 0};
   single_color(args);
 }
 
 void Commands::white(char * data) {
-  char args[3] = {0,0,data[1]};
+  int value = data[1];
+  char args[4] = {STRIP_INDEX_ALL, 0, 0, value};
   single_color(args);
 }
 
@@ -292,28 +290,19 @@ void Commands::rainbow_sine(char * data) {
   int value = 0;
   int hue = 0;
 
-  int rate = data[0];
-  int wavelength = data[1];
-  int width_percent = max(1, data[2]);
+  int strip_index = data[0];
+  int rate = data[1];
+  int wavelength = data[2];
+  int width_percent = max(1, data[3]);
+  int max_value = data[4];
   int min_value = 75;
-  int max_value = data[3];
 
-  int width_pixel = float(BRANCH_OFFSET + BRANCH_PIXEL_COUNT) * float(width_percent) / 100.0;
+  int width_pixel = float(strip_index_length(strip_index)) * float(width_percent) / 100.0;
 
-  for(int i=0; i<TRUNK_PIXEL_COUNT; i++) {
+  for(int i=0; i<strip_index_length(strip_index); i++) {
     value = min_value + wave_propagation(i, 0, rate, wavelength) * (max_value-min_value);
-    for(int j=0; j<TRUNK_STRIP_COUNT; j++) {
-      hue = float(i%width_pixel)/float(width_pixel)*255.0;
-      set_trunk_led(j, i, CHSV(hue, DEFAULT_SATURATION, value));
-    }
-  }
-
-  for(int i=0; i<BRANCH_PIXEL_COUNT; i++) {
-    value = min_value + wave_propagation(i+BRANCH_OFFSET, 0, rate, wavelength) * (max_value-min_value);
-    for(int j=0; j<BRANCH_STRIP_COUNT; j++) {
-      hue = float(i+BRANCH_OFFSET%width_pixel)/float(width_pixel)*255.0;
-      branch_leds[j][i] = CHSV(hue, DEFAULT_SATURATION, value);
-    }
+    hue = float(i%width_pixel)/float(width_pixel)*255.0;
+    set_led(strip_index, i, CHSV(hue, DEFAULT_SATURATION, value));
   }
 }
 
