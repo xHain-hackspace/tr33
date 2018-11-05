@@ -428,8 +428,8 @@ void Commands::gravity(char * data) {
   gravity_width = data[2];
   gravity_rate = data[3];
   int frequency = data[4];
-
-  if (frequency > 0 && 10000 / (millis() - gravity_last_ball) < frequency){
+  
+  if (frequency > 0 && gravity_last_ball < millis() && 10000 / (millis() - gravity_last_ball) < frequency){
     gravity_event();
   }
 
