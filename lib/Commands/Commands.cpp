@@ -35,6 +35,8 @@ void Commands::init() {
     command_buffer[0].data[0] = STRIP_INDEX_ALL;
     command_buffer[0].data[1] = HUE_RED;
 
+    // command_buffer[0].type = SPIRAL;
+
     // command_buffer[0].type = COLOR_WIPE;
     // command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
     // command_buffer[0].data[1] = HUE_BLUE;
@@ -109,6 +111,7 @@ void Commands::run() {
       case OFF               : off(command_buffer[i].data); break;
       case WHITE             : white(command_buffer[i].data); break;
       case SPARKLE           : sparkle(command_buffer[i].data); break;
+      case SPIRAL            : spiral(command_buffer[i].data); break;
     }
   }
 
@@ -327,8 +330,11 @@ void render_ball(int strip_index, float center, float width, CRGB color, float b
   }
 }
 
-float ping_pong_center(float rate, float length) {
-  float position = float(millis()) / 1000.0 * rate;
+
+float ping_pong_center(float bpm, float length, float rel_offset) {
+  float offset = rel_offset / 100.0 * length * 2;
+  float rate = length / (60.0 / bpm);
+  float position = offset + float(millis()) / 1000.0 * rate;
   float rem = fmod(position, (length * 2.0));
 
   if (rem < length) {
@@ -340,11 +346,12 @@ float ping_pong_center(float rate, float length) {
 
 void Commands::ping_pong(char * data) {
   int strip_index = data[0];
-  int hue = data[1];
-  int rate = data[2];
+  int offset = data[1];
+  int hue = data[2];
+  int bpm = data[3];
   float width = float(data[3]) / 10.0;
   float length = strip_index_length(strip_index);
-  float center = ping_pong_center(rate, length);
+  float center = ping_pong_center(bpm, length, offset);
 
   render_ball(strip_index, center, width, CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE), 1);
 }
@@ -482,4 +489,25 @@ void Commands::sparkle(char * data) {
       }
     }
   }
+}
+
+// spiral
+
+void Commands::spiral(char * data) {
+  int hue = 0;
+  float slope = 3.0;
+  int strip_index = STRIP_INDEX_ALL_TRUNKS;
+
+  float current_height = 0.0;
+  int current_strip = 0;
+
+  while (current_height <= strip_index_length(strip_index)) {
+    render_ball(current_strip, current_height, 1, CHSV(0, DEFAULT_SATURATION, DEFAULT_VALUE), 1);
+    current_height = current_height + slope;
+    current_strip = current_strip + 1;
+    if (current_strip > 3) {
+      current_strip = 0;
+    }
+  } 
+
 }

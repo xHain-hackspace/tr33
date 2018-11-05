@@ -68,6 +68,7 @@ struct Command {
 #define OFF                 7   
 #define WHITE               8   
 #define SPARKLE             9   
+#define SPIRAL             10    
 
 // -- EVENTS --------------------------------------------------------------------------
 
@@ -92,6 +93,7 @@ class Commands {
      void off(char* data);
      void white(char* data);
      void sparkle(char* data);
+     void spiral(char* data);
 
      // events
      void gravity_event();
