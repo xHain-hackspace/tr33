@@ -31,9 +31,9 @@ void Commands::init() {
     // command_buffer[0].data[2] = 100;
     // command_buffer[0].data[3] = 255;
 
-    // command_buffer[0].type = SINGLE_HUE;
-    // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-    // command_buffer[0].data[1] = HUE_RED;
+    command_buffer[0].type = SINGLE_HUE;
+    command_buffer[0].data[0] = STRIP_INDEX_ALL;
+    command_buffer[0].data[1] = HUE_RED;
 
     // command_buffer[0].type = SPIRAL;
 
@@ -55,12 +55,12 @@ void Commands::init() {
     // command_buffer[1].data[2] = 15;
     // command_buffer[1].data[3] = 10;
 
-    command_buffer[0].type = PING_PONG;
-    command_buffer[0].data[0] = STRIP_INDEX_ALL_TRUNKS;
-    command_buffer[0].data[1] = 0;
-    command_buffer[0].data[2] = 0;
-    command_buffer[0].data[3] = 30;
-    command_buffer[0].data[4] = 15;
+    // command_buffer[0].type = PING_PONG;
+    // command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
+    // command_buffer[0].data[1] = 0;
+    // command_buffer[0].data[2] = 0;
+    // command_buffer[0].data[3] = 60;
+    // command_buffer[0].data[4] = 20;
 
 
 }
@@ -313,8 +313,21 @@ void render_ball(int strip_index, float center, float width, CRGB color, float b
 
 void render_tail(int strip_index, float start, float end, CRGB color) {
   int strip_length = strip_index_length(strip_index);
-  float max_brightness = 0.1;
+  float max_brightness = 0.05;
   float slope = max_brightness / (start - end);
+
+  for (int i=-strip_length; i<0; i++) {
+    float brightness = slope * (float(i) - end);
+    if (brightness < max_brightness && brightness > 0) {
+      fade_led(strip_index, -i - 1, color, brightness);
+    }
+  }
+  for (int i=strip_length; i<strip_length*2; i++) {
+    float brightness = slope * (float(i) - end);
+    if (brightness < max_brightness && brightness > 0) {
+      fade_led(strip_index, 2*(strip_length)-i, color, brightness);
+    }
+  }
 
   for (int i=0; i<strip_length; i++) {
     float brightness = slope * (float(i) - end);
@@ -356,10 +369,10 @@ void Commands::ping_pong(char * data) {
 
   if(abs_center < length) {
     center = abs_center;
-    tail_end = center - rate;
+    tail_end = center - rate / 3.0;
   } else {
     center = 2.0*(length-1.0)-abs_center;
-    tail_end = center + rate;
+    tail_end = center + rate / 3.0;
   }
 
   render_ball(strip_index, center, width, color, 1);
