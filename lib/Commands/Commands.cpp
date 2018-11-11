@@ -31,9 +31,9 @@ void Commands::init() {
     // command_buffer[0].data[2] = 100;
     // command_buffer[0].data[3] = 255;
 
-    command_buffer[0].type = SINGLE_HUE;
-    command_buffer[0].data[0] = STRIP_INDEX_ALL;
-    command_buffer[0].data[1] = HUE_RED;
+    // command_buffer[0].type = SINGLE_HUE;
+    // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+    // command_buffer[0].data[1] = HUE_RED;
 
     // command_buffer[0].type = SPIRAL;
 
@@ -55,31 +55,12 @@ void Commands::init() {
     // command_buffer[1].data[2] = 15;
     // command_buffer[1].data[3] = 10;
 
-    // command_buffer[0].type = PING_PONG;
-    // command_buffer[0].data[0] = 12;
-    // command_buffer[0].data[1] = 0;
-    // command_buffer[0].data[2] = 10;
-    // command_buffer[0].data[3] = 50;
-    //
-    // command_buffer[2].type = PING_PONG;
-    // command_buffer[2].data[0] = 10;
-    // command_buffer[2].data[1] = 0;
-    // command_buffer[2].data[2] = 13;
-    // command_buffer[2].data[3] = 50;
-    //
-    // command_buffer[3].type = PING_PONG;
-    // command_buffer[3].data[0] = 10;
-    // command_buffer[3].data[1] = 0;
-    // command_buffer[3].data[2] = 15;
-    // command_buffer[3].data[3] = 50;
-
-    // for(int i=1; i<5; i++) {
-    //   command_buffer[i].type = PING_PONG;
-    //   command_buffer[i].data[0] = i-1;
-    //   command_buffer[i].data[1] = 0;
-    //   command_buffer[i].data[2] = 10;
-    //   command_buffer[i].data[3] = 30;
-    // }
+    command_buffer[0].type = PING_PONG;
+    command_buffer[0].data[0] = STRIP_INDEX_ALL_TRUNKS;
+    command_buffer[0].data[1] = 0;
+    command_buffer[0].data[2] = 0;
+    command_buffer[0].data[3] = 30;
+    command_buffer[0].data[4] = 15;
 
 
 }
@@ -330,6 +311,18 @@ void render_ball(int strip_index, float center, float width, CRGB color, float b
   }
 }
 
+void render_tail(int strip_index, float start, float end, CRGB color) {
+  int strip_length = strip_index_length(strip_index);
+  float max_brightness = 0.1;
+  float slope = max_brightness / (start - end);
+
+  for (int i=0; i<strip_length; i++) {
+    float brightness = slope * (float(i) - end);
+    if (brightness < max_brightness && brightness > 0) {
+      fade_led(strip_index, i, color, brightness);
+    }
+  }
+}
 
 float ping_pong_center(float bpm, float length, float rel_offset) {
   float offset = rel_offset / 100.0 * length * 2;
@@ -346,14 +339,31 @@ float ping_pong_center(float bpm, float length, float rel_offset) {
 
 void Commands::ping_pong(char * data) {
   int strip_index = data[0];
-  int offset = data[1];
+  float rel_offset = float(data[1]) / 100.0;
   int hue = data[2];
   int bpm = data[3];
-  float width = float(data[3]) / 10.0;
-  float length = strip_index_length(strip_index);
-  float center = ping_pong_center(bpm, length, offset);
+  float width = float(data[4]) / 10.0;
 
-  render_ball(strip_index, center, width, CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE), 1);
+  float length = strip_index_length(strip_index);
+  float offset = rel_offset * length * 2;
+  float rate = length / (60.0 / bpm);
+  float total_distance = offset + float(millis()) / 1000.0 * rate;
+  float abs_center = fmod(total_distance, (length * 2.0));
+  CRGB color = CHSV(hue, DEFAULT_SATURATION, DEFAULT_VALUE);
+
+  float center, tail_end;
+
+
+  if(abs_center < length) {
+    center = abs_center;
+    tail_end = center - rate;
+  } else {
+    center = 2.0*(length-1.0)-abs_center;
+    tail_end = center + rate;
+  }
+
+  render_ball(strip_index, center, width, color, 1);
+  render_tail(strip_index, center, tail_end, color);
 }
 
 // Gravity effect
