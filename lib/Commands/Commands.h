@@ -3,26 +3,28 @@
 // trunk config
 #define TRUNK_PIN_1 25
 #define TRUNK_PIN_2 26
+#define TRUNK_PIN_3 14
 #define HW_TRUNK_PIXEL_COUNT 100
-#define HW_TRUNK_STRIP_COUNT 2
+#define HW_TRUNK_STRIP_COUNT 3
 #define TRUNK_PIXEL_COUNT 50
-#define TRUNK_STRIP_COUNT 4
+#define TRUNK_STRIP_COUNT 6
 
 // branch config
 #define BRANCH_PIN_1 4
 #define BRANCH_PIN_2 12
 #define BRANCH_PIN_3 13
-#define BRANCH_PIN_4 14
-#define BRANCH_PIN_5 15
-#define BRANCH_PIN_6 21
+#define BRANCH_PIN_4 15
+#define BRANCH_PIN_5 21
+#define BRANCH_PIN_6 22
 #define BRANCH_PIXEL_COUNT 90
 #define BRANCH_STRIP_COUNT 6
 #define BRANCH_OFFSET 50
 
 // strip index
-#define STRIP_INDEX_ALL_TRUNKS 10
-#define STRIP_INDEX_ALL_BRANCHES 11
-#define STRIP_INDEX_ALL 12
+#define STRIP_INDEX_ALL_TRUNKS TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT
+#define STRIP_INDEX_ALL_BRANCHES TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT + 1
+#define STRIP_INDEX_ALL TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT + 2
+#define STRIP_INDEX_SPIRAL TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT + 3
 
 // colors
 #define HUE_RED 0
@@ -46,7 +48,12 @@
 #define GRAVITY_DAMPING 70
 // #define GRAVITY_VALUE 18
 // #define GRAVITY_DAMPING 100
-#define MAX_SPARKLES 200
+#define MAX_SPARKLES 500
+#define SPARKLES_DIM_RATE 40
+
+#define BALL_TYPE_SQUARE 0
+#define BALL_TYPE_SINE   1 
+#define BALL_TYPE_COMET  2
 
 struct Command {
   uint8_t index;
@@ -93,7 +100,7 @@ class Commands {
      void off(char* data);
      void white(char* data);
      void sparkle(char* data);
-     void spiral(char* data);
+    //  void spiral(char* data);
 
      // events
      void gravity_event();

@@ -2,7 +2,6 @@
 #include <Commands.h>
 
 #define SERIAL_BUFFER_SIZE 256
-#define LISTEN_PORT 1337
 char serial_buffer[SERIAL_BUFFER_SIZE];
 
 Commands commands = Commands();
@@ -12,6 +11,7 @@ HardwareSerial CommandSerial(2);
 
 void setup() {
   DebugSerial.begin(230400);
+  Serial.begin(230400);
   while (!DebugSerial) {}
 
   CommandSerial.begin(230400);
@@ -25,6 +25,7 @@ void setup() {
   digitalWrite(LED_BUILTIN, HIGH);
 
   DebugSerial.println("Startup complete");
+  CommandSerial.println("INIT");
 }
 
 
