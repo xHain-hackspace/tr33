@@ -33,9 +33,9 @@ void Commands::init() {
     // command_buffer[0].data[2] = 100;
     // command_buffer[0].data[3] = 255;
 
-    command_buffer[0].type = OFF;
+    command_buffer[0].type = SINGLE_HUE;
     command_buffer[0].data[0] = STRIP_INDEX_ALL;
-    command_buffer[0].data[1] = HUE_ORANGE;
+    command_buffer[0].data[1] = HUE_RED;
 
     // command_buffer[0].type = SPIRAL;
 
@@ -57,13 +57,13 @@ void Commands::init() {
     // command_buffer[1].data[2] = 15;
     // command_buffer[1].data[3] = 10;
 
-    command_buffer[1].type = PING_PONG;
-    command_buffer[1].data[0] = STRIP_INDEX_ALL_TRUNKS;
-    command_buffer[1].data[1] = BALL_TYPE_COMET;
-    command_buffer[1].data[2] = 0;
-    command_buffer[1].data[3] = 0;
-    command_buffer[1].data[4] = 15;
-    command_buffer[1].data[5] = 80;
+    // command_buffer[1].type = PING_PONG;
+    // command_buffer[1].data[0] = STRIP_INDEX_ALL_TRUNKS;
+    // command_buffer[1].data[1] = BALL_TYPE_COMET;
+    // command_buffer[1].data[2] = 0;
+    // command_buffer[1].data[3] = 0;
+    // command_buffer[1].data[4] = 15;
+    // command_buffer[1].data[5] = 80;
 }
 
 void Commands::process(char* command_bin) {
@@ -468,9 +468,9 @@ void Commands::gravity_event() {
 void Commands::gravity(char * data) {
   gravity_strip_index = data[0];
   gravity_hue = data[1];
-  gravity_width = data[2];
-  gravity_rate = data[3];
-  int frequency = data[4];
+  // gravity_width = data[2];
+  gravity_rate = data[2];
+  int frequency = data[3];
 
   if (frequency > 0 && gravity_last_ball < millis() && 10000 / (millis() - gravity_last_ball) < frequency){
     gravity_event();
@@ -501,11 +501,24 @@ struct Sparkle {
 
 Sparkle sparkles[MAX_SPARKLES];
 
+uint8_t random_strip(uint8_t strip_index) {
+  if (strip_index < BRANCH_STRIP_COUNT + TRUNK_STRIP_COUNT) {
+    return strip_index;
+  } else if (strip_index == STRIP_INDEX_ALL) {
+    return random8(0, TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT - 1);
+  } else if (strip_index == STRIP_INDEX_ALL_TRUNKS) {
+    return random8(0, TRUNK_STRIP_COUNT - 1);
+  } else if (strip_index == STRIP_INDEX_ALL_BRANCHES) {
+    return random8(TRUNK_STRIP_COUNT, TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT - 1);
+  }
+}
+
 void Commands::sparkle(char * data) {
-  uint8_t hue = random_or_value(data[0], 0, 255);
-  uint8_t saturation = data[1];
-  float width = float(random_or_value(data[2], 0, 255))/10.0;
-  uint8_t frequency = data[3];  // sparkles per seconds
+  uint8_t strip_index = data[0];
+  uint8_t hue = random_or_value(data[1], 0, 255);
+  uint8_t saturation = data[2];
+  float width = float(random_or_value(data[3], 0, 255))/10.0;
+  uint8_t frequency = data[4];  // sparkles per seconds
   int now = millis();
 
   if (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency){
@@ -516,7 +529,7 @@ void Commands::sparkle(char * data) {
     sparkles[sparkle_index].color = CHSV(hue, saturation, DEFAULT_VALUE);
     sparkles[sparkle_index].width = width;
     sparkles[sparkle_index].brightness = float(random(10))/20.0 + 0.5;
-    sparkles[sparkle_index].strip_index = random8(TRUNK_STRIP_COUNT, TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT - 1);
+    sparkles[sparkle_index].strip_index = random_strip(strip_index);
     sparkles[sparkle_index].center = random(0, strip_index_length(sparkles[sparkle_index].strip_index)-1);
     sparkles[sparkle_index].start_time = now;
   }
