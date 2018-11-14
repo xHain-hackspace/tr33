@@ -1,13 +1,14 @@
-#include <Arduino.h>
 #include <Commands.h>
-#include <Overrides.h>
 
 CRGB trunk_leds[HW_TRUNK_STRIP_COUNT][HW_TRUNK_PIXEL_COUNT];
 CRGB branch_leds[BRANCH_STRIP_COUNT][BRANCH_PIXEL_COUNT];
 
 Command command_buffer[COMMAND_BUFFER_SIZE];
 
+CRGBPalette256 currentPalette;
+
 Commands::Commands(void) {
+  // todo: use loops
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_1>(trunk_leds[0], HW_TRUNK_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_2>(trunk_leds[1], HW_TRUNK_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_3>(trunk_leds[2], HW_TRUNK_PIXEL_COUNT);
@@ -18,52 +19,21 @@ Commands::Commands(void) {
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_4>(branch_leds[3], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_5>(branch_leds[4], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_6>(branch_leds[5], BRANCH_PIXEL_COUNT);
-
 }
 
 void Commands::init() {
-    // command_buffer[0].type = SINGLE_COLOR;
-    // command_buffer[0].data[0] = 0;
-    // command_buffer[0].data[1] = 0;
-    // command_buffer[0].data[2] = 0;
+  // currentPalette = DEFAULT_PALETTE;  
+  currentPalette = Rainbow_gp;  
+  // currentPalette = CloudColors_p;  
+  // currentPalette = ForestColors_p;  
+  // currentPalette = LavaColors_p;  
+  // currentPalette = OceanColors_p;  
+  // currentPalette = PartyColors_p;  
+  // currentPalette = HeatColors_p;  
 
-    // command_buffer[0].type = RAINBOW_SINE;
-    // command_buffer[0].data[0] = 10;
-    // command_buffer[0].data[1] = 100;
-    // command_buffer[0].data[2] = 100;
-    // command_buffer[0].data[3] = 255;
-
-    command_buffer[0].type = SINGLE_HUE;
-    command_buffer[0].data[0] = STRIP_INDEX_ALL;
-    command_buffer[0].data[1] = HUE_RED;
-
-    // command_buffer[0].type = SPIRAL;
-
-    // command_buffer[0].type = COLOR_WIPE;
-    // command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
-    // command_buffer[0].data[1] = HUE_BLUE;
-    // command_buffer[0].data[2] = 50;
-
-    // command_buffer[1].type = GRAVITY;
-    // command_buffer[1].data[0] = 11;
-    // command_buffer[1].data[1] = 0;
-    // command_buffer[1].data[2] = 25;
-    // command_buffer[1].data[3] = 100;
-    // command_buffer[1].data[4] = 2;
-
-    // command_buffer[1].type = SPARKLE;
-    // command_buffer[1].data[0] = 0;
-    // command_buffer[1].data[1] = 255;
-    // command_buffer[1].data[2] = 15;
-    // command_buffer[1].data[3] = 10;
-
-    // command_buffer[1].type = PING_PONG;
-    // command_buffer[1].data[0] = STRIP_INDEX_ALL_TRUNKS;
-    // command_buffer[1].data[1] = BALL_TYPE_COMET;
-    // command_buffer[1].data[2] = 0;
-    // command_buffer[1].data[3] = 0;
-    // command_buffer[1].data[4] = 15;
-    // command_buffer[1].data[5] = 80;
+  command_buffer[0].type = SINGLE_HUE;
+  command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  command_buffer[0].data[1] = HUE_RED;
 }
 
 void Commands::process(char* command_bin) {
@@ -100,19 +70,6 @@ void Commands::run() {
   FastLED.show();
 }
 
-void Commands::start_sequence() {
-  char data[64];
-  data[0] = HUE_BLUE;
-  single_hue(data);
-
-  data[0] = HUE_RED;
-  data[1] = 10;
-  data[2] = 0;
-  color_wipe(data);
-
-  FastLED.show();
-}
-
 // -- Set leds ----------------------------------------
 void set_trunk_led(int trunk, int led, CRGB color) {
   if(trunk < HW_TRUNK_STRIP_COUNT) {
@@ -130,7 +87,7 @@ CRGB get_trunk_led(int trunk, int led) {
   }
 }
 
-int strip_index_length(int strip_index) {
+int Commands::strip_index_length(int strip_index) {
   if(strip_index < TRUNK_STRIP_COUNT || strip_index == STRIP_INDEX_ALL_TRUNKS) {
     return TRUNK_PIXEL_COUNT;
   } else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT || strip_index == STRIP_INDEX_ALL_BRANCHES) {
@@ -149,7 +106,7 @@ int spiral_led_index(int index) {
   return index;
 }
 
-void set_led(int strip_index, int led, CRGB color) {
+void Commands::set_led(int strip_index, int led, CRGB color) {
   if (led > 0 && led < strip_index_length(strip_index)) {
     // single trunk
     if (strip_index < TRUNK_STRIP_COUNT) {
@@ -185,7 +142,6 @@ void set_led(int strip_index, int led, CRGB color) {
   }
 }
 
-
 CRGB get_led(int strip_index, int led) {
   // single trunk
   if (strip_index < TRUNK_STRIP_COUNT) {
@@ -213,7 +169,7 @@ CRGB get_led(int strip_index, int led) {
 }
 
 // fade_value: min: 0.0, max: 1.0
-void fade_led(int strip_index, int led, CRGB target, float intensity) {
+void Commands::fade_led(int strip_index, int led, CRGB target, float intensity) {
   if (led > 0 && led < strip_index_length(strip_index)) {
     CRGB current = get_led(strip_index, led);
 
@@ -283,29 +239,8 @@ void Commands::white(char * data) {
   single_color(args);
 }
 
-void Commands::rainbow_sine(char * data) {
-  int value = 0;
-  int hue = 0;
-
-  int strip_index = data[0];
-  int rate = data[1];
-  int wavelength = data[2];
-  int width_percent = max(1, data[3]);
-  int max_value = data[4];
-  int min_value = 75;
-
-  int width_pixel = float(strip_index_length(strip_index)) * float(width_percent) / 100.0;
-
-  for(int i=0; i<strip_index_length(strip_index); i++) {
-    value = min_value + wave_propagation(i, 0, rate, wavelength) * (max_value-min_value);
-    hue = float(i%width_pixel)/float(width_pixel)*255.0;
-    set_led(strip_index, i, CHSV(hue, DEFAULT_SATURATION, value));
-  }
-}
-
-
 // ball rendering
-void render_square_ball(int strip_index, float center, float width, CHSV color, float ball_intensity) {
+void Commands::render_square_ball(int strip_index, float center, float width, CHSV color, float ball_intensity) {
   int strip_length = strip_index_length(strip_index);
   int start_led = max(0, ceilf(center-width/2.0));
   int end_led = min(strip_length, floorf(center+width/2.0));
@@ -315,7 +250,7 @@ void render_square_ball(int strip_index, float center, float width, CHSV color, 
   }
 }
 
-void render_sine_ball(int strip_index, float center, float width, CHSV color, float ball_intensity) {
+void Commands::render_sine_ball(int strip_index, float center, float width, CHSV color, float ball_intensity) {
   int strip_length = strip_index_length(strip_index);
   int start_led = max(0, ceilf(center-width/2.0));
   int end_led = min(strip_length, floorf(center+width/2.0));
@@ -328,7 +263,7 @@ void render_sine_ball(int strip_index, float center, float width, CHSV color, fl
   }
 }
 
-void render_tail(int strip_index, float center, float length, CHSV color, bool bounce_top) {
+void Commands::render_tail(int strip_index, float center, float length, CHSV color, bool bounce_top) {
   if (length != 0) {
     if (length > 0) {
       center = center - 0.5;
@@ -360,7 +295,7 @@ void render_tail(int strip_index, float center, float length, CHSV color, bool b
   }
 }
 
-void render_ball(int strip_index, int ball_type, float center, float width, CHSV color, float ball_intensity, bool bounce_top) {
+void Commands::render_ball(int strip_index, int ball_type, float center, float width, CHSV color, float ball_intensity, bool bounce_top) {
   switch(ball_type) {
     case BALL_TYPE_SQUARE:
       render_square_ball(strip_index, center, fabs(width), color, ball_intensity);

@@ -1,3 +1,4 @@
+#include <Arduino.h>
 #include <FastLED.h>
 
 // trunk config
@@ -40,6 +41,7 @@
 #define COMMAND_BUFFER_SIZE 16
 
 // effect config
+#define DEFAULT_PALETTE RainbowColors_p
 #define DEFAULT_SATURATION 255
 #define DEFAULT_VALUE 255
 
@@ -54,6 +56,8 @@
 #define BALL_TYPE_SQUARE 0
 #define BALL_TYPE_SINE   1 
 #define BALL_TYPE_COMET  2
+
+#include <Overrides.h>
 
 struct Command {
   uint8_t index;
@@ -81,12 +85,13 @@ struct Command {
 
 #define GRAVITY_EVENT       100
 
+extern CRGBPalette256 currentPalette;
+
 class Commands {
    public:
      Commands();
-     void process(char* command);
      void init();
-     void start_sequence();
+     void process(char* command);
      void run();
 
    private:
@@ -102,6 +107,16 @@ class Commands {
      void sparkle(char* data);
     //  void spiral(char* data);
 
-     // events
-     void gravity_event();
-};
+    // events
+    void gravity_event();
+
+    // set leds
+    void set_led(int strip_index, int led, CRGB color);
+    void fade_led(int strip_index, int led, CRGB target, float intensity);
+    int strip_index_length(int strip_index);
+
+    // ball rendering
+    void render_ball(int strip_index, int ball_type, float center, float width, CHSV color, float ball_intensity, bool bounce_top);
+    void render_square_ball(int strip_index, float center, float width, CHSV color, float ball_intensity);
+    void render_sine_ball(int strip_index, float center, float width, CHSV color, float ball_intensity);
+    void render_tail(int strip_index, float center, float length, CHSV color, bool bounce_top);};

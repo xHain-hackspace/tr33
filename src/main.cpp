@@ -1,4 +1,3 @@
-#include <Arduino.h>
 #include <Commands.h>
 
 #define SERIAL_BUFFER_SIZE 256
