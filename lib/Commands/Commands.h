@@ -42,20 +42,12 @@
 
 // effect config
 #define DEFAULT_PALETTE RainbowColors_p
-#define DEFAULT_SATURATION 255
-#define DEFAULT_VALUE 255
 
-#define MAX_GRAVITY_BALLS 50
+#define GRAVITY_MAX_BALLS 50
 #define GRAVITY_VALUE 50
 #define GRAVITY_DAMPING 70
-// #define GRAVITY_VALUE 18
-// #define GRAVITY_DAMPING 100
 #define MAX_SPARKLES 500
 #define SPARKLES_DIM_RATE 40
-
-#define BALL_TYPE_SQUARE 0
-#define BALL_TYPE_SINE   1 
-#define BALL_TYPE_COMET  2
 
 #include <Overrides.h>
 
@@ -65,26 +57,28 @@ struct Command {
   char data[COMMAND_MAX_DATA];
 };
 
-// -- COMMANDS -----------------------------------------------------------------------
-// All commands take a pointer to a buffer with its parameters.
-// The comments indicate which data is expected at a certain byte index
+// -- COMMANDS ---------------------------------------------------------------------------
 
 #define DISABLE             0   
-#define SINGLE_HUE          1   
-#define SINGLE_COLOR        2   
-#define COLOR_WIPE          3   
+#define SINGLE_COLOR        1   
 #define RAINBOW_SINE        4   
 #define PING_PONG           5   
 #define GRAVITY             6   
-#define OFF                 7   
-#define WHITE               8   
 #define SPARKLE             9   
-#define SPIRAL             10    
+// #define SPIRAL             10    
 
-// -- EVENTS --------------------------------------------------------------------------
+// -- EVENTS ------------------------------------------------------------------------------
 
 #define GRAVITY_EVENT     100
 #define SET_PALETTE       101
+
+// -- BALL_TYPES --------------------------------------------------------------------------
+
+#define BALL_TYPE_SQUARE        0
+#define BALL_TYPE_SINE          1 
+#define BALL_TYPE_COMET         2
+#define BALL_TYPE_FILL_TOP      3
+#define BALL_TYPE_FILL_BOTTOM   4
 
 extern CRGBPalette256 currentPalette;
 
@@ -97,14 +91,10 @@ class Commands {
 
    private:
      // commands
-     void single_hue(char* data);
      void single_color(char* data);
-     void color_wipe(char* data);
      void rainbow_sine(char* data);
      void ping_pong(char* data);
      void gravity(char* data);
-     void off(char* data);
-     void white(char* data);
      void sparkle(char* data);
     //  void spiral(char* data);
 
@@ -113,12 +103,20 @@ class Commands {
     void set_palette(char * data);
 
     // set leds
-    void set_led(int strip_index, int led, CRGB color);
-    void fade_led(int strip_index, int led, CRGB target, float intensity);
-    int strip_index_length(int strip_index);
+    void all_off();
+    void set_led(uint8_t strip_index, int led, CRGB color);
+    void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
+    int strip_index_length(uint8_t strip_index);
 
     // ball rendering
-    void render_ball(int strip_index, int ball_type, float center, float width, CHSV color, float ball_intensity, bool bounce_top);
-    void render_square_ball(int strip_index, float center, float width, CHSV color, float ball_intensity);
-    void render_sine_ball(int strip_index, float center, float width, CHSV color, float ball_intensity);
-    void render_tail(int strip_index, float center, float length, CHSV color, bool bounce_top);};
+    void render_ball(uint8_t strip_index, int ball_type, float center, float width, CRGB color, float ball_brightness, bool bounce_top);
+    void render_square_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
+    void render_sine_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
+    void render_comet(uint8_t strip_index, float center, float length, CRGB color, bool bounce_top);
+    void render_fill_top(uint8_t strip_index, float center, CRGB color);
+    void render_fill_bottom(uint8_t strip_index, float center, CRGB color);
+
+    // helper 
+    uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
+
+};
