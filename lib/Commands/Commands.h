@@ -83,7 +83,8 @@ struct Command {
 
 // -- EVENTS --------------------------------------------------------------------------
 
-#define GRAVITY_EVENT       100
+#define GRAVITY_EVENT     100
+#define SET_PALETTE       101
 
 extern CRGBPalette256 currentPalette;
 
@@ -107,8 +108,9 @@ class Commands {
      void sparkle(char* data);
     //  void spiral(char* data);
 
-    // events
+    // one-off events
     void gravity_event();
+    void set_palette(char * data);
 
     // set leds
     void set_led(int strip_index, int led, CRGB color);

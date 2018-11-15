@@ -22,14 +22,7 @@ Commands::Commands(void) {
 }
 
 void Commands::init() {
-  // currentPalette = DEFAULT_PALETTE;  
-  currentPalette = Rainbow_gp;  
-  // currentPalette = CloudColors_p;  
-  // currentPalette = ForestColors_p;  
-  // currentPalette = LavaColors_p;  
-  // currentPalette = OceanColors_p;  
-  // currentPalette = PartyColors_p;  
-  // currentPalette = HeatColors_p;  
+  currentPalette = DEFAULT_PALETTE; 
 
   command_buffer[0].type = SINGLE_HUE;
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
@@ -38,12 +31,11 @@ void Commands::init() {
 
 void Commands::process(char* command_bin) {
   Command command = *(Command *) command_bin;
-  if (command.type == GRAVITY_EVENT) {
-    gravity_event();
-  } else {
-    if (command.index < COMMAND_BUFFER_SIZE) {
-      command_buffer[command.index] = command;
-    }
+
+  switch(command.type) {
+    case GRAVITY_EVENT    : gravity_event(); break;
+    case SET_PALETTE      : set_palette(command.data); break;
+    default               : if (command.index < COMMAND_BUFFER_SIZE) command_buffer[command.index] = command; break;
   }
 }
 
@@ -501,3 +493,15 @@ void Commands::sparkle(char * data) {
 //   }
 
 // }
+
+void Commands::set_palette(char * data) {
+  switch (data[0]) {
+    case PALETTE_RAINBOW: currentPalette = Rainbow_gp; break; 
+    case PALETTE_CLOUD: currentPalette = CloudColors_p; break; 
+    case PALETTE_FOREST: currentPalette = ForestColors_p; break; 
+    case PALETTE_LAVA: currentPalette = LavaColors_p; break; 
+    case PALETTE_OCEAN: currentPalette = OceanColors_p; break; 
+    case PALETTE_PARTY: currentPalette = PartyColors_p; break; 
+    case PALETTE_HEAT: currentPalette = HeatColors_p; break; 
+  }
+};

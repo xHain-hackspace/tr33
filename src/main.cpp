@@ -6,7 +6,7 @@ char serial_buffer[SERIAL_BUFFER_SIZE];
 Commands commands = Commands();
 
 HardwareSerial DebugSerial(0);
-HardwareSerial CommandSerial(2);
+HardwareSerial CommandSerial(0);
 
 void setup() {
   DebugSerial.begin(230400);
