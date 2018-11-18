@@ -28,6 +28,8 @@ void Commands::init() {
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
   command_buffer[0].data[1] = HUE_RED;
   command_buffer[0].data[2] = 255;
+
+  FastLED.setCorrection(TypicalLEDStrip);
 }
 
 void Commands::process(char* command_bin) {
@@ -35,7 +37,7 @@ void Commands::process(char* command_bin) {
 
   switch(command.type) {
     case GRAVITY_EVENT    : gravity_event(); break;
-    case SET_PALETTE      : set_palette(command.data); break;
+    case UPDATE_SETTINGS  : update_settings(command.data); break;
     default               : if (command.index < COMMAND_BUFFER_SIZE) command_buffer[command.index] = command; break;
   }
 }
@@ -47,6 +49,7 @@ void Commands::run() {
   for (int i=0; i<COMMAND_BUFFER_SIZE; i++) {
     switch(command_buffer[i].type) {
       case SINGLE_COLOR      : single_color(command_buffer[i].data); break;
+      case WHITE             : all_white(); break;
       case RAINBOW_SINE      : rainbow_sine(command_buffer[i].data); break;
       case PING_PONG         : ping_pong(command_buffer[i].data); break;
       case GRAVITY           : gravity(command_buffer[i].data); break;
@@ -170,8 +173,13 @@ void Commands::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
 void Commands::all_off() {
   for(int i=0; i<strip_index_length(STRIP_INDEX_ALL); i++) {
     set_led(STRIP_INDEX_ALL, i, CRGB(0, 0, 0));
-  }
-  
+  }  
+}
+
+void Commands::all_white() {
+  for(int i=0; i<strip_index_length(STRIP_INDEX_ALL); i++) {
+    set_led(STRIP_INDEX_ALL, i, CRGB(255, 255, 255));
+  }  
 }
 
 //
@@ -282,22 +290,7 @@ uint8_t Commands::random_or_value(uint8_t value, uint8_t min, uint8_t max) {
   }
 }
 
-// sparkle effect
-uint8_t sparkle_index = 0;
-
-struct Sparkle {
-  bool enabled;
-  CHSV color;
-  float width;
-  float brightness;
-  uint8_t strip_index;
-  int center;
-  int start_time;
-};
-
-Sparkle sparkles[MAX_SPARKLES];
-
-uint8_t random_strip(uint8_t strip_index) {
+uint8_t Commands::random_strip(uint8_t strip_index) {
   if (strip_index < BRANCH_STRIP_COUNT + TRUNK_STRIP_COUNT) {
     return strip_index;
   } else if (strip_index == STRIP_INDEX_ALL) {
@@ -309,38 +302,6 @@ uint8_t random_strip(uint8_t strip_index) {
   }
 }
 
-void Commands::sparkle(char * data) {
-  uint8_t strip_index = data[0];
-  uint8_t hue = random_or_value(data[1], 0, 255);
-  uint8_t saturation = data[2];
-  float width = float(random_or_value(data[3], 0, 255))/10.0;
-  uint8_t frequency = data[4];  // sparkles per seconds
-  int now = millis();
-
-  if (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency){
-    if (sparkle_index ++ >= MAX_SPARKLES) {
-      sparkle_index = 0;
-    }
-    sparkles[sparkle_index].enabled = true;
-    sparkles[sparkle_index].color = CHSV(hue, saturation, 255);
-    sparkles[sparkle_index].width = width;
-    sparkles[sparkle_index].brightness = float(random(10))/20.0 + 0.5;
-    sparkles[sparkle_index].strip_index = random_strip(strip_index);
-    sparkles[sparkle_index].center = random(0, strip_index_length(sparkles[sparkle_index].strip_index)-1);
-    sparkles[sparkle_index].start_time = now;
-  }
-
-  for (int i=0; i<MAX_SPARKLES; i++) {
-    if (sparkles[i].enabled) {
-      float brightness = sparkles[i].brightness - float(now - sparkles[i].start_time) / (100.0 * float(SPARKLES_DIM_RATE));
-      if (brightness > 0) {
-        render_ball(sparkles[i].strip_index, BALL_TYPE_SINE, sparkles[i].center, sparkles[i].width, sparkles[i].color, brightness, false);
-      } else {
-        sparkles[i].enabled = false;
-      }
-    }
-  }
-}
 
 // // spiral
 

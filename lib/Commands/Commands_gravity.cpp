@@ -58,10 +58,10 @@ void Commands::gravity_event() {
 }
 
 void Commands::gravity(char * data) {
-  gravity_strip_index = data[0];
-  gravity_color_index = data[1];
-  gravity_rate = data[2];
-  int frequency = data[3];
+  gravity_strip_index   = data[0];
+  gravity_color_index   = data[1];
+  gravity_rate          = data[2];
+  int frequency         = data[3];
 
   if (frequency > 0 && gravity_last_ball < millis() && 10000 / (millis() - gravity_last_ball) < frequency){
     gravity_event();

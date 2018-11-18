@@ -61,16 +61,16 @@ struct Command {
 
 #define DISABLE             0   
 #define SINGLE_COLOR        1   
-#define RAINBOW_SINE        4   
-#define PING_PONG           5   
-#define GRAVITY             6   
-#define SPARKLE             9   
-// #define SPIRAL             10    
+#define WHITE               2
+#define RAINBOW_SINE        3   
+#define PING_PONG           4   
+#define GRAVITY             5   
+#define SPARKLE             6
 
 // -- EVENTS ------------------------------------------------------------------------------
 
 #define GRAVITY_EVENT     100
-#define SET_PALETTE       101
+#define UPDATE_SETTINGS   101
 
 // -- BALL_TYPES --------------------------------------------------------------------------
 
@@ -100,10 +100,11 @@ class Commands {
 
     // one-off events
     void gravity_event();
-    void set_palette(char * data);
+    void update_settings(char * data);
 
     // set leds
     void all_off();
+    void all_white();
     void set_led(uint8_t strip_index, int led, CRGB color);
     void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
     int strip_index_length(uint8_t strip_index);
@@ -118,5 +119,5 @@ class Commands {
 
     // helper 
     uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
-
+    uint8_t random_strip(uint8_t strip_index);
 };
