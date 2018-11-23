@@ -5,25 +5,24 @@ char serial_buffer[SERIAL_BUFFER_SIZE];
 
 Commands commands = Commands();
 
-HardwareSerial DebugSerial(0);
-HardwareSerial CommandSerial(0);
+HardwareSerial CommandSerial(2);
 
 void setup() {
-  DebugSerial.begin(230400);
   Serial.begin(230400);
-  while (!DebugSerial) {}
+  while (!Serial) {}
 
   CommandSerial.begin(230400);
   while (!CommandSerial) {}
 
-  DebugSerial.println("Starting up...");
+  Serial.println("Starting up...");
 
   commands.init();
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
 
-  DebugSerial.println("Startup complete");
+  Serial.println("Startup complete");
+
   CommandSerial.println("INIT");
 }
 

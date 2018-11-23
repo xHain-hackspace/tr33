@@ -8,10 +8,10 @@ Command command_buffer[COMMAND_BUFFER_SIZE];
 CRGBPalette256 currentPalette;
 
 Commands::Commands(void) {
-  // todo: use loops
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_1>(trunk_leds[0], HW_TRUNK_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_2>(trunk_leds[1], HW_TRUNK_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_3>(trunk_leds[2], HW_TRUNK_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, TRUNK_PIN_4>(trunk_leds[3], HW_TRUNK_PIXEL_COUNT);
 
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_1>(branch_leds[0], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_2>(branch_leds[1], BRANCH_PIXEL_COUNT);
@@ -19,24 +19,44 @@ Commands::Commands(void) {
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_4>(branch_leds[3], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_5>(branch_leds[4], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_6>(branch_leds[5], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_7>(branch_leds[6], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_8>(branch_leds[7], BRANCH_PIXEL_COUNT);
 }
 
 void Commands::init() {
+  FastLED.setCorrection(TypicalLEDStrip);
   currentPalette = DEFAULT_PALETTE; 
+  
+  // show_pin_numbers();
 
   command_buffer[0].type = SINGLE_COLOR;
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
   command_buffer[0].data[1] = HUE_RED;
-  command_buffer[0].data[2] = 255;
+  command_buffer[0].data[2] = 255;  
 
-  FastLED.setCorrection(TypicalLEDStrip);
+  // command_buffer[0].type = RAINBOW_SINE;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
+  // command_buffer[0].data[1] = 10;
+  // command_buffer[0].data[2] = 100;
+  // command_buffer[0].data[3] = 100;
+  // command_buffer[0].data[4] = 255;
+
+  // command_buffer[0].type = PING_PONG;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[0].data[1] = 1;
+  // command_buffer[0].data[2] = 1;
+  // command_buffer[0].data[3] = 255;
+  // command_buffer[0].data[4] = 190;
+  // command_buffer[0].data[5] = 75;
+  // command_buffer[0].data[6] = 0;
+
 }
 
 void Commands::process(char* command_bin) {
   Command command = *(Command *) command_bin;
 
   switch(command.type) {
-    case GRAVITY_EVENT    : gravity_event(); break;
+    case GRAVITY_ADD_BALL : gravity_event(); break;
     case UPDATE_SETTINGS  : update_settings(command.data); break;
     default               : if (command.index < COMMAND_BUFFER_SIZE) command_buffer[command.index] = command; break;
   }
@@ -54,6 +74,7 @@ void Commands::run() {
       case PING_PONG         : ping_pong(command_buffer[i].data); break;
       case GRAVITY           : gravity(command_buffer[i].data); break;
       case SPARKLE           : sparkle(command_buffer[i].data); break;
+      case SHOW_NUMBER       : show_number(command_buffer[i].data); break;
       // case SPIRAL            : spiral(command_buffer[i].data); break;
     }
   }
@@ -101,7 +122,7 @@ int spiral_led_index(uint8_t index) {
 }
 
 void Commands::set_led(uint8_t strip_index, int led, CRGB color) {
-  if (led > 0 && led < strip_index_length(strip_index)) {
+  if (led >= 0 && led < strip_index_length(strip_index)) {
     // single trunk
     if (strip_index < TRUNK_STRIP_COUNT) {
       set_trunk_led(strip_index, led, color);
@@ -302,6 +323,57 @@ uint8_t Commands::random_strip(uint8_t strip_index) {
   }
 }
 
+
+void Commands::show_pin_numbers() {
+  command_buffer[0].type = SHOW_NUMBER;
+  command_buffer[0].data[0] = 0;
+  command_buffer[0].data[1] = TRUNK_PIN_1;
+  
+  command_buffer[1].type = SHOW_NUMBER;
+  command_buffer[1].data[0] = 1;
+  command_buffer[1].data[1] = TRUNK_PIN_2;
+  
+  command_buffer[2].type = SHOW_NUMBER;
+  command_buffer[2].data[0] = 2;
+  command_buffer[2].data[1] = TRUNK_PIN_3;
+  
+  command_buffer[3].type = SHOW_NUMBER;
+  command_buffer[3].data[0] = 3;
+  command_buffer[3].data[1] = TRUNK_PIN_4;
+  
+  command_buffer[4].type = SHOW_NUMBER;
+  command_buffer[4].data[0] = TRUNK_STRIP_COUNT;
+  command_buffer[4].data[1] = BRANCH_PIN_1;
+  
+  command_buffer[5].type = SHOW_NUMBER;
+  command_buffer[5].data[0] = TRUNK_STRIP_COUNT + 1;
+  command_buffer[5].data[1] = BRANCH_PIN_2;
+  
+  command_buffer[6].type = SHOW_NUMBER;
+  command_buffer[6].data[0] = TRUNK_STRIP_COUNT + 2;
+  command_buffer[6].data[1] = BRANCH_PIN_3;
+  
+  command_buffer[7].type = SHOW_NUMBER;
+  command_buffer[7].data[0] = TRUNK_STRIP_COUNT + 3;
+  command_buffer[7].data[1] = BRANCH_PIN_4;
+  
+  command_buffer[8].type = SHOW_NUMBER;
+  command_buffer[8].data[0] = TRUNK_STRIP_COUNT + 4;
+  command_buffer[8].data[1] = BRANCH_PIN_5;
+  
+  command_buffer[9].type = SHOW_NUMBER;
+  command_buffer[9].data[0] = TRUNK_STRIP_COUNT + 5;
+  command_buffer[9].data[1] = BRANCH_PIN_6;
+  
+  command_buffer[10].type = SHOW_NUMBER;
+  command_buffer[10].data[0] = TRUNK_STRIP_COUNT + 6;
+  command_buffer[10].data[1] = BRANCH_PIN_7;
+  
+  command_buffer[11].type = SHOW_NUMBER;
+  command_buffer[11].data[0] = TRUNK_STRIP_COUNT + 7;
+  command_buffer[11].data[1] = BRANCH_PIN_8;
+
+}
 
 // // spiral
 

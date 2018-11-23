@@ -2,23 +2,26 @@
 #include <FastLED.h>
 
 // trunk config
-#define TRUNK_PIN_1 25
-#define TRUNK_PIN_2 26
-#define TRUNK_PIN_3 14
+#define TRUNK_PIN_1 5
+#define TRUNK_PIN_2 4
+#define TRUNK_PIN_3 33
+#define TRUNK_PIN_4 27
 #define HW_TRUNK_PIXEL_COUNT 100
-#define HW_TRUNK_STRIP_COUNT 3
-#define TRUNK_PIXEL_COUNT 50
-#define TRUNK_STRIP_COUNT 6
+#define HW_TRUNK_STRIP_COUNT 4
+#define TRUNK_PIXEL_COUNT HW_TRUNK_PIXEL_COUNT / 2
+#define TRUNK_STRIP_COUNT HW_TRUNK_STRIP_COUNT * 2
 
 // branch config
-#define BRANCH_PIN_1 4
-#define BRANCH_PIN_2 12
-#define BRANCH_PIN_3 13
-#define BRANCH_PIN_4 15
-#define BRANCH_PIN_5 21
-#define BRANCH_PIN_6 22
+#define BRANCH_PIN_1 23
+#define BRANCH_PIN_2 21
+#define BRANCH_PIN_3 19
+#define BRANCH_PIN_4 18
+#define BRANCH_PIN_5 22
+#define BRANCH_PIN_6 14
+#define BRANCH_PIN_7 32
+#define BRANCH_PIN_8 15
 #define BRANCH_PIXEL_COUNT 90
-#define BRANCH_STRIP_COUNT 6
+#define BRANCH_STRIP_COUNT 8
 #define BRANCH_OFFSET 50
 
 // strip index
@@ -41,7 +44,7 @@
 #define COMMAND_BUFFER_SIZE 16
 
 // effect config
-#define DEFAULT_PALETTE RainbowColors_p
+#define DEFAULT_PALETTE Rainbow_gp
 
 #define GRAVITY_MAX_BALLS 50
 #define GRAVITY_VALUE 50
@@ -66,11 +69,12 @@ struct Command {
 #define PING_PONG           4   
 #define GRAVITY             5   
 #define SPARKLE             6
+#define SHOW_NUMBER         7
 
 // -- EVENTS ------------------------------------------------------------------------------
 
-#define GRAVITY_EVENT     100
-#define UPDATE_SETTINGS   101
+#define GRAVITY_ADD_BALL    100
+#define UPDATE_SETTINGS     101
 
 // -- BALL_TYPES --------------------------------------------------------------------------
 
@@ -96,6 +100,7 @@ class Commands {
      void ping_pong(char* data);
      void gravity(char* data);
      void sparkle(char* data);
+     void show_number(char* data);
     //  void spiral(char* data);
 
     // one-off events
@@ -117,7 +122,12 @@ class Commands {
     void render_fill_top(uint8_t strip_index, float center, CRGB color);
     void render_fill_bottom(uint8_t strip_index, float center, CRGB color);
 
+    // debugging
+    void show_pin_numbers();
+
     // helper 
     uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
     uint8_t random_strip(uint8_t strip_index);
+    
+
 };
