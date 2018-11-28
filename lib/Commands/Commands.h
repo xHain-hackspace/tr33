@@ -49,10 +49,10 @@
 #define GRAVITY_MAX_BALLS 50
 #define GRAVITY_VALUE 50
 #define GRAVITY_DAMPING 70
-#define MAX_SPARKLES 200
+#define MAX_SPARKLES 500
 #define SPARKLES_DIM_RATE 40
 
-#define MAX_RAIN_DROPS 200
+#define MAX_RAIN_DROPS 500
 
 #include <Overrides.h>
 

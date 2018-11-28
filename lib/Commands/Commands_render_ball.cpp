@@ -38,9 +38,7 @@ void Commands::render_sine_ball(uint8_t strip_index, float center, float width, 
 
   for (int i=start_led; i<=end_led; i++) {
     brightness = 1.0 - fabs(float(i) - center) / (width / 2.0);
-    Serial.print(brightness);
-    Serial.print("-");
-    brightness = ease_in_out_cubic(brightness);
+    brightness = ease_in_out_cubic(brightness*ball_brightness);
     fade_led(strip_index, i, color, brightness);
   }
 }
