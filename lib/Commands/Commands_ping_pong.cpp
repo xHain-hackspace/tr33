@@ -22,5 +22,5 @@ void Commands::ping_pong(char * data) {
     width = -1.0 * width;
   }
 
-  render_ball(strip_index, ball_type, center, width, color, 1.0, true);
+  render_ball(strip_index, ball_type, center, width, color, 1, true, true);
 }

@@ -49,8 +49,10 @@
 #define GRAVITY_MAX_BALLS 50
 #define GRAVITY_VALUE 50
 #define GRAVITY_DAMPING 70
-#define MAX_SPARKLES 500
+#define MAX_SPARKLES 200
 #define SPARKLES_DIM_RATE 40
+
+#define MAX_RAIN_DROPS 200
 
 #include <Overrides.h>
 
@@ -70,6 +72,7 @@ struct Command {
 #define GRAVITY             5   
 #define SPARKLE             6
 #define SHOW_NUMBER         7
+#define RAIN                8
 
 // -- EVENTS ------------------------------------------------------------------------------
 
@@ -101,7 +104,7 @@ class Commands {
      void gravity(char* data);
      void sparkle(char* data);
      void show_number(char* data);
-    //  void spiral(char* data);
+     void rain(char* data);
 
     // one-off events
     void gravity_event();
@@ -115,12 +118,12 @@ class Commands {
     int strip_index_length(uint8_t strip_index);
 
     // ball rendering
-    void render_ball(uint8_t strip_index, int ball_type, float center, float width, CRGB color, float ball_brightness, bool bounce_top);
+    void render_ball(uint8_t strip_index, int ball_type, float center, float width, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
     void render_square_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
     void render_sine_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
-    void render_comet(uint8_t strip_index, float center, float length, CRGB color, bool bounce_top);
-    void render_fill_top(uint8_t strip_index, float center, CRGB color);
-    void render_fill_bottom(uint8_t strip_index, float center, CRGB color);
+    void render_comet(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
+    void render_fill_top(uint8_t strip_index, float center, CRGB color, float ball_brightness);
+    void render_fill_bottom(uint8_t strip_index, float center, CRGB color, float ball_brightness);
 
     // debugging
     void show_pin_numbers();
@@ -128,6 +131,10 @@ class Commands {
     // helper 
     uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
     uint8_t random_strip(uint8_t strip_index);
-    
+
+    // float easing functions
+    float ease_in_cubic( float t );
+    float ease_out_cubic( float t );
+    float ease_in_out_cubic(float t);
 
 };

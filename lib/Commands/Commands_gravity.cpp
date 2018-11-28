@@ -72,7 +72,7 @@ void Commands::gravity(char * data) {
       update_ball(i);
       CRGB color = ColorFromPalette(currentPalette, balls[i].color_index);  
       float width = balls[i].rate/70.0;
-      render_ball(balls[i].strip_index, BALL_TYPE_COMET, balls[i].position, width, color, 1.0, false);
+      render_ball(balls[i].strip_index, BALL_TYPE_COMET, balls[i].position, width, color, 1.0, false, true);
     }
   }
 }

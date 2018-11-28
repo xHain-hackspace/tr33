@@ -75,6 +75,7 @@ void Commands::run() {
       case GRAVITY           : gravity(command_buffer[i].data); break;
       case SPARKLE           : sparkle(command_buffer[i].data); break;
       case SHOW_NUMBER       : show_number(command_buffer[i].data); break;
+      case RAIN              : rain(command_buffer[i].data); break;
       // case SPIRAL            : spiral(command_buffer[i].data); break;
     }
   }
@@ -203,100 +204,21 @@ void Commands::all_white() {
   }  
 }
 
-//
-// -- Ball rendering ------------------------------------------------
-//
-
-void Commands::render_ball(uint8_t strip_index, int ball_type, float center, float width, CRGB color, float ball_brightness, bool bounce_top) {
-  switch(ball_type) {
-    case BALL_TYPE_SQUARE:
-      render_square_ball(strip_index, center, fabs(width), color, ball_brightness);
-      break;
-    case BALL_TYPE_SINE:
-      render_sine_ball(strip_index, center, fabs(width), color, ball_brightness);
-      break;
-    case BALL_TYPE_COMET:
-      render_comet(strip_index, center, width * 10.0, color, bounce_top);
-      break;
-    case BALL_TYPE_FILL_TOP:
-      render_fill_top(strip_index, center, color);
-      break;
-    case BALL_TYPE_FILL_BOTTOM:
-      render_fill_bottom(strip_index, center, color);
-      break;
-  }
+float Commands::ease_in_cubic(float t) {
+	return t*t*t;
 }
 
-void Commands::render_square_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness) {
-  int strip_length = strip_index_length(strip_index);
-  int start_led = max(0, ceilf(center-width/2.0));
-  int end_led = min(strip_length, floorf(center+width/2.0));
-
-  for (int i=start_led; i<=end_led; i++) {
-    fade_led(strip_index, i, color, ball_brightness);
-  }
+float Commands::ease_out_cubic(float t) {
+	t -= 1;
+	return t*t*t + 1;
 }
 
-void Commands::render_sine_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness) {
-  int strip_length = strip_index_length(strip_index);
-  int start_led = max(0, ceilf(center-width/2.0));
-  int end_led = min(strip_length, floorf(center+width/2.0));
-  float brightness = 0.0;
-
-  for (int i=start_led; i<=end_led; i++) {
-    brightness = 0.5*sinf(2.0*3.1415*((float(i)-center)/width+0.25))+0.5 * ball_brightness;
-    if (brightness>0) {
-      fade_led(strip_index, i, color, brightness);
-    }
-  }
-}
-
-void Commands::render_comet(uint8_t strip_index, float center, float length, CRGB color, bool bounce_top) {
-  render_sine_ball(strip_index, center, 3, color, 1.0);  
-  
-  if (length != 0) {
-    if (length > 0) {
-      center = center - 0.5;
-    } else {
-      center = center + 0.5;
-    }
-
-    int strip_length = strip_index_length(strip_index);
-    float end = center - length;
-    float max_brightness = 0.8;
-    float slope = max_brightness / (center - end);
-
-    int first_led = min(floorf(center), floorf(end));
-    int last_led = max(ceilf(center), ceilf(end));
-
-    for (int i=first_led; i<last_led; i++) {
-      float intensity = slope * (float(i) - end);
-      if (intensity <= max_brightness && intensity > 0) {
-        int led_index = i;
-        if (led_index < 0) led_index = -1*led_index;
-        if (bounce_top) {
-          if (led_index >= strip_length) led_index = 2*(strip_length)-led_index;
-        }
-        fade_led(strip_index, led_index, color, intensity);
-      }
-    }
-  }
-}
-
-void Commands::render_fill_top(uint8_t strip_index, float center, CRGB color) {
-  render_sine_ball(strip_index, center, 5, color, 1.0);  
-
-  for (int i = center; i < strip_index_length(strip_index); i++) {
-    set_led(strip_index, i, color);
-  }
-}
-
-void Commands::render_fill_bottom(uint8_t strip_index, float center, CRGB color) {
-  render_sine_ball(strip_index, center, 5, color, 1.0);  
-
-  for (int i = 0; i < center; i++) {
-    set_led(strip_index, i, color);
-  }
+float Commands::ease_in_out_cubic(float t) {
+	t *= 2;
+	if( t < 1 )
+		return 0.5f * t*t*t;
+	t -= 2;
+	return 0.5f*(t*t*t + 2);
 }
 
 //
