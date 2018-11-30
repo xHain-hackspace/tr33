@@ -40,7 +40,7 @@
 #define COLOR_WHITE CRGB(255, 255, 255)
 
 // commands
-#define COMMAND_MAX_DATA 8
+#define COMMAND_DATA_SIZE 8
 #define COMMAND_BUFFER_SIZE 16
 
 // effect config
@@ -59,7 +59,7 @@
 struct Command {
   uint8_t index;
   uint8_t type;
-  char data[COMMAND_MAX_DATA];
+  char data[COMMAND_DATA_SIZE];
 };
 
 // -- COMMANDS ---------------------------------------------------------------------------
@@ -86,6 +86,12 @@ struct Command {
 #define BALL_TYPE_COMET         2
 #define BALL_TYPE_FILL_TOP      3
 #define BALL_TYPE_FILL_BOTTOM   4
+
+// -- SERIAL -----------------------------------------------------------------------------
+#define SERIAL_HEADER 0x42
+#define SERIAL_READY_TO_SEND 0xAA
+#define SERIAL_CLEAR_TO_SEND 0xBB
+#define SERIAL_REQUEST_RESYNC 0xCC
 
 extern CRGBPalette256 currentPalette;
 

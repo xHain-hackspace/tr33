@@ -29,17 +29,17 @@ void Commands::init() {
   
   // show_pin_numbers();
 
-  command_buffer[0].type = SINGLE_COLOR;
-  command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = HUE_RED;
-  command_buffer[0].data[2] = 255;  
+  // command_buffer[0].type = SINGLE_COLOR;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[0].data[1] = HUE_RED;
+  // command_buffer[0].data[2] = 255;  
 
-  // command_buffer[0].type = RAINBOW_SINE;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
-  // command_buffer[0].data[1] = 10;
-  // command_buffer[0].data[2] = 100;
-  // command_buffer[0].data[3] = 100;
-  // command_buffer[0].data[4] = 255;
+  command_buffer[0].type = RAINBOW_SINE;
+  command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
+  command_buffer[0].data[1] = 50;
+  command_buffer[0].data[2] = 100;
+  command_buffer[0].data[3] = 100;
+  command_buffer[0].data[4] = 255;
 
   // command_buffer[0].type = PING_PONG;
   // command_buffer[0].data[0] = STRIP_INDEX_ALL;
