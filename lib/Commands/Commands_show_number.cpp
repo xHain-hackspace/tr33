@@ -3,7 +3,7 @@
 void Commands::show_number(char * data) {
   uint8_t strip_index = data[0];
   uint8_t number = data[1];
-  
+
   uint8_t hundrets = number / 100;
   uint8_t tens = (number % 100) / 10;
   uint8_t ones = (number % 10);

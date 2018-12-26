@@ -2,26 +2,30 @@
 #include <FastLED.h>
 
 // trunk config
-#define TRUNK_PIN_1 5
-#define TRUNK_PIN_2 4
-#define TRUNK_PIN_3 33
-#define TRUNK_PIN_4 27
+#define TRUNK_PIN_1 23
+#define TRUNK_PIN_2 22
+#define TRUNK_PIN_3 14
+#define TRUNK_PIN_4 32
 #define HW_TRUNK_PIXEL_COUNT 100
 #define HW_TRUNK_STRIP_COUNT 4
 #define TRUNK_PIXEL_COUNT HW_TRUNK_PIXEL_COUNT / 2
 #define TRUNK_STRIP_COUNT HW_TRUNK_STRIP_COUNT * 2
 
 // branch config
-#define BRANCH_PIN_1 23
-#define BRANCH_PIN_2 21
-#define BRANCH_PIN_3 19
-#define BRANCH_PIN_4 18
-#define BRANCH_PIN_5 22
-#define BRANCH_PIN_6 14
-#define BRANCH_PIN_7 32
-#define BRANCH_PIN_8 15
+#define BRANCH_PIN_1 15
+#define BRANCH_PIN_2 33
+#define BRANCH_PIN_3 27
+#define BRANCH_PIN_4 12
+#define BRANCH_PIN_5 21
+#define BRANCH_PIN_6 19
+#define BRANCH_PIN_7 18
+#define BRANCH_PIN_8 5
+#define BRANCH_PIN_9 4
+#define BRANCH_PIN_10 25
+#define BRANCH_PIN_11 26
+#define BRANCH_PIN_12 13
 #define BRANCH_PIXEL_COUNT 90
-#define BRANCH_STRIP_COUNT 8
+#define BRANCH_STRIP_COUNT 12
 #define BRANCH_OFFSET 50
 
 // strip index
@@ -54,7 +58,7 @@
 
 #define MAX_RAIN_DROPS 500
 
-#include <Overrides.h>
+// #include <Overrides.h>
 
 struct Command {
   uint8_t index;
@@ -64,34 +68,36 @@ struct Command {
 
 // -- COMMANDS ---------------------------------------------------------------------------
 
-#define DISABLE             0   
-#define SINGLE_COLOR        1   
-#define WHITE               2
-#define RAINBOW_SINE        3   
-#define PING_PONG           4   
-#define GRAVITY             5   
-#define SPARKLE             6
-#define SHOW_NUMBER         7
-#define RAIN                8
+#define DISABLE                 0   
+#define SINGLE_COLOR            1   
+#define WHITE                   2
+#define RAINBOW_SINE            3   
+#define PING_PONG               4   
+#define GRAVITY                 5   
+#define SPARKLE                 6
+#define SHOW_NUMBER             7
+#define RAIN                    8
 
 // -- EVENTS ------------------------------------------------------------------------------
 
-#define GRAVITY_ADD_BALL    100
-#define UPDATE_SETTINGS     101
+#define GRAVITY_ADD_BALL        100
+#define UPDATE_SETTINGS         101
+#define BLINK                   102
 
 // -- BALL_TYPES --------------------------------------------------------------------------
 
 #define BALL_TYPE_SQUARE        0
 #define BALL_TYPE_SINE          1 
 #define BALL_TYPE_COMET         2
-#define BALL_TYPE_FILL_TOP      3
-#define BALL_TYPE_FILL_BOTTOM   4
+#define BALL_TYPE_NYAN          3
+#define BALL_TYPE_FILL_TOP      4
+#define BALL_TYPE_FILL_BOTTOM   5
 
 // -- SERIAL -----------------------------------------------------------------------------
-#define SERIAL_HEADER 0x42
-#define SERIAL_READY_TO_SEND 0xAA
-#define SERIAL_CLEAR_TO_SEND 0xBB
-#define SERIAL_REQUEST_RESYNC 0xCC
+#define SERIAL_HEADER           0x42
+#define SERIAL_READY_TO_SEND    0xAA
+#define SERIAL_CLEAR_TO_SEND    0xBB
+#define SERIAL_REQUEST_RESYNC   0xCC
 
 extern CRGBPalette256 currentPalette;
 
@@ -128,6 +134,7 @@ class Commands {
     void render_square_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
     void render_sine_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
     void render_comet(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
+    void render_nyan(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
     void render_fill_top(uint8_t strip_index, float center, CRGB color, float ball_brightness);
     void render_fill_bottom(uint8_t strip_index, float center, CRGB color, float ball_brightness);
 

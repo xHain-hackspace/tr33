@@ -21,12 +21,17 @@ Commands::Commands(void) {
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_6>(branch_leds[5], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_7>(branch_leds[6], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_8>(branch_leds[7], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_9>(branch_leds[8], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_10>(branch_leds[9], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_11>(branch_leds[10], BRANCH_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_12>(branch_leds[11], BRANCH_PIXEL_COUNT);
 }
 
 void Commands::init() {
   FastLED.setCorrection(TypicalLEDStrip);
   currentPalette = DEFAULT_PALETTE; 
   
+  // uncomment this to show the pin number on each strip
   // show_pin_numbers();
 
   // command_buffer[0].type = SINGLE_COLOR;
@@ -35,20 +40,20 @@ void Commands::init() {
   // command_buffer[0].data[2] = 255;  
 
   command_buffer[0].type = RAINBOW_SINE;
-  command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
-  command_buffer[0].data[1] = 50;
+  command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  command_buffer[0].data[1] = 30;
   command_buffer[0].data[2] = 100;
   command_buffer[0].data[3] = 100;
   command_buffer[0].data[4] = 255;
 
-  // command_buffer[0].type = PING_PONG;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[0].data[1] = 1;
-  // command_buffer[0].data[2] = 1;
-  // command_buffer[0].data[3] = 255;
-  // command_buffer[0].data[4] = 190;
-  // command_buffer[0].data[5] = 75;
-  // command_buffer[0].data[6] = 0;
+  command_buffer[1].type = PING_PONG;
+  command_buffer[1].data[0] = STRIP_INDEX_ALL;
+  command_buffer[1].data[1] = 1;
+  command_buffer[1].data[2] = 1;
+  command_buffer[1].data[3] = 255;
+  command_buffer[1].data[4] = 190;
+  command_buffer[1].data[5] = 20;
+  command_buffer[1].data[6] = 0;
 
 }
 
@@ -63,7 +68,6 @@ void Commands::process(char* command_bin) {
 }
 
 void Commands::run() {
-  
   all_off();
 
   for (int i=0; i<COMMAND_BUFFER_SIZE; i++) {
@@ -247,6 +251,8 @@ uint8_t Commands::random_strip(uint8_t strip_index) {
 
 
 void Commands::show_pin_numbers() {
+  Serial.println("Showing pin Numbers");
+
   command_buffer[0].type = SHOW_NUMBER;
   command_buffer[0].data[0] = 0;
   command_buffer[0].data[1] = TRUNK_PIN_1;
@@ -294,6 +300,22 @@ void Commands::show_pin_numbers() {
   command_buffer[11].type = SHOW_NUMBER;
   command_buffer[11].data[0] = TRUNK_STRIP_COUNT + 7;
   command_buffer[11].data[1] = BRANCH_PIN_8;
+
+  command_buffer[12].type = SHOW_NUMBER;
+  command_buffer[12].data[0] = TRUNK_STRIP_COUNT + 8;
+  command_buffer[12].data[1] = BRANCH_PIN_9;
+
+  command_buffer[13].type = SHOW_NUMBER;
+  command_buffer[13].data[0] = TRUNK_STRIP_COUNT + 9;
+  command_buffer[13].data[1] = BRANCH_PIN_10;
+
+  command_buffer[14].type = SHOW_NUMBER;
+  command_buffer[14].data[0] = TRUNK_STRIP_COUNT + 10;
+  command_buffer[14].data[1] = BRANCH_PIN_11;
+
+  command_buffer[15].type = SHOW_NUMBER;
+  command_buffer[15].data[0] = TRUNK_STRIP_COUNT + 11;
+  command_buffer[15].data[1] = BRANCH_PIN_12;
 
 }
 

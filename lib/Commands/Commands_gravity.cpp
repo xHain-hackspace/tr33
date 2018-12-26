@@ -45,7 +45,7 @@ void Commands::gravity_event() {
 
   ball.strip_index = gravity_strip_index;
   ball.width = float(random_or_value(gravity_width, 0, 255))/10.0;
-  ball.rate = random_or_value(gravity_rate, 30, 175);
+  ball.rate = random_or_value(gravity_rate, 30, 120);
   ball.color_index = random_or_value(gravity_color_index, 0, 255);
 
   gravity_last_ball = millis();
