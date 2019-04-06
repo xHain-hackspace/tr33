@@ -39,22 +39,26 @@ void Commands::init() {
   // command_buffer[0].data[1] = HUE_RED;
   // command_buffer[0].data[2] = 255;  
 
-  command_buffer[0].type = RAINBOW_SINE;
-  command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = 30;
-  command_buffer[0].data[2] = 100;
-  command_buffer[0].data[3] = 100;
-  command_buffer[0].data[4] = 255;
+  // command_buffer[0].type = RAINBOW_SINE;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[0].data[1] = 30;
+  // command_buffer[0].data[2] = 100;
+  // command_buffer[0].data[3] = 100;
+  // command_buffer[0].data[4] = 255;
 
-  command_buffer[1].type = PING_PONG;
-  command_buffer[1].data[0] = STRIP_INDEX_ALL;
-  command_buffer[1].data[1] = 1;
-  command_buffer[1].data[2] = 1;
-  command_buffer[1].data[3] = 255;
-  command_buffer[1].data[4] = 190;
-  command_buffer[1].data[5] = 20;
-  command_buffer[1].data[6] = 0;
+  // command_buffer[1].type = PING_PONG;
+  // command_buffer[1].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[1].data[1] = 1;
+  // command_buffer[1].data[2] = 1;
+  // command_buffer[1].data[3] = 255;
+  // command_buffer[1].data[4] = 190;
+  // command_buffer[1].data[5] = 20;
+  // command_buffer[1].data[6] = 0;
 
+  // command_buffer[0].type = BEATS;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
+  // command_buffer[0].data[1] = 0;
+  // command_buffer[0].data[2] = 20;
 }
 
 void Commands::process(char* command_bin) {
@@ -63,6 +67,7 @@ void Commands::process(char* command_bin) {
   switch(command.type) {
     case GRAVITY_ADD_BALL : gravity_event(); break;
     case UPDATE_SETTINGS  : update_settings(command.data); break;
+    case BEAT             : beat(command.data); break;
     default               : if (command.index < COMMAND_BUFFER_SIZE) command_buffer[command.index] = command; break;
   }
 }
@@ -80,6 +85,7 @@ void Commands::run() {
       case SPARKLE           : sparkle(command_buffer[i].data); break;
       case SHOW_NUMBER       : show_number(command_buffer[i].data); break;
       case RAIN              : rain(command_buffer[i].data); break;
+      case BEATS             : beats(command_buffer[i].data); break;
       // case SPIRAL            : spiral(command_buffer[i].data); break;
     }
   }
@@ -241,11 +247,11 @@ uint8_t Commands::random_strip(uint8_t strip_index) {
   if (strip_index < BRANCH_STRIP_COUNT + TRUNK_STRIP_COUNT) {
     return strip_index;
   } else if (strip_index == STRIP_INDEX_ALL) {
-    return random8(0, TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT - 1);
+    return random8(0, TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT);
   } else if (strip_index == STRIP_INDEX_ALL_TRUNKS) {
-    return random8(0, TRUNK_STRIP_COUNT - 1);
+    return random8(0, TRUNK_STRIP_COUNT);
   } else if (strip_index == STRIP_INDEX_ALL_BRANCHES) {
-    return random8(TRUNK_STRIP_COUNT, TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT - 1);
+    return random8(TRUNK_STRIP_COUNT, TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT);
   }
 }
 

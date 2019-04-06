@@ -12,7 +12,8 @@ struct Ball {
   int last_update;
   float position;
   float rate;
-  float width;  // deprecated
+  float width;
+  bool bounce = false;
 
   uint8_t color_index;
   uint8_t strip_index;
@@ -30,9 +31,13 @@ void update_ball(int i) {
   balls[i].rate = balls[i].rate - float(GRAVITY_VALUE) * interval;
 
   if (balls[i].position < 0) {
-    balls[i].enabled = fabs(balls[i].rate) > 20 && now - balls[i].start < 40000;
-    balls[i].position = fabs(balls[i].position);
-    balls[i].rate = fabs(balls[i].rate) * (1.0 - GRAVITY_DAMPING/255.0);
+    if (balls[i].bounce) {
+      balls[i].enabled = fabs(balls[i].rate) > 20 && now - balls[i].start < 40000;
+      balls[i].position = fabs(balls[i].position);
+      balls[i].rate = fabs(balls[i].rate) * (1.0 - GRAVITY_DAMPING/255.0);
+    } else {
+      balls[i].enabled = false;
+    }
   }
 }
 
@@ -44,7 +49,6 @@ void Commands::gravity_event() {
   ball.position = 0;
 
   ball.strip_index = gravity_strip_index;
-  ball.width = float(random_or_value(gravity_width, 0, 255))/10.0;
   ball.rate = random_or_value(gravity_rate, 30, 120);
   ball.color_index = random_or_value(gravity_color_index, 0, 255);
 
@@ -62,6 +66,7 @@ void Commands::gravity(char * data) {
   gravity_color_index   = data[1];
   gravity_rate          = data[2];
   int frequency         = data[3];
+  gravity_width         = data[4];
 
   if (frequency > 0 && gravity_last_ball < millis() && 10000 / (millis() - gravity_last_ball) < frequency){
     gravity_event();
@@ -71,8 +76,8 @@ void Commands::gravity(char * data) {
     if (balls[i].enabled) {
       update_ball(i);
       CRGB color = ColorFromPalette(currentPalette, balls[i].color_index);  
-      float width = balls[i].rate/70.0;
-      render_ball(balls[i].strip_index, BALL_TYPE_COMET, balls[i].position, width, color, 1.0, false, true);
+      float width = balls[i].rate*float(gravity_width)/6000.0;
+      render_ball(balls[i].strip_index, BALL_TYPE_COMET, balls[i].position, width, color, 1.0, false, balls[i].bounce);
     }
   }
 }

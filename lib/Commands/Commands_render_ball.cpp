@@ -25,8 +25,8 @@ void Commands::render_ball(uint8_t strip_index, int ball_type, float center, flo
 
 void Commands::render_square_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness) {
   int strip_length = strip_index_length(strip_index);
-  int start_led = max(0, ceilf(center-width/2.0));
-  int end_led = min(strip_length, floorf(center+width/2.0));
+  int start_led = max(0, int(ceilf(center-width/2.0)));
+  int end_led = min(strip_length, int(floorf(center+width/2.0)));
 
   for (int i=start_led; i<=end_led; i++) {
     fade_led(strip_index, i, color, ball_brightness);
@@ -35,8 +35,8 @@ void Commands::render_square_ball(uint8_t strip_index, float center, float width
 
 void Commands::render_sine_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness) {
   int strip_length = strip_index_length(strip_index);
-  int start_led = max(0, ceilf(center-width/2.0));
-  int end_led = min(strip_length, floorf(center+width/2.0));
+  int start_led = max(0, int(ceilf(center-width/2.0)));
+  int end_led = min(strip_length, int(floorf(center+width/2.0)));
   float brightness = 0.0;
 
   for (int i=start_led; i<=end_led; i++) {
@@ -114,7 +114,7 @@ void Commands::render_nyan(uint8_t strip_index, float center, float length, CRGB
         if (bounce_top && led_index >= strip_length) {
           led_index = 2*(strip_length)-led_index;
         }
-        CRGB nyan_color = ColorFromPalette(currentPalette, start - float(center));
+        CRGB nyan_color = ColorFromPalette(currentPalette, i*10);
         fade_led(strip_index, led_index, nyan_color, brightness);
       }
     }

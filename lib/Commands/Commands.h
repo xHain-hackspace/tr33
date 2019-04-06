@@ -77,12 +77,19 @@ struct Command {
 #define SPARKLE                 6
 #define SHOW_NUMBER             7
 #define RAIN                    8
+#define BEATS                   9
 
 // -- EVENTS ------------------------------------------------------------------------------
 
 #define GRAVITY_ADD_BALL        100
 #define UPDATE_SETTINGS         101
-#define BLINK                   102
+#define BEAT                    102
+
+// -- DISPLAY_MODES ------------------------------------------------------------------------------
+
+#define MODE_COMMANDS  0
+#define MODE_STREAM   1
+#define MODE_GAME     2
 
 // -- BALL_TYPES --------------------------------------------------------------------------
 
@@ -100,6 +107,7 @@ struct Command {
 #define SERIAL_REQUEST_RESYNC   0xCC
 
 extern CRGBPalette256 currentPalette;
+extern uint8_t currentDisplayMode = MODE_COMMANDS;
 
 class Commands {
    public:
@@ -117,10 +125,12 @@ class Commands {
      void sparkle(char* data);
      void show_number(char* data);
      void rain(char* data);
+     void beats(char* data);
 
     // one-off events
     void gravity_event();
     void update_settings(char * data);
+    void beat(char * data);
 
     // set leds
     void all_off();

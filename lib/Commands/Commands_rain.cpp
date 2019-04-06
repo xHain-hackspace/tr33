@@ -9,19 +9,19 @@ struct Drop {
   uint8_t strip_index;
   float center;
   int start_time;
+  float rate;
 };
 
 Drop drops[MAX_RAIN_DROPS];
 
 int drop_duration = 7500; // ms
-uint8_t rate = 0;
 
 void Commands::rain(char * data) {
   uint8_t strip_index = data[0];
   uint8_t color_index = random_or_value(data[1], 0, 255);
   float width         = float(random_or_value(data[2], 0, 255)) / 10.0;
   uint8_t frequency   = data[3];  // drops per seconds
-  rate                = data[4] / 10;
+  float rate = float(random_or_value(data[4], 0, 255)) / 10.0;
 
   int now = millis();
 
@@ -35,12 +35,13 @@ void Commands::rain(char * data) {
     drops[drop_index].strip_index = random_strip(strip_index);
     drops[drop_index].center = random(0, strip_index_length(drops[drop_index].strip_index)-1);
     drops[drop_index].start_time = now;
+    drops[drop_index].rate = rate;
   }
 
   for (int i=0; i<MAX_RAIN_DROPS; i++) {
     if (drops[i].enabled) {
       int time_diff = (now - drops[i].start_time);
-      float center =  drops[i].center - float(time_diff) / 1000.0 * float(rate); 
+      float center =  drops[i].center - float(time_diff) / 1000.0 * float(drops[i].rate); 
       float time_to_peak = 1.0 - fabs(time_diff-drop_duration/2)/float(drop_duration/2);
       float brightness = ease_out_cubic(time_to_peak);
 

@@ -1,6 +1,5 @@
 #include <Commands.h>
 
-
 const uint8_t SERIAL_BUFFER_SIZE=256;
 char serial_buffer[SERIAL_BUFFER_SIZE];
 const uint8_t SERIAL_PACKET_SIZE = 2 + COMMAND_DATA_SIZE;
@@ -9,6 +8,7 @@ const uint8_t SERIAL_TIMEOUT=100;
 Commands commands = Commands();
 
 HardwareSerial CommandSerial(2);
+// HardwareSerial CommandSerial(0);
 
 void flush_serial() {
   while(CommandSerial.available()) {

@@ -3,8 +3,8 @@
 void Commands::rainbow_sine(char * data) {
   uint8_t strip_index     = data[0];
   uint8_t rate            = data[1];
-  uint8_t wavelength      = max(1, data[2]);
-  uint8_t width_percent   = max(1, data[3]);
+  uint8_t wavelength      = max(1, int(data[2]));
+  uint8_t width_percent   = max(1, int(data[3]));
   uint8_t max_brightness  = data[4];
   
   uint8_t brightness = 0;
