@@ -6,6 +6,7 @@ CRGB branch_leds[BRANCH_STRIP_COUNT][BRANCH_PIXEL_COUNT];
 Command command_buffer[COMMAND_BUFFER_SIZE];
 
 CRGBPalette256 currentPalette;
+uint8_t currentMode = MODE_COMMANDS;
 
 Commands::Commands(void) {
   FastLED.addLeds<NEOPIXEL, TRUNK_PIN_1>(trunk_leds[0], HW_TRUNK_PIXEL_COUNT);
@@ -39,12 +40,12 @@ void Commands::init() {
   // command_buffer[0].data[1] = HUE_RED;
   // command_buffer[0].data[2] = 255;  
 
-  // command_buffer[0].type = RAINBOW_SINE;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[0].data[1] = 30;
-  // command_buffer[0].data[2] = 100;
-  // command_buffer[0].data[3] = 100;
-  // command_buffer[0].data[4] = 255;
+  command_buffer[0].type = RAINBOW_SINE;
+  command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  command_buffer[0].data[1] = 30;
+  command_buffer[0].data[2] = 100;
+  command_buffer[0].data[3] = 100;
+  command_buffer[0].data[4] = 255;
 
   // command_buffer[1].type = PING_PONG;
   // command_buffer[1].data[0] = STRIP_INDEX_ALL;
@@ -68,25 +69,35 @@ void Commands::process(char* command_bin) {
     case GRAVITY_ADD_BALL : gravity_event(); break;
     case UPDATE_SETTINGS  : update_settings(command.data); break;
     case BEAT             : beat(command.data); break;
+    case PIXEL            : pixel(command.data); break;
+    case PIXEL_RGB        : pixel_rgb(command.data); break;
     default               : if (command.index < COMMAND_BUFFER_SIZE) command_buffer[command.index] = command; break;
   }
 }
 
 void Commands::run() {
-  all_off();
 
-  for (int i=0; i<COMMAND_BUFFER_SIZE; i++) {
-    switch(command_buffer[i].type) {
-      case SINGLE_COLOR      : single_color(command_buffer[i].data); break;
-      case WHITE             : all_white(); break;
-      case RAINBOW_SINE      : rainbow_sine(command_buffer[i].data); break;
-      case PING_PONG         : ping_pong(command_buffer[i].data); break;
-      case GRAVITY           : gravity(command_buffer[i].data); break;
-      case SPARKLE           : sparkle(command_buffer[i].data); break;
-      case SHOW_NUMBER       : show_number(command_buffer[i].data); break;
-      case RAIN              : rain(command_buffer[i].data); break;
-      case BEATS             : beats(command_buffer[i].data); break;
-      // case SPIRAL            : spiral(command_buffer[i].data); break;
+  bool run_commands;
+
+  switch(currentMode) {
+    case MODE_STREAM  : run_commands = false; break;
+    default           : run_commands = true; all_off(); break;
+  }
+
+  if(run_commands) {
+    for (int i=0; i<COMMAND_BUFFER_SIZE; i++) {
+      switch(command_buffer[i].type) {
+        case SINGLE_COLOR      : single_color(command_buffer[i].data); break;
+        case WHITE             : all_white(); break;
+        case RAINBOW_SINE      : rainbow_sine(command_buffer[i].data); break;
+        case PING_PONG         : ping_pong(command_buffer[i].data); break;
+        case GRAVITY           : gravity(command_buffer[i].data); break;
+        case SPARKLE           : sparkle(command_buffer[i].data); break;
+        case SHOW_NUMBER       : show_number(command_buffer[i].data); break;
+        case RAIN              : rain(command_buffer[i].data); break;
+        case BEATS             : beats(command_buffer[i].data); break;
+        // case SPIRAL            : spiral(command_buffer[i].data); break;
+      }
     }
   }
 

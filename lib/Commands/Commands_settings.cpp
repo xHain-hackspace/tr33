@@ -135,4 +135,6 @@ void Commands::update_settings(char * data) {
     case 8: FastLED.setTemperature(OvercastSky); break; /* 7000 K, 201, 226, 255 */
     case 9: FastLED.setTemperature(ClearBlueSky); break; /* 20000 K, 64, 156, 255 */
   }
+
+  currentMode = data[2];  
 };

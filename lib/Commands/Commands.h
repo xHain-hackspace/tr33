@@ -38,7 +38,7 @@
 #define HUE_RED 0
 #define HUE_YELLOW 42
 #define HUE_GREEN 85
-#define HUE_BLUE  171
+#define HUE_BLUE 171
 #define HUE_PINK 213
 #define COLOR_BLACK CHSV(0, 0, 0)
 #define COLOR_WHITE CRGB(255, 255, 255)
@@ -60,7 +60,8 @@
 
 // #include <Overrides.h>
 
-struct Command {
+struct Command
+{
   uint8_t index;
   uint8_t type;
   char data[COMMAND_DATA_SIZE];
@@ -68,96 +69,100 @@ struct Command {
 
 // -- COMMANDS ---------------------------------------------------------------------------
 
-#define DISABLE                 0   
-#define SINGLE_COLOR            1   
-#define WHITE                   2
-#define RAINBOW_SINE            3   
-#define PING_PONG               4   
-#define GRAVITY                 5   
-#define SPARKLE                 6
-#define SHOW_NUMBER             7
-#define RAIN                    8
-#define BEATS                   9
+#define DISABLE 0
+#define SINGLE_COLOR 1
+#define WHITE 2
+#define RAINBOW_SINE 3
+#define PING_PONG 4
+#define GRAVITY 5
+#define SPARKLE 6
+#define SHOW_NUMBER 7
+#define RAIN 8
+#define BEATS 9
 
 // -- EVENTS ------------------------------------------------------------------------------
 
-#define GRAVITY_ADD_BALL        100
-#define UPDATE_SETTINGS         101
-#define BEAT                    102
+#define GRAVITY_ADD_BALL 100
+#define UPDATE_SETTINGS 101
+#define BEAT 102
+#define PIXEL 103
+#define PIXEL_RGB 104
 
 // -- DISPLAY_MODES ------------------------------------------------------------------------------
 
-#define MODE_COMMANDS  0
-#define MODE_STREAM   1
-#define MODE_GAME     2
+#define MODE_COMMANDS 0
+#define MODE_STREAM 1
+#define MODE_GAME 2
 
 // -- BALL_TYPES --------------------------------------------------------------------------
 
-#define BALL_TYPE_SQUARE        0
-#define BALL_TYPE_SINE          1 
-#define BALL_TYPE_COMET         2
-#define BALL_TYPE_NYAN          3
-#define BALL_TYPE_FILL_TOP      4
-#define BALL_TYPE_FILL_BOTTOM   5
+#define BALL_TYPE_SQUARE 0
+#define BALL_TYPE_SINE 1
+#define BALL_TYPE_COMET 2
+#define BALL_TYPE_NYAN 3
+#define BALL_TYPE_FILL_TOP 4
+#define BALL_TYPE_FILL_BOTTOM 5
 
 // -- SERIAL -----------------------------------------------------------------------------
-#define SERIAL_HEADER           0x42
-#define SERIAL_READY_TO_SEND    0xAA
-#define SERIAL_CLEAR_TO_SEND    0xBB
-#define SERIAL_REQUEST_RESYNC   0xCC
+#define SERIAL_HEADER 42
+#define SERIAL_READY_TO_SEND 0xAA
+#define SERIAL_CLEAR_TO_SEND 0xBB
+#define SERIAL_REQUEST_RESYNC 0xCC
 
 extern CRGBPalette256 currentPalette;
-extern uint8_t currentDisplayMode = MODE_COMMANDS;
+extern uint8_t currentMode;
 
-class Commands {
-   public:
-     Commands();
-     void init();
-     void process(char* command);
-     void run();
+class Commands
+{
+public:
+  Commands();
+  void init();
+  void process(char *command);
+  void run();
 
-   private:
-     // commands
-     void single_color(char* data);
-     void rainbow_sine(char* data);
-     void ping_pong(char* data);
-     void gravity(char* data);
-     void sparkle(char* data);
-     void show_number(char* data);
-     void rain(char* data);
-     void beats(char* data);
+private:
+  // commands - rendered on each loop
+  void single_color(char *data);
+  void rainbow_sine(char *data);
+  void ping_pong(char *data);
+  void gravity(char *data);
+  void sparkle(char *data);
+  void show_number(char *data);
+  void rain(char *data);
+  void beats(char *data);
 
-    // one-off events
-    void gravity_event();
-    void update_settings(char * data);
-    void beat(char * data);
+  // events - rendered once
+  void gravity_event();
+  void update_settings(char *data);
+  void beat(char *data);
+  void pixel(char *data);
+  void pixel_rgb(char *data);
 
-    // set leds
-    void all_off();
-    void all_white();
-    void set_led(uint8_t strip_index, int led, CRGB color);
-    void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
-    int strip_index_length(uint8_t strip_index);
+  // set leds
+  void all_off();
+  void all_white();
+  void set_led(uint8_t strip_index, int led, CRGB color);
+  void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
+  int strip_index_length(uint8_t strip_index);
 
-    // ball rendering
-    void render_ball(uint8_t strip_index, int ball_type, float center, float width, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
-    void render_square_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
-    void render_sine_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
-    void render_comet(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
-    void render_nyan(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
-    void render_fill_top(uint8_t strip_index, float center, CRGB color, float ball_brightness);
-    void render_fill_bottom(uint8_t strip_index, float center, CRGB color, float ball_brightness);
+  // ball rendering
+  void render_ball(uint8_t strip_index, int ball_type, float center, float width, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
+  void render_square_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
+  void render_sine_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
+  void render_comet(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
+  void render_nyan(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
+  void render_fill_top(uint8_t strip_index, float center, CRGB color, float ball_brightness);
+  void render_fill_bottom(uint8_t strip_index, float center, CRGB color, float ball_brightness);
 
-    // debugging
-    void show_pin_numbers();
+  // debugging
+  void show_pin_numbers();
 
-    // helper 
-    uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
-    uint8_t random_strip(uint8_t strip_index);
+  // helper
+  uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
+  uint8_t random_strip(uint8_t strip_index);
 
-    // float easing functions
-    float ease_in_cubic( float t );
-    float ease_out_cubic( float t );
-    float ease_in_out_cubic(float t);
-
+  // float easing functions
+  float ease_in_cubic(float t);
+  float ease_out_cubic(float t);
+  float ease_in_out_cubic(float t);
 };
