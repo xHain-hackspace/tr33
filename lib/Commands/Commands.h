@@ -79,6 +79,8 @@ struct Command
 #define SHOW_NUMBER 7
 #define RAIN 8
 #define BEATS 9
+#define MAPPED_SWIPE 10
+#define MAPPED_SHAPE 11
 
 // -- EVENTS ------------------------------------------------------------------------------
 
@@ -102,6 +104,17 @@ struct Command
 #define BALL_TYPE_NYAN 3
 #define BALL_TYPE_FILL_TOP 4
 #define BALL_TYPE_FILL_BOTTOM 5
+
+// -- MAPPED -----------------------------------------------------------------------
+
+#define SWIPE_TOP_BOTTOM 0
+#define SWIPE_BOTTOM_TOP 1
+#define SWIPE_LEFT_RIGHT 2
+#define SWIPE_RIGHT_LEFT 3
+
+#define SHAPE_SQUARE 0
+#define SHAPE_HOLLOW_SQUARE 1
+#define SHAPE_CIRCLE 2
 
 // -- SERIAL -----------------------------------------------------------------------------
 #define SERIAL_HEADER 42
@@ -130,6 +143,8 @@ private:
   void show_number(char *data);
   void rain(char *data);
   void beats(char *data);
+  void mapped_swipe(char *data);
+  void mapped_shape(char *data);
 
   // events - rendered once
   void gravity_event();
@@ -153,6 +168,10 @@ private:
   void render_nyan(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
   void render_fill_top(uint8_t strip_index, float center, CRGB color, float ball_brightness);
   void render_fill_bottom(uint8_t strip_index, float center, CRGB color, float ball_brightness);
+
+  // mapped rendering
+  void render_mapped_square(float x, float y, float size, CRGB color, bool fill);
+  void render_mapped_circle(float x, float y, float size, CRGB color, bool fuzz);
 
   // debugging
   void show_pin_numbers();
