@@ -1,11 +1,18 @@
+#include <Arduino.h>
+#include <FastLED.h>
 #include <Commands.h>
+
+#define SERIAL_HEADER 42
+#define SERIAL_READY_TO_SEND 0xAA
+#define SERIAL_CLEAR_TO_SEND 0xBB
+#define SERIAL_REQUEST_RESYNC 0xCC
 
 const uint8_t SERIAL_BUFFER_SIZE = 1024;
 char serial_buffer[SERIAL_BUFFER_SIZE];
 const uint8_t SERIAL_PACKET_SIZE = 2 + COMMAND_DATA_SIZE;
 const uint8_t SERIAL_TIMEOUT = 100;
 
-Commands commands = Commands();
+Commands commands;
 
 HardwareSerial CommandSerial(2);
 // HardwareSerial CommandSerial(0);

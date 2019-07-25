@@ -1,5 +1,6 @@
+#include <Tr33.h>
+#include <Tr33_mapped.h>
 #include <Commands.h>
-#include <Commands_mapped.h>
 
 float fraction = 0.0;
 long last_mapped_update = millis();
@@ -28,7 +29,7 @@ bool render(int i, float fraction, uint8_t swipe_direction)
   }
 }
 
-void Commands::mapped_swipe(char *data)
+void Tr33::mapped_swipe(char *data)
 {
   uint8_t swipe_direction = data[0];
   uint8_t color_index = data[1];
@@ -46,13 +47,13 @@ void Commands::mapped_swipe(char *data)
   {
     if (render(i, fraction, swipe_direction))
     {
-      Commands::set_led(int(mapping[i][0]), int(mapping[i][1]), color);
+      set_led(int(mapping[i][0]), int(mapping[i][1]), color);
     }
   }
   last_mapped_update = millis();
 }
 
-void Commands::mapped_shape(char *data)
+void Tr33::mapped_shape(char *data)
 {
   uint8_t shape = data[0];
   uint8_t color_index = data[1];
@@ -86,7 +87,7 @@ bool is_inside_square(float x, float y, float x_min, float x_max, float y_min, f
   return x > x_min && x < x_max && y > y_min && y < y_max;
 }
 
-void Commands::render_mapped_square(float x, float y, float size, CRGB color, bool fill)
+void Tr33::render_mapped_square(float x, float y, float size, CRGB color, bool fill)
 {
   float x_min = x - size / 2.0;
   float x_max = x + size / 2.0;
@@ -100,16 +101,16 @@ void Commands::render_mapped_square(float x, float y, float size, CRGB color, bo
 
     if (fill && is_inside_square(mapping[i][2], mapping[i][3], x_min, x_max, y_min, y_max))
     {
-      Commands::set_led(int(mapping[i][0]), int(mapping[i][1]), color);
+      set_led(int(mapping[i][0]), int(mapping[i][1]), color);
     }
     else if (!fill && is_inside_square(mapping[i][2], mapping[i][3], x_min, x_max, y_min, y_max) && !is_inside_square(mapping[i][2], mapping[i][3], x_min + border_width, x_max - border_width, y_min + border_width, y_max - border_width))
     {
-      Commands::set_led(int(mapping[i][0]), int(mapping[i][1]), color);
+      set_led(int(mapping[i][0]), int(mapping[i][1]), color);
     }
   }
 }
 
-void Commands::render_mapped_circle(float x, float y, float size, CRGB color, bool fuzz)
+void Tr33::render_mapped_circle(float x, float y, float size, CRGB color, bool fuzz)
 {
   float brightness = 0.0;
   float distance = 0.0;
@@ -128,7 +129,7 @@ void Commands::render_mapped_circle(float x, float y, float size, CRGB color, bo
       }
       else
       {
-        Commands::set_led(int(mapping[i][0]), int(mapping[i][1]), color);
+        set_led(int(mapping[i][0]), int(mapping[i][1]), color);
       }
     }
   }
