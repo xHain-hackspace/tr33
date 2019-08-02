@@ -15,7 +15,7 @@
 #define BRANCH_PIN_1 15
 #define BRANCH_PIN_2 33
 #define BRANCH_PIN_3 27
-#define BRANCH_PIN_4 12u
+#define BRANCH_PIN_4 12
 #define BRANCH_PIN_5 21
 #define BRANCH_PIN_6 19
 #define BRANCH_PIN_7 18
@@ -43,8 +43,6 @@
 
 // -- COMMANDS ---------------------------------------------------------------------------
 
-#define DISABLE 0
-#define SINGLE_COLOR 1
 #define WHITE 2
 #define RAINBOW_SINE 3
 #define PING_PONG 4
@@ -59,7 +57,6 @@
 // -- EVENTS ------------------------------------------------------------------------------
 
 #define GRAVITY_ADD_BALL 100
-#define UPDATE_SETTINGS 101
 #define BEAT 102
 #define PIXEL 103
 #define PIXEL_RGB 104

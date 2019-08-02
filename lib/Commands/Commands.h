@@ -16,6 +16,16 @@
 #define COLOR_BLACK CHSV(0, 0, 0)
 #define COLOR_WHITE CRGB(255, 255, 255)
 
+// -- COMMANDS ---------------------------------------------------------------------------
+
+#define COMMAND_DISABLE 0
+#define COMMAND_SINGLE_COLOR 1
+#define COMMAND_WHITE 2
+
+// -- EVENTS ------------------------------------------------------------------------------
+
+#define EVENT_UPDATE_SETTINGS 101
+
 struct Command
 {
   uint8_t index;
@@ -34,4 +44,6 @@ public:
   void process(char *command);
   void run();
   void update_settings(char *data);
+
+  static float ping_pong(uint8_t period_100ms);
 };

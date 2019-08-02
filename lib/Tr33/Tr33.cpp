@@ -67,12 +67,12 @@ void Tr33::init()
   // command_buffer[0].data[1] = 0;
   // command_buffer[0].data[2] = 20;
 
-  // command_buffer[0].type = RAINBOW_SINE;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[0].data[1] = 0;
-  // command_buffer[0].data[2] = 155;
-  // command_buffer[0].data[3] = 25;
-  // command_buffer[0].data[4] = 255;
+  command_buffer[0].type = RAINBOW_SINE;
+  command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  command_buffer[0].data[1] = 60;
+  command_buffer[0].data[2] = 50;
+  command_buffer[0].data[3] = 50;
+  command_buffer[0].data[4] = 255;
 }
 Commands commands_1;
 
@@ -83,7 +83,7 @@ void Tr33::process_event(Command *command)
   case GRAVITY_ADD_BALL:
     gravity_event();
     break;
-  case UPDATE_SETTINGS:
+  case EVENT_UPDATE_SETTINGS:
     commands_1.update_settings(command->data);
     break;
   case BEAT:
@@ -102,10 +102,10 @@ void Tr33::process_command(Command *command)
 {
   switch (command->type)
   {
-  case SINGLE_COLOR:
+  case COMMAND_SINGLE_COLOR:
     single_color(command->data);
     break;
-  case WHITE:
+  case COMMAND_WHITE:
     all_white();
     break;
   case RAINBOW_SINE:
