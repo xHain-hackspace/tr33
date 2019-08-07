@@ -44,7 +44,7 @@ void Tr33::sparkle(char *data)
   {
     if (sparkles[i].enabled)
     {
-      float brightness = ease_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (100.0 * float(SPARKLES_DIM_RATE)));
+      float brightness = Commands::ease_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (100.0 * float(SPARKLES_DIM_RATE)));
       if (brightness > 0)
       {
         render_ball(sparkles[i].strip_index, BALL_TYPE_SINE, sparkles[i].center, sparkles[i].width, sparkles[i].color, brightness, false, false);

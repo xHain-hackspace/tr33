@@ -138,9 +138,4 @@ private:
   // helper
   uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
   uint8_t random_strip(uint8_t strip_index);
-
-  // float easing functions
-  float ease_in_cubic(float t);
-  float ease_out_cubic(float t);
-  float ease_in_out_cubic(float t);
 };

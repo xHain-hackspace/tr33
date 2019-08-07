@@ -45,5 +45,11 @@ public:
   void run();
   void update_settings(char *data);
 
-  static float ping_pong(uint8_t period_100ms);
+  // Helpers
+  static float ping_pong_linear(uint8_t period_100ms);
+
+  // float easing functions
+  static float ease_in_cubic(float t);
+  static float ease_out_cubic(float t);
+  static float ease_in_out_cubic(float t);
 };

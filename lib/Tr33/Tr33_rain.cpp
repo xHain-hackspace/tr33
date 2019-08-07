@@ -50,7 +50,7 @@ void Tr33::rain(char *data)
       int time_diff = (now - drops[i].start_time);
       float center = drops[i].center - float(time_diff) / 1000.0 * float(drops[i].rate);
       float time_to_peak = 1.0 - fabs(time_diff - drop_duration / 2) / float(drop_duration / 2);
-      float brightness = ease_out_cubic(time_to_peak);
+      float brightness = Commands::ease_out_cubic(time_to_peak);
 
       if (time_diff > drop_duration || center < -10)
       {

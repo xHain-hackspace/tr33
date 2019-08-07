@@ -2,8 +2,8 @@
 #include <Tr33.h>
 #include <Dode.h>
 
-Tr33 runner = Tr33();
-// Dode runner = Dode();
+// Tr33 runner = Tr33();
+Dode runner = Dode();
 
 Command command_buffer[COMMAND_BUFFER_SIZE];
 CRGBPalette256 currentPalette = Rainbow_gp;

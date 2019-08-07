@@ -124,7 +124,7 @@ void Tr33::render_mapped_circle(float x, float y, float size, CRGB color, bool f
       if (fuzz)
       {
         brightness = 1.0 - distance / size;
-        brightness = ease_in_out_cubic(brightness);
+        brightness = Commands::ease_in_out_cubic(brightness);
         fade_led(mapping[i][0], mapping[i][1], color, brightness);
       }
       else

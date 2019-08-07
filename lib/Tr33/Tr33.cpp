@@ -318,26 +318,6 @@ void Tr33::all_white()
   }
 }
 
-float Tr33::ease_in_cubic(float t)
-{
-  return t * t * t;
-}
-
-float Tr33::ease_out_cubic(float t)
-{
-  t -= 1;
-  return t * t * t + 1;
-}
-
-float Tr33::ease_in_out_cubic(float t)
-{
-  t *= 2;
-  if (t < 1)
-    return 0.5f * t * t * t;
-  t -= 2;
-  return 0.5f * (t * t * t + 2);
-}
-
 //
 // -- Helper ------------------------------------------------------
 //

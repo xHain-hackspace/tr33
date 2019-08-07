@@ -48,7 +48,7 @@ void Tr33::render_sine_ball(uint8_t strip_index, float center, float width, CRGB
   for (int i = start_led; i <= end_led; i++)
   {
     brightness = 1.0 - fabs(float(i) - center) / (width / 2.0);
-    brightness = ease_in_out_cubic(brightness * ball_brightness);
+    brightness = Commands::ease_in_out_cubic(brightness * ball_brightness);
     fade_led(strip_index, i, color, brightness);
   }
 }
@@ -81,7 +81,7 @@ void Tr33::render_comet(uint8_t strip_index, float center, float length, CRGB co
 
     for (int i = first_led; i < last_led; i++)
     {
-      float brightness = ease_in_out_cubic(slope * (float(i) - end));
+      float brightness = Commands::ease_in_out_cubic(slope * (float(i) - end));
       if (brightness > 0)
       {
         int led_index = i;
@@ -127,7 +127,7 @@ void Tr33::render_nyan(uint8_t strip_index, float center, float length, CRGB col
 
     for (int i = first_led; i < last_led; i++)
     {
-      float brightness = ease_in_out_cubic(slope * (float(i) - end));
+      float brightness = Commands::ease_in_out_cubic(slope * (float(i) - end));
       if (brightness > 0)
       {
         int led_index = i;
