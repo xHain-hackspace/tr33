@@ -3,7 +3,7 @@
 
 #define HW_STRIP_COUNT 1
 #define HW_STRIP_PIXEL_COUNT 120
-#define HW_STRIP_PIN_0 27
+#define HW_STRIP_PIN_0 25
 extern CRGB leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 
 #define EDGE_COUNT 30
@@ -109,5 +109,5 @@ private:
     void set_led_mirrored_middle(uint8_t edge_index, uint8_t led_index, CRGB color);
     CRGB get_led(uint8_t edge_index, uint8_t led);
     void fade_led(uint8_t edge_index, int led, CRGB target, float amount);
-    void render_sine_ball(int8_t edge, float center, float width, CRGB color, float ball_brightness);
+    void render_ball(int8_t edge, float center, float width, CRGB color, float ball_brightness);
 };

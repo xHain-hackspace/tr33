@@ -1,6 +1,8 @@
 #include <Dode.h>
 #include <Commands.h>
 
+#define MAX_BALLS 16
+
 struct Ball
 {
   int8_t last_edge;
@@ -10,7 +12,8 @@ struct Ball
   float position;
 };
 
-Ball ball = {1, 1, 1, 0};
+Ball balls[MAX_BALLS];
+uint8_t active_balls = 0;
 long last_update = millis();
 
 int8_t next_edge(int8_t current_edge)
@@ -36,28 +39,56 @@ int8_t next_edge(int8_t current_edge)
   }
 };
 
+void add_ball()
+{
+  if (active_balls < MAX_BALLS)
+  {
+    uint8_t index = active_balls;
+    balls[index].last_edge = 1;
+    balls[index].current_edge = 1;
+    balls[index].next_edge = 1;
+    balls[index].position = random8(0, EDGE_PIXEL_COUNT);
+    active_balls++;
+  }
+}
+
 void Dode::random_walk(char *data)
 {
   uint8_t color_index = data[0];
   uint8_t rate = data[1];
   float width = float(data[2]) / 10.0;
+  uint8_t ball_count = data[3];
 
-  CRGB color = ColorFromPalette(currentPalette, color_index, 255);
-
-  long now = millis();
-  ball.position = ball.position + float(rate) * float(now - last_update) / 500.0;
-
-  if (ball.position > EDGE_PIXEL_COUNT)
+  if (active_balls > ball_count)
   {
-    ball.last_edge = ball.current_edge;
-    ball.current_edge = ball.next_edge;
-    ball.position = ball.position - EDGE_PIXEL_COUNT;
-
-    ball.next_edge = next_edge(ball.current_edge);
+    active_balls = ball_count;
+  }
+  else if (active_balls < ball_count)
+  {
+    for (int i = 0; i < ball_count - active_balls; i++)
+    {
+      add_ball();
+    }
   }
 
-  render_sine_ball(ball.last_edge, ball.position + EDGE_PIXEL_COUNT, width, color, 1.0);
-  render_sine_ball(ball.current_edge, ball.position, width, color, 1.0);
-  render_sine_ball(ball.next_edge, ball.position - EDGE_PIXEL_COUNT, width, color, 1.0);
+  long now = millis();
+
+  for (int i = 0; i < active_balls; i++)
+  {
+    CRGB color = ColorFromPalette(currentPalette, color_index + i * 256 / active_balls, 255);
+    balls[i].position = balls[i].position + float(rate) * float(now - last_update) / 500.0;
+
+    if (balls[i].position > EDGE_PIXEL_COUNT)
+    {
+      balls[i].last_edge = balls[i].current_edge;
+      balls[i].current_edge = balls[i].next_edge;
+      balls[i].next_edge = next_edge(balls[i].current_edge);
+      balls[i].position = balls[i].position - EDGE_PIXEL_COUNT;
+    }
+
+    render_ball(balls[i].last_edge, balls[i].position + EDGE_PIXEL_COUNT, width, color, 1.0);
+    render_ball(balls[i].current_edge, balls[i].position, width, color, 1.0);
+    render_ball(balls[i].next_edge, balls[i].position - EDGE_PIXEL_COUNT, width, color, 1.0);
+  }
   last_update = now;
 }

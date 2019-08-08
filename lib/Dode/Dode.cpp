@@ -11,20 +11,20 @@ Dode::Dode(void)
 
 void Dode::init()
 {
-  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
-  // command_buffer[0].data[0] = HUE_ORANGE;
-  // command_buffer[0].data[1] = 10;
+  command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  command_buffer[0].data[0] = HUE_PURPLE;
+  command_buffer[0].data[1] = 10;
 
-  // command_buffer[0].type = COMMAND_KALEIDOSCOPE;
-  // command_buffer[0].data[0] = HUE_PINK;
-  // command_buffer[0].data[1] = 255;
-  // command_buffer[0].data[2] = 20;
+  // command_buffer[1].type = COMMAND_KALEIDOSCOPE;
+  // command_buffer[1].data[0] = HUE_PINK;
+  // command_buffer[1].data[1] = 255;
+  // command_buffer[1].data[2] = 20;
 
   command_buffer[1].type = COMMAND_RANDOM_WALK;
   command_buffer[1].data[0] = HUE_RED;
   command_buffer[1].data[1] = 5;
   command_buffer[1].data[2] = 100;
-  command_buffer[1].data[3] = 10;
+  command_buffer[1].data[3] = 3;
 }
 
 void Dode::process_event(Command *command)

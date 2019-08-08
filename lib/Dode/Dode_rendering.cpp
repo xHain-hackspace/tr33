@@ -30,7 +30,7 @@ void Dode::set_led_mirrored_middle(uint8_t edge_index, uint8_t led_index, CRGB c
   }
 }
 
-void Dode::render_sine_ball(int8_t edge, float center, float width, CRGB color, float ball_brightness)
+void Dode::render_ball(int8_t edge, float center, float width, CRGB color, float ball_brightness)
 {
   if (edge < 0)
   {

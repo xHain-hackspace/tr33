@@ -14,8 +14,8 @@ const uint8_t SERIAL_TIMEOUT = 100;
 
 Commands commands;
 
-HardwareSerial CommandSerial(2);
-// HardwareSerial CommandSerial(0);
+// HardwareSerial CommandSerial(2);
+HardwareSerial CommandSerial(0);
 
 void flush_serial()
 {
