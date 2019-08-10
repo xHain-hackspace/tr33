@@ -1,16 +1,16 @@
 #include <Tr33.h>
 #include <Commands.h>
 
-void Tr33::pixel(char *data)
+void Commands::pixel(Leds *leds, char *data)
 {
   uint8_t strip_index = data[0];
   uint8_t led_index = data[1];
   uint8_t color_index = data[2];
 
-  set_led(strip_index, led_index, ColorFromPalette(currentPalette, color_index));
+  leds->set_led(strip_index, led_index, ColorFromPalette(currentPalette, color_index));
 }
 
-void Tr33::pixel_rgb(char *data)
+void Commands::pixel_rgb(Leds *leds, char *data)
 {
   uint8_t strip_index = data[0];
   uint8_t led_index = data[1];
@@ -18,5 +18,5 @@ void Tr33::pixel_rgb(char *data)
   uint8_t green = data[2];
   uint8_t blue = data[4];
 
-  set_led(strip_index, led_index, CRGB(red, green, blue));
+  leds->set_led(strip_index, led_index, CRGB(red, green, blue));
 }

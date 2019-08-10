@@ -1,9 +1,15 @@
 #include <Arduino.h>
 #include <FastLED.h>
 
+#ifndef LEDS_H
+#define LEDS_H
+#include <Leds.h>
+#endif
+
 #define HW_STRIP_COUNT 1
 #define HW_STRIP_PIXEL_COUNT 120
-#define HW_STRIP_PIN_0 25
+// #define HW_STRIP_PIN_0 25
+#define HW_STRIP_PIN_0 15
 extern CRGB edge_leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 
 #define EDGE_COUNT 30
@@ -84,25 +90,22 @@ static EdgeCorner corners[EDGE_COUNT] = {
 
 struct Command;
 
-class Dode
+class Dode : public Leds
 {
 public:
     Dode();
     void init();
-    void all_off();
-    void process_event(Command *command);
-    void process_command(Command *command);
+    void set_led(uint8_t strip_index, int led, CRGB color);
+    void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
+    uint8_t random_strip(uint8_t strip_index);
+    uint16_t strip_length(uint8_t strip_index);
+    uint8_t strip_count();
 
-private:
-    // Commands
-    void single_color(char *data);
+    void all_white();
     void kaleidoscope(char *data);
     void random_walk(char *data);
 
+private:
     // Rendering
-    void set_led(uint8_t edge_index, uint8_t led, CRGB color);
     void set_led_mirrored_middle(uint8_t edge_index, uint8_t led_index, CRGB color);
-    CRGB get_led(uint8_t edge_index, uint8_t led);
-    void fade_led(uint8_t edge_index, int led, CRGB target, float amount);
-    void render_ball(int8_t edge, float center, float width, CRGB color, float ball_brightness);
 };

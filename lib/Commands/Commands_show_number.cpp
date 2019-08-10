@@ -1,7 +1,6 @@
-#include <Tr33.h>
 #include <Commands.h>
 
-void Tr33::show_number(char *data)
+void Commands::show_number(Leds *leds, char *data)
 {
   uint8_t strip_index = data[0];
   uint8_t number = data[1];
@@ -13,18 +12,18 @@ void Tr33::show_number(char *data)
   // hundreds - red
   for (int i = 0; i < hundrets; i++)
   {
-    set_led(strip_index, i, CRGB(255, 0, 0));
+    leds->set_led(strip_index, i, CRGB(255, 0, 0));
   }
 
   // tens - green
   for (int i = hundrets; i < hundrets + tens; i++)
   {
-    set_led(strip_index, i, CRGB(0, 255, 0));
+    leds->set_led(strip_index, i, CRGB(0, 255, 0));
   }
 
   // ones - blue
   for (int i = hundrets + tens; i < hundrets + tens + ones; i++)
   {
-    set_led(strip_index, i, CRGB(0, 0, 255));
+    leds->set_led(strip_index, i, CRGB(0, 0, 255));
   }
 }

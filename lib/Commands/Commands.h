@@ -1,6 +1,11 @@
 #include <Arduino.h>
 #include <FastLED.h>
 
+#ifndef LEDS_H
+#define LEDS_H
+#include <Leds.h>
+#endif
+
 #define COMMAND_DATA_SIZE 8
 #define COMMAND_BUFFER_SIZE 16
 
@@ -52,18 +57,22 @@ extern Command command_buffer[COMMAND_BUFFER_SIZE];
 extern CRGBPalette256 currentPalette;
 extern uint8_t currentMode;
 
-struct Leds;
-
 class Commands
 {
 public:
-  void init();
+  void init(Leds *leds);
   void process(char *command);
   void run();
   void update_settings(char *data);
 
   // Commands
+  void single_color(Leds *leds, char *data);
   void sparkle(Leds *leds, char *data);
+  void show_number(Leds *leds, char *data);
+
+  // Events
+  void pixel(Leds *leds, char *data);
+  void pixel_rgb(Leds *leds, char *data);
 
   // Helpers
   static float ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms);

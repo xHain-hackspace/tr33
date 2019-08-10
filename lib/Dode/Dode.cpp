@@ -26,22 +26,76 @@ void Dode::init()
   command_buffer[1].data[3] = 3;
 }
 
-void Dode::process_event(Command *command){
-
-};
-
-void Dode::process_command(Command *command)
+void Dode::set_led(uint8_t strip_index, int led, CRGB color)
 {
-  switch (command->type)
+  if (strip_index < EDGE_COUNT)
   {
-  case COMMAND_SINGLE_COLOR:
-    single_color(command->data);
-    break;
-  case COMMAND_KALEIDOSCOPE:
-    kaleidoscope(command->data);
-    break;
-  case COMMAND_RANDOM_WALK:
-    random_walk(command->data);
-    break;
+    edge_leds[edges[strip_index][0]][edges[strip_index][1] + led] = color;
   }
+  else
+  {
+    for (int i = 0; i < HW_STRIP_COUNT; i++)
+    {
+      for (int j = 0; j < HW_STRIP_PIXEL_COUNT; j++)
+      {
+        edge_leds[i][j] = color;
+      }
+    }
+  }
+}
+
+CRGB get_led(uint8_t strip_index, int led)
+{
+  if (strip_index < EDGE_COUNT)
+  {
+    return edge_leds[edges[strip_index][0]][edges[strip_index][1] + led];
+  }
+  else
+  {
+    return edge_leds[edges[0][0]][edges[0][1] + led];
+  }
+}
+
+void Dode::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
+{
+  if (led >= 0 && led < EDGE_PIXEL_COUNT)
+  {
+    CRGB current = get_led(strip_index, led);
+    CRGB faded = blend(current, target, amount * 255.0);
+    set_led(strip_index, led, faded);
+  }
+}
+
+void Dode::set_led_mirrored_middle(uint8_t edge_index, uint8_t led_index, CRGB color)
+{
+  if (led_index <= EDGE_PIXEL_COUNT / 2 - 1)
+  {
+    set_led(edge_index, EDGE_PIXEL_COUNT / 2 - 1 - led_index, color);
+    set_led(edge_index, EDGE_PIXEL_COUNT / 2 + led_index, color);
+  }
+}
+
+void Dode::all_white()
+{
+  for (int i = 0; i < EDGE_PIXEL_COUNT; i++)
+  {
+    set_led(EDGE_COUNT, i, CRGB(255, 255, 255));
+  }
+}
+
+uint8_t Dode::random_strip(uint8_t strip_index)
+{
+  if (strip_index < EDGE_COUNT)
+  {
+    return strip_index;
+  }
+  else
+  {
+    return random8(0, EDGE_COUNT);
+  }
+}
+
+uint16_t Dode::strip_length(uint8_t strip_index)
+{
+  return EDGE_PIXEL_COUNT;
 }

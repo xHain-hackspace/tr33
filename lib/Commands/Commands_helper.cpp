@@ -1,5 +1,4 @@
 #include <Commands.h>
-#include <Leds.h>
 
 void Commands::render_ball(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness)
 {

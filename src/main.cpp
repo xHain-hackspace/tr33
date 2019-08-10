@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include <Commands.h>
+#include <Tr33.h>
+#include <Dode.h>
 
 #define SERIAL_HEADER 42
 #define SERIAL_READY_TO_SEND 0xAA
@@ -16,6 +18,9 @@ Commands commands;
 
 // HardwareSerial CommandSerial(2);
 HardwareSerial CommandSerial(0);
+
+// Tr33 led_structure = Tr33();
+Dode led_structure = Dode();
 
 void flush_serial()
 {
@@ -40,7 +45,7 @@ void setup()
 
   Serial.println("Starting up...");
 
-  commands.init();
+  commands.init(&led_structure);
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);

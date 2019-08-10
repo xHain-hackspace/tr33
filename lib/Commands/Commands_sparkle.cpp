@@ -1,5 +1,4 @@
 #include <Commands.h>
-#include <Leds.h>
 
 #define MAX_SPARKLES 500
 #define SPARKLES_DIM_RATE 40

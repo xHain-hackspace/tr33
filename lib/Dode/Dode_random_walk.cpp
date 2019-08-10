@@ -55,9 +55,10 @@ void add_ball()
 void Dode::random_walk(char *data)
 {
   uint8_t color_index = data[0];
-  uint8_t rate = data[1];
-  float width = float(data[2]) / 10.0;
-  uint8_t ball_count = data[3];
+  float brightness = data[1];
+  uint8_t rate = data[2];
+  float width = float(data[3]) / 10.0;
+  uint8_t ball_count = data[4];
 
   if (active_balls > ball_count)
   {
@@ -86,9 +87,9 @@ void Dode::random_walk(char *data)
       balls[i].position = balls[i].position - EDGE_PIXEL_COUNT;
     }
 
-    render_ball(balls[i].last_edge, balls[i].position + EDGE_PIXEL_COUNT, width, color, 1.0);
-    render_ball(balls[i].current_edge, balls[i].position, width, color, 1.0);
-    render_ball(balls[i].next_edge, balls[i].position - EDGE_PIXEL_COUNT, width, color, 1.0);
+    Commands::render_ball(this, abs8(balls[i].last_edge) - 1, balls[i].position + EDGE_PIXEL_COUNT, width, color, brightness / 255.0);
+    Commands::render_ball(this, abs8(balls[i].current_edge) - 1, balls[i].position, width, color, brightness / 255.0);
+    Commands::render_ball(this, abs8(balls[i].next_edge) - 1, balls[i].position - EDGE_PIXEL_COUNT, width, color, brightness / 255.0);
   }
   last_update = now;
 }

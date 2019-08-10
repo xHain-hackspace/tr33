@@ -1,6 +1,10 @@
 #include <Arduino.h>
 #include <FastLED.h>
+
+#ifndef LEDS_H
+#define LEDS_H
 #include <Leds.h>
+#endif
 
 // trunk config
 #define TRUNK_PIN_1 23
@@ -25,7 +29,7 @@
 #define BRANCH_PIN_10 25
 #define BRANCH_PIN_11 26
 #define BRANCH_PIN_12 13
-#define BRANCH_PIXEL_COUNT 90
+#define BRANCH_PIXEL_COUNT 300
 #define BRANCH_STRIP_COUNT 12
 #define BRANCH_OFFSET 50
 
@@ -61,6 +65,7 @@
 #define SHAPE_CIRCLE 2
 
 struct Command;
+struct Leds;
 
 class Tr33 : public Leds
 {
@@ -72,15 +77,13 @@ public:
   void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
   uint8_t random_strip(uint8_t strip_index);
   uint16_t strip_length(uint8_t strip_index);
+  uint8_t strip_count();
 
   // commands - rendered on each loop
   void all_white();
-  void single_color(char *data);
   void rainbow_sine(char *data);
   void ping_pong(char *data);
   void gravity(char *data);
-  void sparkle(char *data);
-  void show_number(char *data);
   void rain(char *data);
   void beats(char *data);
   void mapped_swipe(char *data);
@@ -89,8 +92,6 @@ public:
   // events - rendered once
   void gravity_event();
   void beat(char *data);
-  void pixel(char *data);
-  void pixel_rgb(char *data);
 
 private:
   // ball rendering
