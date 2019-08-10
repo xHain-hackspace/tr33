@@ -4,16 +4,11 @@
 #define HW_STRIP_COUNT 1
 #define HW_STRIP_PIXEL_COUNT 120
 #define HW_STRIP_PIN_0 25
-extern CRGB leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
+extern CRGB edge_leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 
 #define EDGE_COUNT 30
 #define EDGE_PIXEL_COUNT 4
 #define CORNER_COUNT 20
-
-// COMMANDS
-
-#define COMMAND_KALEIDOSCOPE 12
-#define COMMAND_RANDOM_WALK 13
 
 static uint16_t edges[EDGE_COUNT][2] = {
     {0, 0},

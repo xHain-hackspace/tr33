@@ -21,10 +21,10 @@ int drop_duration = 7500; // ms
 void Tr33::rain(char *data)
 {
   uint8_t strip_index = data[0];
-  uint8_t color_index = random_or_value(data[1], 0, 255);
-  float width = float(random_or_value(data[2], 0, 255)) / 10.0;
+  uint8_t color_index = Commands::random_or_value(data[1], 0, 255);
+  float width = float(Commands::random_or_value(data[2], 0, 255)) / 10.0;
   uint8_t frequency = data[3]; // drops per seconds
-  float rate = float(random_or_value(data[4], 0, 255)) / 10.0;
+  float rate = float(Commands::random_or_value(data[4], 0, 255)) / 10.0;
 
   int now = millis();
 
@@ -38,7 +38,7 @@ void Tr33::rain(char *data)
     drops[drop_index].color = color_index == 255 ? COLOR_WHITE : ColorFromPalette(currentPalette, color_index);
     drops[drop_index].width = width;
     drops[drop_index].strip_index = random_strip(strip_index);
-    drops[drop_index].center = random(0, strip_index_length(drops[drop_index].strip_index) - 1);
+    drops[drop_index].center = random(0, strip_length(drops[drop_index].strip_index) - 1);
     drops[drop_index].start_time = now;
     drops[drop_index].rate = rate;
   }

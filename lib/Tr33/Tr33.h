@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <FastLED.h>
+#include <Leds.h>
 
 // trunk config
 #define TRUNK_PIN_1 23
@@ -37,29 +38,7 @@
 #define GRAVITY_MAX_BALLS 50
 #define GRAVITY_VALUE 50
 #define GRAVITY_DAMPING 70
-#define MAX_SPARKLES 500
-#define SPARKLES_DIM_RATE 40
 #define MAX_RAIN_DROPS 500
-
-// -- COMMANDS ---------------------------------------------------------------------------
-
-#define WHITE 2
-#define RAINBOW_SINE 3
-#define PING_PONG 4
-#define GRAVITY 5
-#define SPARKLE 6
-#define SHOW_NUMBER 7
-#define RAIN 8
-#define BEATS 9
-#define MAPPED_SWIPE 10
-#define MAPPED_SHAPE 11
-
-// -- EVENTS ------------------------------------------------------------------------------
-
-#define GRAVITY_ADD_BALL 100
-#define BEAT 102
-#define PIXEL 103
-#define PIXEL_RGB 104
 
 // -- BALL_TYPES --------------------------------------------------------------------------
 
@@ -83,18 +62,19 @@
 
 struct Command;
 
-class Tr33
+class Tr33 : public Leds
 {
 
 public:
   Tr33();
   void init();
-  void all_off();
-  void process_event(Command *command);
-  void process_command(Command *command);
+  void set_led(uint8_t strip_index, int led, CRGB color);
+  void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
+  uint8_t random_strip(uint8_t strip_index);
+  uint16_t strip_length(uint8_t strip_index);
 
-private:
   // commands - rendered on each loop
+  void all_white();
   void single_color(char *data);
   void rainbow_sine(char *data);
   void ping_pong(char *data);
@@ -108,21 +88,14 @@ private:
 
   // events - rendered once
   void gravity_event();
-  void update_settings(char *data);
   void beat(char *data);
   void pixel(char *data);
   void pixel_rgb(char *data);
 
-  // set leds
-  void all_white();
-  void set_led(uint8_t strip_index, int led, CRGB color);
-  void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
-  int strip_index_length(uint8_t strip_index);
-
+private:
   // ball rendering
   void render_ball(uint8_t strip_index, int ball_type, float center, float width, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
   void render_square_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
-  void render_sine_ball(uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
   void render_comet(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
   void render_nyan(uint8_t strip_index, float center, float length, CRGB color, float ball_brightness, bool bounce_top, bool bounce_bottom);
   void render_fill_top(uint8_t strip_index, float center, CRGB color, float ball_brightness);
@@ -134,8 +107,4 @@ private:
 
   // debugging
   void show_pin_numbers();
-
-  // helper
-  uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
-  uint8_t random_strip(uint8_t strip_index);
 };

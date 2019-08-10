@@ -1,12 +1,11 @@
 #include <Dode.h>
 #include <Commands.h>
 
-Commands commands_2;
-CRGB leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
+CRGB edge_leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 
 Dode::Dode(void)
 {
-  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_0>(leds[0], HW_STRIP_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_0>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
 }
 
 void Dode::init()
@@ -27,14 +26,8 @@ void Dode::init()
   command_buffer[1].data[3] = 3;
 }
 
-void Dode::process_event(Command *command)
-{
-  switch (command->type)
-  {
-  case EVENT_UPDATE_SETTINGS:
-    commands_2.update_settings(command->data);
-    break;
-  };
+void Dode::process_event(Command *command){
+
 };
 
 void Dode::process_command(Command *command)

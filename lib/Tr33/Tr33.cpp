@@ -67,75 +67,12 @@ void Tr33::init()
   // command_buffer[0].data[1] = 0;
   // command_buffer[0].data[2] = 20;
 
-  command_buffer[0].type = RAINBOW_SINE;
+  command_buffer[0].type = COMMAND_RAINBOW_SINE;
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
   command_buffer[0].data[1] = 60;
   command_buffer[0].data[2] = 50;
   command_buffer[0].data[3] = 50;
   command_buffer[0].data[4] = 255;
-}
-Commands commands_1;
-
-void Tr33::process_event(Command *command)
-{
-  switch (command->type)
-  {
-  case GRAVITY_ADD_BALL:
-    gravity_event();
-    break;
-  case EVENT_UPDATE_SETTINGS:
-    commands_1.update_settings(command->data);
-    break;
-  case BEAT:
-    beat(command->data);
-    break;
-  case PIXEL:
-    pixel(command->data);
-    break;
-  case PIXEL_RGB:
-    pixel_rgb(command->data);
-    break;
-  };
-};
-
-void Tr33::process_command(Command *command)
-{
-  switch (command->type)
-  {
-  case COMMAND_SINGLE_COLOR:
-    single_color(command->data);
-    break;
-  case COMMAND_WHITE:
-    all_white();
-    break;
-  case RAINBOW_SINE:
-    rainbow_sine(command->data);
-    break;
-  case PING_PONG:
-    ping_pong(command->data);
-    break;
-  case GRAVITY:
-    gravity(command->data);
-    break;
-  case SPARKLE:
-    sparkle(command->data);
-    break;
-  case SHOW_NUMBER:
-    show_number(command->data);
-    break;
-  case RAIN:
-    rain(command->data);
-    break;
-  case BEATS:
-    beats(command->data);
-    break;
-  case MAPPED_SWIPE:
-    mapped_swipe(command->data);
-    break;
-  case MAPPED_SHAPE:
-    mapped_shape(command->data);
-    break;
-  }
 }
 
 //
@@ -166,7 +103,7 @@ CRGB get_trunk_led(int trunk, int led)
   }
 }
 
-int Tr33::strip_index_length(uint8_t strip_index)
+uint16_t Tr33::strip_length(uint8_t strip_index)
 {
   if (strip_index < TRUNK_STRIP_COUNT || strip_index == STRIP_INDEX_ALL_TRUNKS)
   {
@@ -197,7 +134,7 @@ int spiral_led_index(uint8_t index)
 
 void Tr33::set_led(uint8_t strip_index, int led, CRGB color)
 {
-  if (led >= 0 && led < strip_index_length(strip_index))
+  if (led >= 0 && led < strip_length(strip_index))
   {
     // single trunk
     if (strip_index < TRUNK_STRIP_COUNT)
@@ -294,7 +231,7 @@ CRGB get_led(uint8_t strip_index, int led)
 
 void Tr33::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
 {
-  if (led > 0 && led < strip_index_length(strip_index))
+  if (led > 0 && led < strip_length(strip_index))
   {
     CRGB current = get_led(strip_index, led);
     CRGB faded = blend(current, target, amount * 255.0);
@@ -302,17 +239,9 @@ void Tr33::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
   }
 }
 
-void Tr33::all_off()
-{
-  for (int i = 0; i < strip_index_length(STRIP_INDEX_ALL); i++)
-  {
-    set_led(STRIP_INDEX_ALL, i, CRGB(0, 0, 0));
-  }
-}
-
 void Tr33::all_white()
 {
-  for (int i = 0; i < strip_index_length(STRIP_INDEX_ALL); i++)
+  for (int i = 0; i < strip_length(STRIP_INDEX_ALL); i++)
   {
     set_led(STRIP_INDEX_ALL, i, CRGB(255, 255, 255));
   }
@@ -321,18 +250,6 @@ void Tr33::all_white()
 //
 // -- Helper ------------------------------------------------------
 //
-
-uint8_t Tr33::random_or_value(uint8_t value, uint8_t min, uint8_t max)
-{
-  if (value == 0)
-  {
-    return random8(min, max);
-  }
-  else
-  {
-    return value;
-  }
-}
 
 uint8_t Tr33::random_strip(uint8_t strip_index)
 {

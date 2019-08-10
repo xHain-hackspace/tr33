@@ -3,12 +3,12 @@
 
 void Dode::set_led(uint8_t edge_index, uint8_t led, CRGB color)
 {
-  leds[edges[edge_index][0]][edges[edge_index][1] + led] = color;
+  edge_leds[edges[edge_index][0]][edges[edge_index][1] + led] = color;
 }
 
 CRGB Dode::get_led(uint8_t edge_index, uint8_t led)
 {
-  return leds[edges[edge_index][0]][edges[edge_index][1] + led];
+  return edge_leds[edges[edge_index][0]][edges[edge_index][1] + led];
 }
 
 void Dode::fade_led(uint8_t edge_index, int led, CRGB target, float amount)
@@ -46,16 +46,5 @@ void Dode::render_ball(int8_t edge, float center, float width, CRGB color, float
     brightness = 1.0 - fabs(float(i) - center) / (width / 2.0);
     brightness = Commands::ease_in_out_cubic(brightness * ball_brightness);
     fade_led(abs8(edge) - 1, i, color, brightness);
-  }
-}
-
-void Dode::all_off()
-{
-  for (int i = 0; i < HW_STRIP_COUNT; i++)
-  {
-    for (int j = 0; j < HW_STRIP_PIXEL_COUNT; j++)
-    {
-      leds[i][j] = CRGB(0, 0, 0);
-    }
   }
 }

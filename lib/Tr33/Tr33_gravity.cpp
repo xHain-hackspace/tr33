@@ -57,8 +57,8 @@ void Tr33::gravity_event()
   ball.position = 0;
 
   ball.strip_index = gravity_strip_index;
-  ball.rate = random_or_value(gravity_rate, 30, 120);
-  ball.color_index = random_or_value(gravity_color_index, 0, 255);
+  ball.rate = Commands::random_or_value(gravity_rate, 30, 120);
+  ball.color_index = Commands::random_or_value(gravity_color_index, 0, 255);
 
   gravity_last_ball = millis();
 
