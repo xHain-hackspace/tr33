@@ -8,45 +8,54 @@
 
 #define HW_STRIP_COUNT 1
 #define HW_STRIP_PIXEL_COUNT 120
-// #define HW_STRIP_PIN_0 25
-#define HW_STRIP_PIN_0 15
+#define HW_STRIP_PIN_0 33
+#define HW_STRIP_PIN_1 13
+#define HW_STRIP_PIN_2 14
+#define HW_STRIP_PIN_3 27
+#define HW_STRIP_PIN_4 25
+#define HW_STRIP_PIN_5 26
+#define HW_STRIP_PIN_6 32
+#define HW_STRIP_PIN_7 15
+#define HW_STRIP_PIN_8 4
+#define HW_STRIP_PIN_9 15
+
 extern CRGB edge_leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 
 #define EDGE_COUNT 30
-#define EDGE_PIXEL_COUNT 4
+#define EDGE_PIXEL_COUNT 74
 #define CORNER_COUNT 20
 
 static uint16_t edges[EDGE_COUNT][2] = {
     {0, 0},
-    {0, 4},
-    {0, 8},
-    {0, 12},
-    {0, 16},
-    {0, 20},
-    {0, 24},
-    {0, 28},
-    {0, 32},
-    {0, 36},
-    {0, 40},
-    {0, 44},
-    {0, 48},
-    {0, 52},
-    {0, 56},
-    {0, 60},
-    {0, 64},
-    {0, 68},
-    {0, 72},
-    {0, 76},
-    {0, 80},
-    {0, 84},
-    {0, 88},
-    {0, 92},
-    {0, 96},
-    {0, 100},
-    {0, 104},
-    {0, 108},
-    {0, 112},
-    {0, 116}};
+    {0, 74},
+    {0, 148},
+    {1, 0},
+    {1, 74},
+    {1, 148},
+    {2, 0},
+    {2, 74},
+    {2, 148},
+    {3, 0},
+    {3, 74},
+    {3, 148},
+    {4, 0},
+    {4, 74},
+    {4, 148},
+    {5, 0},
+    {5, 74},
+    {5, 148},
+    {6, 0},
+    {6, 74},
+    {6, 148},
+    {7, 0},
+    {7, 74},
+    {7, 148},
+    {8, 0},
+    {8, 74},
+    {8, 148},
+    {9, 0},
+    {9, 74},
+    {9, 148}};
 
 struct EdgeCorner
 {

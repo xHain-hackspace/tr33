@@ -52,6 +52,16 @@ void add_ball()
   }
 }
 
+void render_ball(Leds *leds, int8_t edge, float center, float width, CRGB color, float brightness)
+{
+  if (edge < 0)
+  {
+    edge = edge * -1;
+    center = EDGE_PIXEL_COUNT - center;
+  }
+  Commands::render_ball(leds, edge - 1, center, width, color, brightness);
+}
+
 void Dode::random_walk(char *data)
 {
   uint8_t color_index = data[0];
@@ -87,9 +97,9 @@ void Dode::random_walk(char *data)
       balls[i].position = balls[i].position - EDGE_PIXEL_COUNT;
     }
 
-    Commands::render_ball(this, abs8(balls[i].last_edge) - 1, balls[i].position + EDGE_PIXEL_COUNT, width, color, brightness / 255.0);
-    Commands::render_ball(this, abs8(balls[i].current_edge) - 1, balls[i].position, width, color, brightness / 255.0);
-    Commands::render_ball(this, abs8(balls[i].next_edge) - 1, balls[i].position - EDGE_PIXEL_COUNT, width, color, brightness / 255.0);
+    render_ball(this, balls[i].last_edge, balls[i].position + EDGE_PIXEL_COUNT, width, color, brightness / 255.0);
+    render_ball(this, balls[i].current_edge, balls[i].position, width, color, brightness / 255.0);
+    render_ball(this, balls[i].next_edge, balls[i].position - EDGE_PIXEL_COUNT, width, color, brightness / 255.0);
   }
   last_update = now;
 }

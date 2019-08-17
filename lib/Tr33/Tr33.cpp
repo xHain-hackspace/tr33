@@ -278,7 +278,7 @@ uint8_t Tr33::strip_count()
 
 void Tr33::show_pin_numbers()
 {
-  Serial.println("Showing pin Numbers");
+  // Serial.println("Showing pin Numbers");
 
   // command_buffer[0].type = SHOW_NUMBER;
   // command_buffer[0].data[0] = 0;

@@ -35,7 +35,7 @@ void flush_serial()
 void setup()
 {
   Serial.begin(230400);
-  CommandSerial.begin(1000000);
+  CommandSerial.begin(921600);
   while (!Serial || !CommandSerial)
   {
     // do nothing
@@ -93,14 +93,14 @@ void loop()
     }
     else
     {
-      Serial.print("Expected header, got: ");
-      Serial.println(byte);
+      // Serial.print("Expected header, got: ");
+      // Serial.println(byte);
     }
   }
   else if (byte != -1)
   {
-    Serial.print("Expected RTS, got: ");
-    Serial.println(byte);
+    // Serial.print("Expected RTS, got: ");
+    // Serial.println(byte);
     // flush_serial();
     // CommandSerial.write(SERIAL_REQUEST_RESYNC);
   }

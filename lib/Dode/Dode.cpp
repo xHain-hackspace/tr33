@@ -6,13 +6,20 @@ CRGB edge_leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 Dode::Dode(void)
 {
   FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_0>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_1>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_2>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_3>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_4>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_5>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_6>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
+  FastLED.addLeds<NEOPIXEL, HW_STRIP_PIN_7>(edge_leds[0], HW_STRIP_PIXEL_COUNT);
 }
 
 void Dode::init()
 {
-  command_buffer[0].type = COMMAND_SINGLE_COLOR;
-  command_buffer[0].data[0] = HUE_PURPLE;
-  command_buffer[0].data[1] = 10;
+  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  // command_buffer[0].data[0] = HUE_PURPLE;
+  // command_buffer[0].data[1] = 10;
 
   // command_buffer[1].type = COMMAND_KALEIDOSCOPE;
   // command_buffer[1].data[0] = HUE_PINK;
@@ -21,9 +28,10 @@ void Dode::init()
 
   command_buffer[1].type = COMMAND_RANDOM_WALK;
   command_buffer[1].data[0] = HUE_RED;
-  command_buffer[1].data[1] = 5;
-  command_buffer[1].data[2] = 100;
-  command_buffer[1].data[3] = 3;
+  command_buffer[1].data[1] = 255;
+  command_buffer[1].data[2] = 1;
+  command_buffer[1].data[3] = 100;
+  command_buffer[1].data[4] = 1;
 }
 
 void Dode::set_led(uint8_t strip_index, int led, CRGB color)
