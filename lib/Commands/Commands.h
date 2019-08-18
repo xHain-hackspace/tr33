@@ -37,6 +37,7 @@
 #define COMMAND_MAPPED_SHAPE 11
 #define COMMAND_KALEIDOSCOPE 12
 #define COMMAND_RANDOM_WALK 13
+#define COMMAND_DEBUG 14
 
 // -- EVENTS ------------------------------------------------------------------------------
 
@@ -45,6 +46,12 @@
 #define EVENT_BEAT 102
 #define EVENT_PIXEL 103
 #define EVENT_PIXEL_RGB 104
+
+// -- BALLS ------------------------------------------------------------------------------
+
+#define BALL_TYPE_SINE 1
+#define BALL_TYPE_COMET 2
+#define BALL_TYPE_NYAN 3
 
 struct Command
 {
@@ -84,5 +91,6 @@ public:
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
   static void render_ball(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
-  static void render_nyan(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
+  static void render_nyan(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, bool reverse);
+  static void render_comet(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, bool reverse);
 };

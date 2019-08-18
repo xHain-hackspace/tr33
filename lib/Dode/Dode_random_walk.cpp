@@ -1,7 +1,7 @@
 #include <Dode.h>
 #include <Commands.h>
 
-#define MAX_BALLS 32
+#define MAX_BALLS 64
 
 struct Ball
 {
@@ -14,6 +14,7 @@ struct Ball
 
 Ball balls[MAX_BALLS];
 uint8_t active_balls = 0;
+uint8_t ball_type = BALL_TYPE_SINE;
 long last_update = millis();
 
 int8_t next_edge(int8_t current_edge)
@@ -59,13 +60,28 @@ uint16_t r_strip_length(Leds *leds, int8_t edge)
 
 void render_ball(Leds *leds, int8_t edge, float center, float width, CRGB color, float brightness)
 {
+  bool reverse = false;
+
   if (edge < 0)
   {
     edge = edge * -1;
     center = r_strip_length(leds, edge) - center;
+    reverse = true;
   }
-  Commands::render_ball(leds, edge - 1, center, width, color, brightness);
-  // Commands::render_nyan(leds, edge - 1, center, width, color, brightness);
+
+  switch (ball_type)
+  {
+  case 0:
+  case BALL_TYPE_SINE:
+    Commands::render_ball(leds, edge - 1, center, width, color, brightness);
+    break;
+  case BALL_TYPE_COMET:
+    Commands::render_comet(leds, edge - 1, center, width, color, brightness, reverse);
+    break;
+  case BALL_TYPE_NYAN:
+    Commands::render_nyan(leds, edge - 1, center, width, color, brightness, reverse);
+    break;
+  }
 }
 
 void Dode::random_walk(char *data)
@@ -75,6 +91,7 @@ void Dode::random_walk(char *data)
   uint8_t rate = data[2];
   float width = float(data[3]);
   uint8_t ball_count = data[4];
+  ball_type = data[5];
 
   if (active_balls > ball_count)
   {
@@ -106,7 +123,7 @@ void Dode::random_walk(char *data)
 
     render_ball(this, balls[i].last_edge, balls[i].position + r_strip_length(this, balls[i].last_edge), width, color, brightness / 255.0);
     render_ball(this, balls[i].current_edge, balls[i].position, width, color, brightness / 255.0);
-    render_ball(this, balls[i].next_edge, r_strip_length(this, balls[i].next_edge), width, color, brightness / 255.0);
+    render_ball(this, balls[i].next_edge, balls[i].position - r_strip_length(this, balls[i].next_edge), width, color, brightness / 255.0);
   }
   last_update = now;
 }

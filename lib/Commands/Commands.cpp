@@ -106,6 +106,9 @@ void Commands::run()
       case COMMAND_RANDOM_WALK:
         leds->random_walk(command_buffer[i].data);
         break;
+      case COMMAND_DEBUG:
+        leds->debug(command_buffer[i].data);
+        break;
       default:
         break;
       }

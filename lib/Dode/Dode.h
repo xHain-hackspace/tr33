@@ -8,17 +8,17 @@
 
 #define HW_STRIP_COUNT 10
 #define HW_STRIP_PIXEL_COUNT 260
-#define HW_STRIP_PIN_0 4  // 0
-#define HW_STRIP_PIN_1 5  // 3
-#define HW_STRIP_PIN_2 21 // 6
-#define HW_STRIP_PIN_3 23 // 9
-#define HW_STRIP_PIN_4 15 // 12
+#define HW_STRIP_PIN_0 4
+#define HW_STRIP_PIN_1 5
+#define HW_STRIP_PIN_2 21
+#define HW_STRIP_PIN_3 23
+#define HW_STRIP_PIN_4 15
 
-#define HW_STRIP_PIN_5 18 // 15 : 22
-#define HW_STRIP_PIN_6 19 // 18 : 18
-#define HW_STRIP_PIN_7 22 // 21 : 18
-#define HW_STRIP_PIN_8 13 // 24 : 12
-#define HW_STRIP_PIN_9 12 // 27
+#define HW_STRIP_PIN_5 18
+#define HW_STRIP_PIN_6 19
+#define HW_STRIP_PIN_7 22
+#define HW_STRIP_PIN_8 13
+#define HW_STRIP_PIN_9 12
 
 extern CRGB edge_leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 
@@ -90,13 +90,13 @@ static EdgeCorner corners[EDGE_COUNT] = {
     {1, -13, 28, 15},
     {28, -14, 26, -25},
 
-    {-2, 3, -5, 17},
-    {-5, 16, -21, 18},
+    {-2, 3, -6, 17},
+    {-6, -16, -21, 18},
     {-21, -17, 30, -29},
     {-5, 6, -9, 20},
     {-9, -19, -24, 21},
 
-    {-24, 20, 28, -27},
+    {-24, -20, 18, -17},
     {-8, 9, -12, 23},
     {-12, -22, -27, 24},
     {-27, -23, 21, -20},
@@ -105,7 +105,7 @@ static EdgeCorner corners[EDGE_COUNT] = {
     {-15, -25, -30, 27},
     {-30, -26, 24, -23},
     {-14, 15, -3, 29},
-    {-2, -28, -27, 30},
+    {-3, -28, -18, 30},
     {-18, -29, 27, -26}};
 
 struct Command;
@@ -124,6 +124,7 @@ public:
     void all_white();
     void kaleidoscope(char *data);
     void random_walk(char *data);
+    void debug(char *data);
 
 private:
     // Rendering

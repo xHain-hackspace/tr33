@@ -5,9 +5,6 @@ void Tr33::render_ball(uint8_t strip_index, int ball_type, float center, float w
 {
   switch (ball_type)
   {
-  case BALL_TYPE_SQUARE:
-    render_square_ball(strip_index, fabs(center), width, color, ball_brightness);
-    break;
   case BALL_TYPE_SINE:
     Commands::render_ball(this, strip_index, fabs(center), width, color, ball_brightness);
     break;

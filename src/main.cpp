@@ -16,8 +16,8 @@ const uint8_t SERIAL_TIMEOUT = 100;
 
 Commands commands;
 
-HardwareSerial CommandSerial(2);
-// HardwareSerial CommandSerial(0);
+// HardwareSerial CommandSerial(2);
+HardwareSerial CommandSerial(0);
 
 // Tr33 led_structure = Tr33();
 Dode led_structure = Dode();

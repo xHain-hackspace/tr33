@@ -31,12 +31,13 @@ void Dode::init()
   // command_buffer[1].data[1] = 255;
   // command_buffer[1].data[2] = 20;
 
-  // command_buffer[1].type = COMMAND_RANDOM_WALK;
-  // command_buffer[1].data[0] = HUE_ORANGE;
-  // command_buffer[1].data[1] = 255;
-  // command_buffer[1].data[2] = 10;
-  // command_buffer[1].data[3] = 200;
-  // command_buffer[1].data[4] = 3;
+  command_buffer[1].type = COMMAND_RANDOM_WALK;
+  command_buffer[1].data[0] = HUE_RED;
+  command_buffer[1].data[1] = 255;
+  command_buffer[1].data[2] = 40;
+  command_buffer[1].data[3] = 150;
+  command_buffer[1].data[4] = 2;
+  command_buffer[1].data[5] = BALL_TYPE_COMET;
 
   // command_buffer[2].type = COMMAND_SPARKLE;
   // command_buffer[2].data[0] = 31;
@@ -44,12 +45,15 @@ void Dode::init()
   // command_buffer[2].data[2] = 40;
   // command_buffer[2].data[3] = 50;
 
-  for (int i = 0; i < 30; i++)
-  {
-    command_buffer[i + 1].type = COMMAND_SHOW_NUMBER;
-    command_buffer[i + 1].data[0] = i;
-    command_buffer[i + 1].data[1] = i + 1;
-  }
+  // for (int i = 0; i < 30; i++)
+  // {
+  //   command_buffer[i + 1].type = COMMAND_SHOW_NUMBER;
+  //   command_buffer[i + 1].data[0] = i;
+  //   command_buffer[i + 1].data[1] = i + 1;
+  // }
+
+  // command_buffer[0].type = COMMAND_DEBUG;
+  // command_buffer[0].data[0] = 29;
 }
 
 void Dode::set_led(uint8_t strip_index, int led, CRGB color)

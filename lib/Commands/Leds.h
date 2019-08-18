@@ -21,6 +21,7 @@ public:
   virtual void mapped_shape(char *data);
   virtual void kaleidoscope(char *data);
   virtual void random_walk(char *data);
+  virtual void debug(char *data);
 
   // events - rendered once
   virtual void gravity_event();

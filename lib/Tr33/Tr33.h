@@ -46,7 +46,6 @@
 
 // -- BALL_TYPES --------------------------------------------------------------------------
 
-#define BALL_TYPE_SQUARE 0
 #define BALL_TYPE_SINE 1
 #define BALL_TYPE_COMET 2
 #define BALL_TYPE_NYAN 3
