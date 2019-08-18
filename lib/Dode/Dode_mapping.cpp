@@ -137,8 +137,7 @@ int main() {
         {H3[0],H3[1],H3[2]}, {T3[0],T3[1],T3[2]}, {L1[0],L1[1],L1[2]}, {H3_[0],H3_[1],H3_[2]}, {T3[0],T3[1],T3[2]}
     };
 
-    // Generieren der Kartesischen Koordinaten
-    // Kantenindex, LED-Index, X, Y, Z
+    // Generieren der Koordinaten
     int j = 0;
     for(int k=0; k<30; k++){ //über Kanten iterieren
         for(int i =0; i < edge_LEDs[k]; i++) // über LEDs pro Kante iterieren
@@ -146,6 +145,7 @@ int main() {
             j++;
         };
     };
+    // Kartesische Koordinaten:  {Kantenindex, LED-Index, X, Y, Z}
     float LED_array[j][5];
     j=0;
     for(int k=0; k<30; k++){ //über Kanten iterieren
@@ -160,6 +160,22 @@ int main() {
         };
     };
 
-    std::cout << "test: " << B2[0] << std::endl;
-
+    // Kugel-Koordinaten:  {Kantenindex, LED-Index, r, phi, theta}
+    float LED_array_spherical[j][5];
+    j=0;
+    double x,y,z;
+    for(int k=0; k<30; k++){ //über Kanten iterieren
+        for(int i =0; i < edge_LEDs[k]; i++) // über LEDs pro Kante iterieren
+        {
+            LED_array_spherical[j][0] = float(k);
+            LED_array_spherical[j][1] = float (i);
+            x = (Ursprung[k][0] + i*Vektor[k][0]);
+            y = (Ursprung[k][1] + i*Vektor[k][1]);
+            z = (Ursprung[k][2] + i*Vektor[k][2]);
+            LED_array_spherical[j][2] = float(sqrt(x*x+y*y+z*z)); //radius
+            LED_array_spherical[j][3] = float(atan(y/x)); //phi
+            LED_array_spherical[j][4] = float(acos(z/(sqrt(x*x+y*y+z*z)))); //theta
+            j++;
+        };
+    };
 }
