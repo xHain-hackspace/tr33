@@ -7,7 +7,7 @@
 #endif
 
 #define COMMAND_DATA_SIZE 8
-#define COMMAND_BUFFER_SIZE 16
+#define COMMAND_BUFFER_SIZE 32
 
 #define MODE_COMMANDS 0
 #define MODE_STREAM 1
@@ -84,4 +84,5 @@ public:
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
   static void render_ball(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
+  static void render_nyan(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
 };

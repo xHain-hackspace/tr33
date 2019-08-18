@@ -8,12 +8,12 @@ void Dode::kaleidoscope(char *data)
   uint8_t period = data[2];
   uint8_t offset = data[3];
 
-  float current_width = Commands::ping_pong_linear(period, offset) * EDGE_PIXEL_COUNT / 2;
+  float current_width = fabs(Commands::ping_pong_linear(period, offset)) * EDGE_MAX_LENGTH / 2;
   CRGB color = ColorFromPalette(currentPalette, color_index, brightness);
 
   for (int i = 0; i < EDGE_COUNT; i++)
   {
-    for (int j = 0; j < EDGE_PIXEL_COUNT / 2; j++)
+    for (int j = 0; j < strip_length(i) / 2; j++)
     {
       if (j <= current_width)
       {

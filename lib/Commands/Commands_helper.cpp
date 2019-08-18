@@ -14,6 +14,47 @@ void Commands::render_ball(Leds *leds, uint8_t strip_index, float center, float 
   }
 }
 
+void Commands::render_nyan(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness)
+{
+
+  if (width != 0)
+  {
+    float start;
+    if (center > 0)
+    {
+      start = center - 0.5;
+    }
+    else
+    {
+      start = fabs(center) + 0.5;
+      width = width * -1;
+    }
+
+    uint16_t length = leds->strip_length(strip_index);
+    float end = start - width;
+    float max_brightness = ball_brightness * 0.8;
+
+    float slope = max_brightness / (start - end);
+
+    int first_led = min(floorf(start), floorf(end));
+    int last_led = max(ceilf(start), ceilf(end));
+
+    for (int i = first_led; i < last_led; i++)
+    {
+      float brightness = Commands::ease_in_out_cubic(slope * (float(i) - end));
+      if (brightness > 0)
+      {
+        int led_index = i;
+
+        CRGB nyan_color = ColorFromPalette(currentPalette, i * 10);
+        leds->fade_led(strip_index, led_index, nyan_color, brightness);
+      }
+    }
+  }
+
+  Commands::render_ball(leds, strip_index, fabs(center), 5, CRGB(255, 255, 255), ball_brightness);
+}
+
 float Commands::ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms)
 {
   int period_millis = period_100ms * 100;
