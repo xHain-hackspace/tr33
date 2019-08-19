@@ -56,7 +56,17 @@ extern CRGB edge_leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 #define NR_LEDS_EDGE_29 83
 #define NR_LEDS_EDGE_30 81
 #define NR_TOTAL_LEDS (NR_LEDS_EDGE_01 + NR_LEDS_EDGE_02 + NR_LEDS_EDGE_03 + NR_LEDS_EDGE_04 + NR_LEDS_EDGE_05 + NR_LEDS_EDGE_06 + NR_LEDS_EDGE_07 + NR_LEDS_EDGE_08 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_10 + NR_LEDS_EDGE_11 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_13 + NR_LEDS_EDGE_14 + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_16 + NR_LEDS_EDGE_17 + NR_LEDS_EDGE_18 + NR_LEDS_EDGE_19 + NR_LEDS_EDGE_20 + NR_LEDS_EDGE_21 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_23 + NR_LEDS_EDGE_24 + NR_LEDS_EDGE_25 + NR_LEDS_EDGE_26 + NR_LEDS_EDGE_27 + NR_LEDS_EDGE_28 + NR_LEDS_EDGE_29 + NR_LEDS_EDGE_30)
-struct Coordinates;
+struct Coordinates
+{
+    uint8_t i_edge;
+    uint8_t i_led;
+    float x;
+    float y;
+    float z;
+    float r;
+    float phi;
+    float theta;
+};
 extern Coordinates coordinates[NR_TOTAL_LEDS];
 
 static uint16_t edges[EDGE_COUNT][3] = {

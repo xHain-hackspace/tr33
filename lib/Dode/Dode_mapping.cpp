@@ -5,18 +5,6 @@
 
 #define my_pi 3.14159265358979323846
 
-struct Coordinates
-{
-    uint8_t i_edge;
-    uint8_t i_led;
-    float x;
-    float y;
-    float z;
-    float r;
-    float phi;
-    float theta;
-};
-
 Coordinates coordinates[NR_TOTAL_LEDS];
 
 void Dode::generate_mapping()
@@ -74,6 +62,7 @@ void Dode::generate_mapping()
     const float corner_L2_[3] = {-x_l2, y_l2, z_l};
     const float corner_L3[3] = {d / 2, -y_l3, z_l};
     const float corner_L3_[3] = {-d / 2, -y_l3, z_l};
+    
 
     // Längen (Anzhal LEDs) der Kanten #1 bis #30
     const int edge_LEDs[EDGE_COUNT] = {
@@ -147,6 +136,7 @@ void Dode::generate_mapping()
         // Kante30: corner_T3_ --> corner_T3
         {(corner_T3[0] - corner_T3_[0]) / (edge_LEDs[29] - 1), (corner_T3[1] - corner_T3_[1]) / (edge_LEDs[29] - 1), (corner_T3[2] - corner_T3_[2]) / (edge_LEDs[29] - 1)}};
 
+    
     // Urpsrung der Vektoren
     float Ursprung[][3] = {
         {corner_B1[0], corner_B1[1], corner_B1[2]}, {corner_B2[0], corner_B2[1], corner_B2[2]}, {corner_L2_[0], corner_L2_[1], corner_L2_[2]}, {corner_B2_[0], corner_B2_[1], corner_B2_[2]}, {corner_B3_[0], corner_B3_[1], corner_B3_[2]}, {corner_L3_[0], corner_L3_[1], corner_L3_[2]}, {corner_B3_[0], corner_B3_[1], corner_B3_[2]}, {corner_B3[0], corner_B3[1], corner_B3[2]}, {corner_L3[0], corner_L3[1], corner_L3[2]}, {corner_B3[0], corner_B3[1], corner_B3[2]}, {corner_B2[0], corner_B2[1], corner_B2[2]}, {corner_L2[0], corner_L2[1], corner_L2[2]}, {corner_B2[0], corner_B2[1], corner_B2[2]}, {corner_B3[0], corner_B3[1], corner_B3[2]}, {corner_L1[0], corner_L1[1], corner_L1[2]}, {corner_L2_[0], corner_L2_[1], corner_L2_[2]}, {corner_H2_[0], corner_H2_[1], corner_H2_[2]}, {corner_T2_[0], corner_T2_[1], corner_T2_[2]}, {corner_L3_[0], corner_L3_[1], corner_L3_[2]}, {corner_H1[0], corner_H1[1], corner_H1[2]}, {corner_T1[0], corner_T1[1], corner_T1[2]}, {corner_L3[0], corner_L3[1], corner_L3[2]}, {corner_H2[0], corner_H2[1], corner_H2[2]}, {corner_T2[0], corner_T2[1], corner_T2[2]}, {corner_L2[0], corner_L2[1], corner_L2[2]}, {corner_H3[0], corner_H3[1], corner_H3[2]}, {corner_T3[0], corner_T3[1], corner_T3[2]}, {corner_L1[0], corner_L1[1], corner_L1[2]}, {corner_H3_[0], corner_H3_[1], corner_H3_[2]}, {corner_T3[0], corner_T3[1], corner_T3[2]}};
@@ -155,7 +145,7 @@ void Dode::generate_mapping()
     // Kartesische Koordinaten:  {X, Y, Z}
     // Kugel-Koordinaten:  {r, phi, theta}
     int j = 0;
-    int c_x, c_y, c_z;
+    float c_x, c_y, c_z;
     for (int k = 0; k < EDGE_COUNT; k++)
     {                                          //über Kanten iterieren
         for (int i = 0; i < edge_LEDs[k]; i++) // über LEDs pro Kante iterieren
@@ -170,7 +160,15 @@ void Dode::generate_mapping()
             coordinates[j].y = c_y;
             coordinates[j].z = c_z;
             coordinates[j].r = float(sqrt(c_x * c_x + c_y * c_y + c_z * c_z));                   //radius
-            coordinates[j].phi = float(atan(c_y / c_x));                                         //phi
+            //phi:
+            if(c_x==0) { //workaround for div by 0
+                if(c_y>0) coordinates[j].phi = my_pi/2;
+                else if(c_y<0) coordinates[j].phi = -my_pi/2;
+                else coordinates[j].phi = 0;
+            }
+            else {
+                coordinates[j].phi = float(atan(c_y / c_x));
+            }
             coordinates[j].theta = float(acos(c_z / (sqrt(c_x * c_x + c_y * c_y + c_z * c_z)))); //theta
             j++;
         };

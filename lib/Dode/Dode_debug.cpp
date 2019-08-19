@@ -5,11 +5,12 @@ long last_debug_update = 0;
 
 void Dode::debug(char *data)
 {
-  // for (int current_led=0; current_led < NR_TOTAL_LEDS; current_led++){
-  //   if (LEDs_cartesian[current_led][4] >= 0){
-  //     set_led(LEDs_cartesian[current_led][0], LEDs_cartesian[current_led][1], CHSV(HUE_GREEN, 255, 255)); 
-  //   }else{
-  //     set_led(LEDs_cartesian[current_led][0], LEDs_cartesian[current_led][1], CHSV(HUE_RED, 255, 255)); 
-  //   }
-  // }
+  float edge = 0.25*3.1415*(fabs(Commands::ping_pong_linear(100,0))*2-1);//1.4 * (fabs(Commands::ping_pong_linear(100,0))*2-1);
+  for (int current_led=0; current_led < NR_TOTAL_LEDS; current_led++){
+    if (coordinates[current_led].phi >= edge){
+      set_led(coordinates[current_led].i_edge, coordinates[current_led].i_led, CHSV(HUE_GREEN, 0, 255)); 
+    }else{
+      set_led(coordinates[current_led].i_edge, coordinates[current_led].i_led, CHSV(HUE_RED, 255, 0)); 
+    }
+  }
 }
