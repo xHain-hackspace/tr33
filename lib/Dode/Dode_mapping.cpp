@@ -101,8 +101,8 @@ void Dode::generate_mapping()
         {(corner_H2[0] - corner_L2[0]) / (edge_LEDs[11] - 1), (corner_H2[1] - corner_L2[1]) / (edge_LEDs[11] - 1), (corner_H2[2] - corner_L2[2]) / (edge_LEDs[11] - 1)},
         // Kante13: corner_B2 --> corner_B1
         {(corner_B1[0] - corner_B2[0]) / (edge_LEDs[12] - 1), (corner_B1[1] - corner_B2[1]) / (edge_LEDs[12] - 1), (corner_B1[2] - corner_B2[2]) / (edge_LEDs[12] - 1)},
-        // Kante14: corner_B3 --> corner_L3
-        {(corner_L3[0] - corner_B3[0]) / (edge_LEDs[13] - 1), (corner_L3[1] - corner_B3[1]) / (edge_LEDs[13] - 1), (corner_L3[2] - corner_B3[2]) / (edge_LEDs[13] - 1)},
+        // Kante14: corner_B1 --> corner_L1
+        {(corner_L1[0] - corner_B1[0]) / (edge_LEDs[13] - 1), (corner_L1[1] - corner_B1[1]) / (edge_LEDs[13] - 1), (corner_L1[2] - corner_B1[2]) / (edge_LEDs[13] - 1)},
         // Kante15: corner_L1 --> corner_H3
         {(corner_H3[0] - corner_L1[0]) / (edge_LEDs[14] - 1), (corner_H3[1] - corner_L1[1]) / (edge_LEDs[14] - 1), (corner_H3[2] - corner_L1[2]) / (edge_LEDs[14] - 1)},
         // Kante16: corner_L2_ --> corner_H2_
@@ -196,7 +196,7 @@ void Dode::generate_mapping()
                 else coordinates[j].phi = 0;
             }
             else {
-                coordinates[j].phi = float(atan(c_y / c_x));
+                coordinates[j].phi = float(atan2(c_y , c_x));
             }
             coordinates[j].theta = float(acos(c_z / (sqrt(c_x * c_x + c_y * c_y + c_z * c_z)))); //theta
             j++;
