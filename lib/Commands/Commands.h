@@ -38,6 +38,7 @@
 #define COMMAND_KALEIDOSCOPE 12
 #define COMMAND_RANDOM_WALK 13
 #define COMMAND_DEBUG 14
+#define COMMAND_FIREWORKS 15
 
 // -- EVENTS ------------------------------------------------------------------------------
 
