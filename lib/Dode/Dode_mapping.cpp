@@ -139,7 +139,36 @@ void Dode::generate_mapping()
     
     // Urpsrung der Vektoren
     float Ursprung[][3] = {
-        {corner_B1[0], corner_B1[1], corner_B1[2]}, {corner_B2[0], corner_B2[1], corner_B2[2]}, {corner_L2_[0], corner_L2_[1], corner_L2_[2]}, {corner_B2_[0], corner_B2_[1], corner_B2_[2]}, {corner_B3_[0], corner_B3_[1], corner_B3_[2]}, {corner_L3_[0], corner_L3_[1], corner_L3_[2]}, {corner_B3_[0], corner_B3_[1], corner_B3_[2]}, {corner_B3[0], corner_B3[1], corner_B3[2]}, {corner_L3[0], corner_L3[1], corner_L3[2]}, {corner_B3[0], corner_B3[1], corner_B3[2]}, {corner_B2[0], corner_B2[1], corner_B2[2]}, {corner_L2[0], corner_L2[1], corner_L2[2]}, {corner_B2[0], corner_B2[1], corner_B2[2]}, {corner_B3[0], corner_B3[1], corner_B3[2]}, {corner_L1[0], corner_L1[1], corner_L1[2]}, {corner_L2_[0], corner_L2_[1], corner_L2_[2]}, {corner_H2_[0], corner_H2_[1], corner_H2_[2]}, {corner_T2_[0], corner_T2_[1], corner_T2_[2]}, {corner_L3_[0], corner_L3_[1], corner_L3_[2]}, {corner_H1[0], corner_H1[1], corner_H1[2]}, {corner_T1[0], corner_T1[1], corner_T1[2]}, {corner_L3[0], corner_L3[1], corner_L3[2]}, {corner_H2[0], corner_H2[1], corner_H2[2]}, {corner_T2[0], corner_T2[1], corner_T2[2]}, {corner_L2[0], corner_L2[1], corner_L2[2]}, {corner_H3[0], corner_H3[1], corner_H3[2]}, {corner_T3[0], corner_T3[1], corner_T3[2]}, {corner_L1[0], corner_L1[1], corner_L1[2]}, {corner_H3_[0], corner_H3_[1], corner_H3_[2]}, {corner_T3[0], corner_T3[1], corner_T3[2]}};
+        {corner_B1[0], corner_B1[1], corner_B1[2]}, 
+        {corner_B2_[0], corner_B2_[1], corner_B2_[2]}, 
+        {corner_L2_[0], corner_L2_[1], corner_L2_[2]}, 
+        {corner_B2_[0], corner_B2_[1], corner_B2_[2]}, 
+        {corner_B3_[0], corner_B3_[1], corner_B3_[2]}, //5
+        {corner_L3_[0], corner_L3_[1], corner_L3_[2]}, 
+        {corner_B3_[0], corner_B3_[1], corner_B3_[2]}, 
+        {corner_B3[0], corner_B3[1], corner_B3[2]}, 
+        {corner_L3[0], corner_L3[1], corner_L3[2]}, 
+        {corner_B3[0], corner_B3[1], corner_B3[2]}, //10
+        {corner_B2[0], corner_B2[1], corner_B2[2]}, 
+        {corner_L2[0], corner_L2[1], corner_L2[2]}, 
+        {corner_B2[0], corner_B2[1], corner_B2[2]}, 
+        {corner_B1[0], corner_B1[1], corner_B1[2]}, 
+        {corner_L1[0], corner_L1[1], corner_L1[2]}, //15
+        {corner_L2_[0], corner_L2_[1], corner_L2_[2]}, 
+        {corner_H2_[0], corner_H2_[1], corner_H2_[2]}, 
+        {corner_T2_[0], corner_T2_[1], corner_T2_[2]}, 
+        {corner_L3_[0], corner_L3_[1], corner_L3_[2]}, 
+        {corner_H1[0], corner_H1[1], corner_H1[2]}, //20
+        {corner_T1[0], corner_T1[1], corner_T1[2]}, 
+        {corner_L3[0], corner_L3[1], corner_L3[2]}, 
+        {corner_H2[0], corner_H2[1], corner_H2[2]}, 
+        {corner_T2[0], corner_T2[1], corner_T2[2]}, 
+        {corner_L2[0], corner_L2[1], corner_L2[2]}, //25
+        {corner_H3[0], corner_H3[1], corner_H3[2]}, 
+        {corner_T3[0], corner_T3[1], corner_T3[2]}, 
+        {corner_L1[0], corner_L1[1], corner_L1[2]}, 
+        {corner_H3_[0], corner_H3_[1], corner_H3_[2]}, 
+        {corner_T3_[0], corner_T3_[1], corner_T3_[2]}}; // 30
 
     // Generieren der Koordinaten
     // Kartesische Koordinaten:  {X, Y, Z}
