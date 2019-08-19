@@ -25,43 +25,78 @@ extern CRGB edge_leds[HW_STRIP_COUNT][HW_STRIP_PIXEL_COUNT];
 #define EDGE_COUNT 30
 #define CORNER_COUNT 20
 #define EDGE_MAX_LENGTH 90
+#define NR_LEDS_EDGE_01 84 
+#define NR_LEDS_EDGE_02 80 
+#define NR_LEDS_EDGE_03 85 
+#define NR_LEDS_EDGE_04 84
+#define NR_LEDS_EDGE_05 77
+#define NR_LEDS_EDGE_06 82
+#define NR_LEDS_EDGE_07 81
+#define NR_LEDS_EDGE_08 78
+#define NR_LEDS_EDGE_09 82
+#define NR_LEDS_EDGE_10 83   
+#define NR_LEDS_EDGE_11 78
+#define NR_LEDS_EDGE_12 83
+#define NR_LEDS_EDGE_13 79
+#define NR_LEDS_EDGE_14 79
+#define NR_LEDS_EDGE_15 81
+#define NR_LEDS_EDGE_16 84
+#define NR_LEDS_EDGE_17 82
+#define NR_LEDS_EDGE_18 76
+#define NR_LEDS_EDGE_19 83
+#define NR_LEDS_EDGE_20 84
+#define NR_LEDS_EDGE_21 79
+#define NR_LEDS_EDGE_22 82
+#define NR_LEDS_EDGE_23 84
+#define NR_LEDS_EDGE_24 78
+#define NR_LEDS_EDGE_25 81
+#define NR_LEDS_EDGE_26 85
+#define NR_LEDS_EDGE_27 79
+#define NR_LEDS_EDGE_28 81
+#define NR_LEDS_EDGE_29 83
+#define NR_LEDS_EDGE_30 81
+#define NR_TOTAL_LEDS ( NR_LEDS_EDGE_01 +NR_LEDS_EDGE_02 +NR_LEDS_EDGE_03 +NR_LEDS_EDGE_04 +NR_LEDS_EDGE_05 +NR_LEDS_EDGE_06 +NR_LEDS_EDGE_07 +NR_LEDS_EDGE_08 +NR_LEDS_EDGE_09 +NR_LEDS_EDGE_10 +NR_LEDS_EDGE_11 +NR_LEDS_EDGE_12 +NR_LEDS_EDGE_13 +NR_LEDS_EDGE_14 +NR_LEDS_EDGE_15 +NR_LEDS_EDGE_16 +NR_LEDS_EDGE_17 +NR_LEDS_EDGE_18 +NR_LEDS_EDGE_19 +NR_LEDS_EDGE_20 +NR_LEDS_EDGE_21 +NR_LEDS_EDGE_22 +NR_LEDS_EDGE_23 +NR_LEDS_EDGE_24 +NR_LEDS_EDGE_25 +NR_LEDS_EDGE_26 +NR_LEDS_EDGE_27 +NR_LEDS_EDGE_28 +NR_LEDS_EDGE_29 +NR_LEDS_EDGE_30 )
+extern float LEDs_cartesian[NR_TOTAL_LEDS][5];// Kartesische Koordinaten:  {Kantenindex, LED-Index, X, Y, Z}
+extern float LEDs_spherical[NR_TOTAL_LEDS][5];// Kugel-Koordinaten:  {Kantenindex, LED-Index, r, phi, theta}
+struct Coordinates;
+extern Coordinates coordinates[NR_TOTAL_LEDS];
 
 static uint16_t edges[EDGE_COUNT][3] = {
-    {0, 0, 84},
-    {0, 84, 80},
-    {0, 164, 85},
-    {1, 0, 84},
-    {1, 84, 77},
+    {0, 0, NR_LEDS_EDGE_01},
+    {0, 84, NR_LEDS_EDGE_02},
+    {0, 164, NR_LEDS_EDGE_03},
+    {1, 0, NR_LEDS_EDGE_04},
+    {1, 84, NR_LEDS_EDGE_05},
 
-    {1, 161, 82},
-    {2, 0, 81},
-    {2, 81, 78},
-    {2, 159, 82},
-    {3, 0, 83},
+    {1, 161, NR_LEDS_EDGE_06},
+    {2, 0, NR_LEDS_EDGE_07},
+    {2, 81, NR_LEDS_EDGE_08},
+    {2, 159, NR_LEDS_EDGE_09},
+    {3, 0, NR_LEDS_EDGE_10},
 
-    {3, 83, 78},
-    {3, 161, 83},
-    {4, 0, 79},
-    {4, 79, 79},
-    {4, 158, 81},
+    {3, 83, NR_LEDS_EDGE_11},
+    {3, 161, NR_LEDS_EDGE_12},
+    {4, 0, NR_LEDS_EDGE_13},
+    {4, 79, NR_LEDS_EDGE_14},
+    {4, 158, NR_LEDS_EDGE_15},
 
-    {5, 0, 84},
-    {5, 84, 82},
-    {5, 166, 76},
-    {6, 0, 83},
-    {6, 83, 84},
+    {5, 0, NR_LEDS_EDGE_16},
+    {5, 84, NR_LEDS_EDGE_17},
+    {5, 166, NR_LEDS_EDGE_18},
+    {6, 0, NR_LEDS_EDGE_19},
+    {6, 83, NR_LEDS_EDGE_20},
 
-    {6, 167, 79},
-    {7, 0, 82},
-    {7, 82, 84},
-    {7, 166, 78},
-    {8, 0, 81},
+    {6, 167, NR_LEDS_EDGE_21},
+    {7, 0, NR_LEDS_EDGE_22},
+    {7, 82, NR_LEDS_EDGE_23},
+    {7, 166, NR_LEDS_EDGE_24},
+    {8, 0, NR_LEDS_EDGE_25},
 
-    {8, 81, 85},
-    {8, 166, 79},
-    {9, 0, 81},
-    {9, 81, 83},
-    {9, 164, 81}};
+    {8, 81, NR_LEDS_EDGE_26},
+    {8, 166, NR_LEDS_EDGE_27},
+    {9, 0, NR_LEDS_EDGE_28},
+    {9, 81, NR_LEDS_EDGE_29},
+    {9, 164, NR_LEDS_EDGE_30}};
 
 struct EdgeCorner
 {
@@ -133,4 +168,6 @@ private:
 
     void render_ball(Leds *leds, int8_t edge, float center, float width, CRGB color, float brightness, uint8_t ball_type);
     uint16_t edge_strip_length(Leds *leds, int8_t edge);
+
+    void generate_mapping();
 };

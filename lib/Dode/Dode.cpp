@@ -19,12 +19,14 @@ Dode::Dode(void)
 
 void Dode::init()
 {
+  generate_mapping(); //generate cartesian and spherical coordinates of pixels
+
   command_buffer[0].type = COMMAND_SINGLE_COLOR;
   command_buffer[0].data[0] = 31;
   command_buffer[0].data[1] = HUE_PURPLE;
   command_buffer[0].data[2] = 10;
 
-  // command_buffer[0].type = COMMAND_WHITE;
+  command_buffer[2].type = COMMAND_DEBUG;
 
   // command_buffer[1].type = COMMAND_KALEIDOSCOPE;
   // command_buffer[1].data[0] = HUE_ORANGE;
