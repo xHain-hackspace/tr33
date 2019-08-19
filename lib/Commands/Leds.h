@@ -22,6 +22,7 @@ public:
   virtual void kaleidoscope(char *data);
   virtual void random_walk(char *data);
   virtual void debug(char *data);
+  virtual void fireworks(char *data);
 
   // events - rendered once
   virtual void gravity_event();

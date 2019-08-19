@@ -109,6 +109,9 @@ void Commands::run()
       case COMMAND_DEBUG:
         leds->debug(command_buffer[i].data);
         break;
+      case COMMAND_FIREWORKS:
+        leds->fireworks(command_buffer[i].data);
+        break;
       default:
         break;
       }
