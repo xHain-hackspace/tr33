@@ -21,27 +21,27 @@ void Dode::init()
 {
   generate_mapping(); //generate cartesian and spherical coordinates of pixels
 
-  command_buffer[0].type = COMMAND_WHITE;
+  //command_buffer[0].type = COMMAND_WHITE;
 
   // command_buffer[0].type = COMMAND_SINGLE_COLOR;
   // command_buffer[0].data[0] = 31;
   // command_buffer[0].data[1] = HUE_GREEN;
   // command_buffer[0].data[2] = 255;
 
-  command_buffer[2].type = COMMAND_DEBUG;
+  command_buffer[1].type = COMMAND_DEBUG;
 
   // command_buffer[1].type = COMMAND_KALEIDOSCOPE;
   // command_buffer[1].data[0] = HUE_ORANGE;
   // command_buffer[1].data[1] = 255;
   // command_buffer[1].data[2] = 20;
 
-  command_buffer[1].type = COMMAND_RANDOM_WALK;
-  command_buffer[1].data[0] = HUE_RED;
-  command_buffer[1].data[1] = 255;
-  command_buffer[1].data[2] = 30;
-  command_buffer[1].data[3] = 130;
-  command_buffer[1].data[4] = 5;
-  command_buffer[1].data[5] = BALL_TYPE_NYAN;
+  command_buffer[0].type = COMMAND_RANDOM_WALK;
+  command_buffer[0].data[0] = HUE_RED;
+  command_buffer[0].data[1] = 255;
+  command_buffer[0].data[2] = 30;
+  command_buffer[0].data[3] = 130;
+  command_buffer[0].data[4] = 5;
+  command_buffer[0].data[5] = BALL_TYPE_NYAN;
 
   // command_buffer[2].type = COMMAND_SPARKLE;
   // command_buffer[2].data[0] = 31;
