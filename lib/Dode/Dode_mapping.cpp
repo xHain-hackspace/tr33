@@ -189,14 +189,14 @@ void Dode::generate_mapping()
             coordinates[j].y = c_y;
             coordinates[j].z = c_z;
             coordinates[j].r = float(sqrt(c_x * c_x + c_y * c_y + c_z * c_z));                   //radius
-            //phi:
+            //phi (from 0 to 2*pi -> offset of pi needed):
             if(c_x==0) { //workaround for div by 0
-                if(c_y>0) coordinates[j].phi = my_pi/2;
-                else if(c_y<0) coordinates[j].phi = -my_pi/2;
-                else coordinates[j].phi = 0;
+                if(c_y>0) coordinates[j].phi = my_pi/2+my_pi;
+                else if(c_y<0) coordinates[j].phi = -my_pi/2+my_pi;
+                else coordinates[j].phi = 0+my_pi;
             }
             else {
-                coordinates[j].phi = float(atan2(c_y , c_x));
+                coordinates[j].phi = float(atan2(c_y , c_x))+my_pi;
             }
             coordinates[j].theta = float(acos(c_z / (sqrt(c_x * c_x + c_y * c_y + c_z * c_z)))); //theta
             j++;

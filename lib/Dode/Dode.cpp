@@ -28,7 +28,7 @@ void Dode::init()
   // command_buffer[0].data[1] = HUE_GREEN;
   // command_buffer[0].data[2] = 255;
 
-  command_buffer[1].type = COMMAND_DEBUG;
+  command_buffer[5].type = COMMAND_DEBUG;
 
   // command_buffer[1].type = COMMAND_KALEIDOSCOPE;
   // command_buffer[1].data[0] = HUE_ORANGE;
@@ -40,7 +40,7 @@ void Dode::init()
   command_buffer[0].data[1] = 255;
   command_buffer[0].data[2] = 30;
   command_buffer[0].data[3] = 130;
-  command_buffer[0].data[4] = 5;
+  command_buffer[0].data[4] = 10;
   command_buffer[0].data[5] = BALL_TYPE_NYAN;
 
   // command_buffer[2].type = COMMAND_SPARKLE;
