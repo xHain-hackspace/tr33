@@ -28,26 +28,40 @@ void Dode::init()
   // command_buffer[0].data[1] = HUE_GREEN;
   // command_buffer[0].data[2] = 255;
 
-  command_buffer[5].type = COMMAND_DEBUG;
+  // command_buffer[5].type = COMMAND_ROTATING_SECTORS;
+  // command_buffer[5].data[0] = HUE_ORANGE;
+  // command_buffer[5].data[1] = 255;
+  // command_buffer[5].data[2] = 255;//*100ms
+  // command_buffer[5].data[3] = 0;//255 =360 degrees
+  // command_buffer[5].data[4] = 1;
+  // command_buffer[5].data[5] = 10;//255 =360 degrees
+
+  // command_buffer[4].type = COMMAND_ROTATING_SECTORS;
+  // command_buffer[4].data[0] = HUE_GREEN;
+  // command_buffer[4].data[1] = 255;
+  // command_buffer[4].data[2] = 255;//*100ms
+  // command_buffer[4].data[3] = 128;//255 =360 degrees
+  // command_buffer[4].data[4] = 3;
+  // command_buffer[4].data[5] = 10;//255 =360 degrees
 
   // command_buffer[1].type = COMMAND_KALEIDOSCOPE;
   // command_buffer[1].data[0] = HUE_ORANGE;
   // command_buffer[1].data[1] = 255;
   // command_buffer[1].data[2] = 20;
 
-  command_buffer[0].type = COMMAND_RANDOM_WALK;
-  command_buffer[0].data[0] = HUE_RED;
-  command_buffer[0].data[1] = 255;
-  command_buffer[0].data[2] = 30;
-  command_buffer[0].data[3] = 130;
-  command_buffer[0].data[4] = 10;
-  command_buffer[0].data[5] = BALL_TYPE_NYAN;
+  command_buffer[1].type = COMMAND_RANDOM_WALK;
+  command_buffer[1].data[0] = HUE_RED;
+  command_buffer[1].data[1] = 255;
+  command_buffer[1].data[2] = 27;
+  command_buffer[1].data[3] = 100;
+  command_buffer[1].data[4] = 5;
+  command_buffer[1].data[5] = BALL_TYPE_NYAN;
 
-  // command_buffer[2].type = COMMAND_SPARKLE;
-  // command_buffer[2].data[0] = 31;
-  // command_buffer[2].data[1] = 160;
-  // command_buffer[2].data[2] = 40;
-  // command_buffer[2].data[3] = 50;
+  command_buffer[0].type = COMMAND_SPARKLE;
+  command_buffer[0].data[0] = 31;
+  command_buffer[0].data[1] = 31;
+  command_buffer[0].data[2] = 15;
+  command_buffer[0].data[3] = 247;
 
   // for (int i = 0; i < 30; i++)
   // {

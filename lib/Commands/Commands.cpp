@@ -112,6 +112,9 @@ void Commands::run()
       case COMMAND_FIREWORKS:
         leds->fireworks(command_buffer[i].data);
         break;
+      case COMMAND_ROTATING_SECTORS:
+        leds->rotating_sectors(command_buffer[i].data);
+        break;
       default:
         break;
       }

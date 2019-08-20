@@ -39,6 +39,7 @@
 #define COMMAND_RANDOM_WALK 13
 #define COMMAND_DEBUG 14
 #define COMMAND_FIREWORKS 15
+#define COMMAND_ROTATING_SECTORS 16
 
 // -- EVENTS ------------------------------------------------------------------------------
 

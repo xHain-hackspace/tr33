@@ -23,6 +23,7 @@ public:
   virtual void random_walk(char *data);
   virtual void debug(char *data);
   virtual void fireworks(char *data);
+  virtual void rotating_sectors(char *data);
 
   // events - rendered once
   virtual void gravity_event();

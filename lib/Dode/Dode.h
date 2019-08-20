@@ -169,6 +169,7 @@ public:
     void random_walk(char *data);
     void debug(char *data);
     void fireworks(char *data);
+    void rotating_sectors(char *data);
 
 private:
     // Rendering
