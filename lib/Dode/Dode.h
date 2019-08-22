@@ -171,13 +171,11 @@ public:
     void debug(char *data);
     void fireworks(char *data);
     void rotating_sectors(char *data);
+    void fill(char *data);
 
 private:
-    // Rendering
     void set_led_mirrored_middle(uint8_t edge_index, uint8_t led_index, CRGB color);
-
     void render_ball(Leds *leds, int8_t edge, float center, float width, CRGB color, float brightness, uint8_t ball_type);
     uint16_t edge_strip_length(Leds *leds, int8_t edge);
-
     void generate_mapping();
 };

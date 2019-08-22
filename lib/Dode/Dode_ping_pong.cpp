@@ -5,7 +5,7 @@ void Dode::ping_pong(char *data)
 {
   uint8_t type = data[0];
   uint8_t color_index = data[1];
-  uint8_t brightness = data[2];
+  float brightness = data[2];
   uint8_t width = data[3];
   uint8_t period = data[4];
   uint8_t offset = data[5];
@@ -28,10 +28,10 @@ void Dode::ping_pong(char *data)
     break;
   }
 
-  CRGB color = ColorFromPalette(currentPalette, color_index, brightness);
+  CRGB color = ColorFromPalette(currentPalette, color_index, 255);
 
   for (int i = 0; i < EDGE_COUNT; i++)
   {
-    Commands::render_ball(this, i, position * strip_length(i), width, color, 1);
+    Commands::render_ball(this, i, position * strip_length(i), width, color, brightness / 255);
   }
 }

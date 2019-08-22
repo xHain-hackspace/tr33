@@ -115,6 +115,9 @@ void Commands::run()
       case COMMAND_ROTATING_SECTORS:
         leds->rotating_sectors(command_buffer[i].data);
         break;
+      case COMMAND_FILL:
+        leds->fill(command_buffer[i].data);
+        break;
       default:
         break;
       }

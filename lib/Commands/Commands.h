@@ -40,6 +40,7 @@
 #define COMMAND_DEBUG 14
 #define COMMAND_FIREWORKS 15
 #define COMMAND_ROTATING_SECTORS 16
+#define COMMAND_FILL 17
 
 // -- EVENTS ------------------------------------------------------------------------------
 
@@ -61,6 +62,12 @@
 #define PING_PONG_SINE 1
 #define PING_PONG_COSINE 2
 #define PING_PONG_SAWTOOTH 3
+
+// -- FILL ------------------------------------------------------------------------------
+
+#define FILL_BALL 0
+#define FILL_TOP 1
+#define FILL_BOTTOM 2
 
 struct Command
 {

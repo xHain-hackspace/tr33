@@ -24,6 +24,7 @@ public:
   virtual void debug(char *data);
   virtual void fireworks(char *data);
   virtual void rotating_sectors(char *data);
+  virtual void fill(char *data);
 
   // events - rendered once
   virtual void gravity_event();
