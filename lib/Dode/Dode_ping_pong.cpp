@@ -10,7 +10,7 @@ void Dode::ping_pong(char *data)
   uint8_t period = data[4];
   uint8_t offset = data[5];
 
-  float position;
+  float position = 0.0;
 
   switch (type)
   {
