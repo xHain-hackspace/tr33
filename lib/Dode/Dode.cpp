@@ -92,7 +92,7 @@ void Dode::set_led(uint8_t strip_index, int led, CRGB color)
   }
 }
 
-CRGB get_led(uint8_t strip_index, int led)
+CRGB Dode::get_led(uint8_t strip_index, int led)
 {
   if (strip_index < EDGE_COUNT)
   {

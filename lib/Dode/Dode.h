@@ -159,6 +159,7 @@ public:
     Dode();
     void init();
     void set_led(uint8_t strip_index, int led, CRGB color);
+    CRGB get_led(uint8_t strip_index, int led);
     void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
     uint8_t random_strip(uint8_t strip_index);
     uint16_t strip_length(uint8_t strip_index);
