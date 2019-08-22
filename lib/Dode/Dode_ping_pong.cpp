@@ -5,7 +5,7 @@ void Dode::ping_pong(char *data)
 {
   uint8_t type = data[0];
   uint8_t color_index = data[1];
-  float brightness = data[2] / 255;
+  float brightness = float(data[2]) / 255;
   uint8_t width = data[3];
   uint8_t period = data[4];
   uint8_t offset = data[5];

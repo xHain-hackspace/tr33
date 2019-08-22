@@ -58,7 +58,7 @@ void Dode::fill(char *data)
   uint8_t type = data[0];
   uint8_t color_index = data[1];
   float brightness = float(data[2]) / 255;
-  float rel_position = float(data[3]) / 255.0;
+  float rel_position = float(data[3]) / 255;
   float width = data[4];
 
   CRGB color = ColorFromPalette(currentPalette, color_index, 255);

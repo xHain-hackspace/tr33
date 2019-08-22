@@ -55,7 +55,7 @@ void add_ball()
 void Dode::random_walk(char *data)
 {
   uint8_t color_index = data[0];
-  float brightness = data[1];
+  float brightness = float(data[1]) / 255;
   uint8_t rate = data[2];
   float width = float(data[3]);
   uint8_t ball_count = data[4];
@@ -89,9 +89,9 @@ void Dode::random_walk(char *data)
       balls[i].position = balls[i].position - edge_strip_length(this, balls[i].current_edge);
     }
 
-    render_ball(this, balls[i].last_edge, balls[i].position + edge_strip_length(this, balls[i].last_edge), width, color, brightness / 255.0, ball_type);
-    render_ball(this, balls[i].current_edge, balls[i].position, width, color, brightness / 255.0, ball_type);
-    render_ball(this, balls[i].next_edge, balls[i].position - edge_strip_length(this, balls[i].next_edge), width, color, brightness / 255.0, ball_type);
+    render_ball(this, balls[i].last_edge, balls[i].position + edge_strip_length(this, balls[i].last_edge), width, color, brightness, ball_type);
+    render_ball(this, balls[i].current_edge, balls[i].position, width, color, brightness, ball_type);
+    render_ball(this, balls[i].next_edge, balls[i].position - edge_strip_length(this, balls[i].next_edge), width, color, brightness, ball_type);
   }
   last_update = now;
 }
