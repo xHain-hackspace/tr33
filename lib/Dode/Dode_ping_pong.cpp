@@ -5,10 +5,12 @@ void Dode::ping_pong(char *data)
 {
   uint8_t type = data[0];
   uint8_t color_index = data[1];
-  float brightness = data[2];
+  float brightness = data[2] / 255;
   uint8_t width = data[3];
   uint8_t period = data[4];
   uint8_t offset = data[5];
+  float max_height = float(data[6]) / 255;
+  uint8_t fill_type = data[7];
 
   float position = 0.0;
 
@@ -28,10 +30,9 @@ void Dode::ping_pong(char *data)
     break;
   }
 
+  position = position * max_height;
+
   CRGB color = ColorFromPalette(currentPalette, color_index, 255);
 
-  for (int i = 0; i < EDGE_COUNT; i++)
-  {
-    Commands::render_ball(this, i, position * strip_length(i), width, color, brightness / 255);
-  }
+  fill(this, position, width, color, brightness, fill_type);
 }

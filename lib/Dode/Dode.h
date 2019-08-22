@@ -179,4 +179,5 @@ private:
     void render_ball(Leds *leds, int8_t edge, float center, float width, CRGB color, float brightness, uint8_t ball_type);
     uint16_t edge_strip_length(Leds *leds, int8_t edge);
     void generate_mapping();
+    void fill(Leds *leds, float rel_position, float width, CRGB color, float brightness, uint8_t type);
 };

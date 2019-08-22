@@ -37,16 +37,8 @@ void fill_top(Leds *leds, float rel_position, float width, CRGB color, float bri
   }
 }
 
-void Dode::fill(char *data)
+void Dode::fill(Leds *leds, float rel_position, float width, CRGB color, float brightness, uint8_t type)
 {
-  uint8_t type = data[0];
-  uint8_t color_index = data[1];
-  float brightness = float(data[2]) / 255;
-  float rel_position = float(data[3]) / 255.0;
-  float width = data[4];
-
-  CRGB color = ColorFromPalette(currentPalette, color_index, 255);
-
   switch (type)
   {
   case FILL_BALL:
@@ -59,4 +51,17 @@ void Dode::fill(char *data)
     fill_top(this, rel_position, width, color, brightness);
     break;
   }
+}
+
+void Dode::fill(char *data)
+{
+  uint8_t type = data[0];
+  uint8_t color_index = data[1];
+  float brightness = float(data[2]) / 255;
+  float rel_position = float(data[3]) / 255.0;
+  float width = data[4];
+
+  CRGB color = ColorFromPalette(currentPalette, color_index, 255);
+
+  fill(this, rel_position, width, color, brightness, type);
 }
