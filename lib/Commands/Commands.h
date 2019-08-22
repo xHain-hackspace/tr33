@@ -85,6 +85,8 @@ public:
 
   // Helpers
   static float ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms);
+  static float ping_pong_sin(uint8_t period_100ms, uint8_t offset_100ms);
+  static float ping_pong_cos(uint8_t period_100ms, uint8_t offset_100ms);
 
   // float easing functions
   static float ease_in_cubic(float t);

@@ -166,6 +166,7 @@ public:
 
     void all_white();
     void kaleidoscope(char *data);
+    void ping_pong(char *data);
     void random_walk(char *data);
     void debug(char *data);
     void fireworks(char *data);
