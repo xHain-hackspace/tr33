@@ -16,7 +16,7 @@ void Dode::rotating_sectors(char *data)
   float offset = input_offset/255.0*2.0*PI; //radians
   float width = input_width/255.0*2.0*PI; //radians
   float rotation_period =input_period*100.0;//ms
-  CHSV sector_color = CHSV(color_index,255,brightness);
+  CRGB sector_color = ColorFromPalette(currentPalette, color_index, brightness);
   float sectors_offset = 2*PI/nr_of_sectors;
 
   float start_angles[MAX_NR_OF_SECTORS];
