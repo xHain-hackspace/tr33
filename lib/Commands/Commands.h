@@ -69,6 +69,12 @@
 #define FILL_TOP 1
 #define FILL_BOTTOM 2
 
+// -- SWIPE ------------------------------------------------------------------------------
+
+#define SWIPE_X 0
+#define SWIPE_Y 1
+#define SWIPE_Z 2
+
 struct Command
 {
   uint8_t index;

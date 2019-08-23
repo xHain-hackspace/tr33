@@ -21,12 +21,12 @@ void Dode::init()
 {
   generate_mapping(); //generate cartesian and spherical coordinates of pixels
 
-  //command_buffer[0].type = COMMAND_WHITE;
+  // command_buffer[5].type = COMMAND_WHITE;
 
-  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
-  // command_buffer[0].data[0] = 31;
-  // command_buffer[0].data[1] = HUE_GREEN;
-  // command_buffer[0].data[2] = 255;
+  command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  command_buffer[0].data[0] = 31;
+  command_buffer[0].data[1] = HUE_PURPLE;
+  command_buffer[0].data[2] = 20;
 
   // command_buffer[5].type = COMMAND_ROTATING_SECTORS;
   // command_buffer[5].data[0] = HUE_ORANGE;
@@ -49,19 +49,27 @@ void Dode::init()
   // command_buffer[1].data[1] = 255;
   // command_buffer[1].data[2] = 20;
 
-  command_buffer[1].type = COMMAND_RANDOM_WALK;
-  command_buffer[1].data[0] = HUE_RED;
-  command_buffer[1].data[1] = 255;
-  command_buffer[1].data[2] = 27;
-  command_buffer[1].data[3] = 100;
-  command_buffer[1].data[4] = 5;
-  command_buffer[1].data[5] = BALL_TYPE_NYAN;
+  // command_buffer[1].type = COMMAND_RANDOM_WALK;
+  // command_buffer[1].data[0] = HUE_RED;
+  // command_buffer[1].data[1] = 255;
+  // command_buffer[1].data[2] = 27;
+  // command_buffer[1].data[3] = 100;
+  // command_buffer[1].data[4] = 5;
+  // command_buffer[1].data[5] = BALL_TYPE_NYAN;
 
-  command_buffer[0].type = COMMAND_SPARKLE;
-  command_buffer[0].data[0] = 31;
-  command_buffer[0].data[1] = 31;
-  command_buffer[0].data[2] = 15;
-  command_buffer[0].data[3] = 247;
+  // command_buffer[0].type = COMMAND_SPARKLE;
+  // command_buffer[0].data[0] = 31;
+  // command_buffer[0].data[1] = 31;
+  // command_buffer[0].data[2] = 15;
+  // command_buffer[0].data[3] = 247;
+
+  command_buffer[2].type = COMMAND_MAPPED_SWIPE;
+  command_buffer[2].data[0] = HUE_AQUA;
+  command_buffer[2].data[1] = 255;
+  command_buffer[2].data[2] = 50;
+  command_buffer[2].data[3] = 0;
+  command_buffer[2].data[4] = 50;
+  command_buffer[2].data[5] = SWIPE_Y;
 
   // for (int i = 0; i < 30; i++)
   // {
@@ -70,7 +78,7 @@ void Dode::init()
   //   command_buffer[i + 1].data[1] = i + 1;
   // }
 
-  // command_buffer[0].type = COMMAND_DEBUG;
+  // command_buffer[1].type = COMMAND_DEBUG;
   // command_buffer[0].data[0] = 29;
 }
 
