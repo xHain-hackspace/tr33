@@ -49,6 +49,13 @@ void Dode::rotating_sectors(char *data)
           break;
         }
       }
+      // float brightness = 1.0 - fabs(led_position - position) / (width / 2.0);
+
+      // if (brightness > 0)
+      // {
+      //   brightness = Commands::ease_in_out_cubic(brightness * 1.0);
+      //   fade_led(coordinates[curr_segment].i_edge, coordinates[curr_segment].i_led, color, brightness);
+      // }
     }
   }
 }

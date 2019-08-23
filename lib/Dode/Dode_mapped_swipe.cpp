@@ -30,6 +30,15 @@ void Dode::mapped_swipe(char *data)
     case SWIPE_Z:
       led_position = coordinates[i].z;
       break;
+    case SWIPE_nX:
+      led_position = - coordinates[i].x;
+      break;
+    case SWIPE_nY:
+      led_position = - coordinates[i].y;
+      break;
+    case SWIPE_nZ:
+      led_position = - coordinates[i].z;
+      break;
     }
     float brightness = 1.0 - fabs(led_position - position) / (width / 2.0);
 

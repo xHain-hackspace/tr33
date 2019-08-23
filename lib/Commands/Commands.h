@@ -74,6 +74,9 @@
 #define SWIPE_X 0
 #define SWIPE_Y 1
 #define SWIPE_Z 2
+#define SWIPE_nX 3
+#define SWIPE_nY 4
+#define SWIPE_nZ 5
 
 struct Command
 {
