@@ -21,7 +21,7 @@ void Dode::init()
 {
   generate_mapping(); //generate cartesian and spherical coordinates of pixels
 
-   //command_buffer[12].type = COMMAND_WHITE;
+  //  command_buffer[12].type = COMMAND_WHITE;
 
   // command_buffer[0].type = COMMAND_SINGLE_COLOR;
   // command_buffer[0].data[0] = 31;
@@ -60,8 +60,8 @@ void Dode::init()
   // command_buffer[0].type = COMMAND_SPARKLE;
   // command_buffer[0].data[0] = 31;
   // command_buffer[0].data[1] = 31;
-  // command_buffer[0].data[2] = 15;
-  // command_buffer[0].data[3] = 247;
+  // command_buffer[0].data[2] = 30;
+  // command_buffer[0].data[3] = 200;
 
   // command_buffer[2].type = COMMAND_MAPPED_SWIPE;
   // command_buffer[2].data[0] = HUE_AQUA;

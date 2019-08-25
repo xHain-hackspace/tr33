@@ -35,7 +35,7 @@ void flush_serial()
 
 void setup()
 {
-  Serial.begin(230400);
+  Serial.begin(921600);
   CommandSerial.begin(921600);
   while (!Serial || !CommandSerial)
   {
