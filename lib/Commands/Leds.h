@@ -25,6 +25,8 @@ public:
   virtual void fireworks(char *data);
   virtual void rotating_sectors(char *data);
   virtual void fill(char *data);
+  virtual void twang(char *data);
+  virtual void joystick(char *data);
 
   // events - rendered once
   virtual void gravity_event();

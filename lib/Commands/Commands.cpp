@@ -33,6 +33,9 @@ void Commands::process(char *command_bin)
     case EVENT_PIXEL_RGB:
       pixel_rgb(leds, command.data);
       break;
+    case EVENT_JOYSTICK:
+      leds->joystick(command.data);
+      break;
     default:
       break;
     };
@@ -117,6 +120,9 @@ void Commands::run()
         break;
       case COMMAND_FILL:
         leds->fill(command_buffer[i].data);
+        break;
+      case COMMAND_TWANG:
+        leds->twang(command_buffer[i].data);
         break;
       default:
         break;

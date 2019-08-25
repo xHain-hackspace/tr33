@@ -1,10 +1,16 @@
 // Required libs
-//#include "FastLED.h"
+#include "FastLED.h"
+
+#ifndef LEDS_H
+#define LEDS_H
+#include <Leds.h>
+#endif
+
 // #include "I2Cdev.h"
 // #include "MPU6050.h"
 //#include "Wire.h"
 // #include "toneAC.h"
-//#include "iSin.h"
+// #include "iSin.h"
 // #include "RunningMedian.h"
 
 // Included libs
@@ -15,8 +21,11 @@
 #include "Boss.h"
 #include "Conveyor.h" */
 
-void setup();
-void loop();
+// void setup();
+void twang_loop();
+void twang_render(Leds* leds);
+void twang_set_tilt(uint8_t tilt);
+void twang_set_wobble(uint8_t wobble);
 
 
 // ---------------------------------

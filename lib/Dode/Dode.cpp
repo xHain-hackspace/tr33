@@ -23,10 +23,10 @@ void Dode::init()
 
    //command_buffer[12].type = COMMAND_WHITE;
 
-  command_buffer[0].type = COMMAND_SINGLE_COLOR;
-  command_buffer[0].data[0] = 31;
-  command_buffer[0].data[1] = HUE_PURPLE;
-  command_buffer[0].data[2] = 20;
+  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  // command_buffer[0].data[0] = 31;
+  // command_buffer[0].data[1] = HUE_PURPLE;
+  // command_buffer[0].data[2] = 20;
 
   // command_buffer[5].type = COMMAND_ROTATING_SECTORS;
   // command_buffer[5].data[0] = HUE_ORANGE;
@@ -49,13 +49,13 @@ void Dode::init()
   // command_buffer[1].data[1] = 255;
   // command_buffer[1].data[2] = 20;
 
-  command_buffer[8].type = COMMAND_RANDOM_WALK;
-  command_buffer[8].data[0] = HUE_RED;
-  command_buffer[8].data[1] = 255;
-  command_buffer[8].data[2] = 27;
-  command_buffer[8].data[3] = 100;
-  command_buffer[8].data[4] = 5;
-  command_buffer[8].data[5] = BALL_TYPE_NYAN;
+  // command_buffer[8].type = COMMAND_RANDOM_WALK;
+  // command_buffer[8].data[0] = HUE_RED;
+  // command_buffer[8].data[1] = 255;
+  // command_buffer[8].data[2] = 27;
+  // command_buffer[8].data[3] = 100;
+  // command_buffer[8].data[4] = 5;
+  // command_buffer[8].data[5] = BALL_TYPE_NYAN;
 
   // command_buffer[0].type = COMMAND_SPARKLE;
   // command_buffer[0].data[0] = 31;
@@ -95,21 +95,23 @@ void Dode::init()
   // command_buffer[5].data[4] = 5;
   // command_buffer[5].data[5] = SWIPE_nY;
 
-  command_buffer[6].type = COMMAND_MAPPED_SWIPE;
-  command_buffer[6].data[0] = HUE_AQUA;
-  command_buffer[6].data[1] = 100;
-  command_buffer[6].data[2] = 50;
-  command_buffer[6].data[3] = 0;
-  command_buffer[6].data[4] = 10;
-  command_buffer[6].data[5] = SWIPE_X;
+  // command_buffer[6].type = COMMAND_MAPPED_SWIPE;
+  // command_buffer[6].data[0] = HUE_AQUA;
+  // command_buffer[6].data[1] = 100;
+  // command_buffer[6].data[2] = 50;
+  // command_buffer[6].data[3] = 0;
+  // command_buffer[6].data[4] = 10;
+  // command_buffer[6].data[5] = SWIPE_X;
 
-  command_buffer[7].type = COMMAND_MAPPED_SWIPE;
-  command_buffer[7].data[0] = HUE_ORANGE;
-  command_buffer[7].data[1] = 100;
-  command_buffer[7].data[2] = 50;
-  command_buffer[7].data[3] = 0;
-  command_buffer[7].data[4] = 10;
-  command_buffer[7].data[5] = SWIPE_nX;
+  // command_buffer[7].type = COMMAND_MAPPED_SWIPE;
+  // command_buffer[7].data[0] = HUE_ORANGE;
+  // command_buffer[7].data[1] = 100;
+  // command_buffer[7].data[2] = 50;
+  // command_buffer[7].data[3] = 0;
+  // command_buffer[7].data[4] = 10;
+  // command_buffer[7].data[5] = SWIPE_X;
+
+  command_buffer[7].type = COMMAND_TWANG;
 
   // for (int i = 0; i < 30; i++)
   // {

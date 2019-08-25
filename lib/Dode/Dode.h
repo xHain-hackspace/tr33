@@ -174,6 +174,8 @@ public:
     void rotating_sectors(char *data);
     void fill(char *data);
     void mapped_swipe(char *data);
+    void twang(char *data);
+    void twang_joystick(char *data);
 
 private:
     void set_led_mirrored_middle(uint8_t edge_index, uint8_t led_index, CRGB color);

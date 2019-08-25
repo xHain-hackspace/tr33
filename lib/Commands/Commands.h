@@ -41,6 +41,7 @@
 #define COMMAND_FIREWORKS 15
 #define COMMAND_ROTATING_SECTORS 16
 #define COMMAND_FILL 17
+#define COMMAND_TWANG 18
 
 // -- EVENTS ------------------------------------------------------------------------------
 
@@ -49,6 +50,7 @@
 #define EVENT_BEAT 102
 #define EVENT_PIXEL 103
 #define EVENT_PIXEL_RGB 104
+#define EVENT_JOYSTICK 105
 
 // -- BALLS ------------------------------------------------------------------------------
 
