@@ -118,6 +118,9 @@ void Commands::run()
       case COMMAND_FILL:
         leds->fill(command_buffer[i].data);
         break;
+      case COMMAND_ROTATING_PLANE:
+        leds->rotating_plane(command_buffer[i].data);
+        break;
       default:
         break;
       }

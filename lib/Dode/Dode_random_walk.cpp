@@ -77,8 +77,8 @@ void Dode::random_walk(char *data)
 
   for (int i = 0; i < active_balls; i++)
   {
-    CRGB color = ColorFromPalette(currentPalette, color_index + i * 256 / active_balls, 255);
-    // CRGB color = ColorFromPalette(currentPalette, color_index, 255);
+    // CRGB color = ColorFromPalette(currentPalette, color_index + i * 256 / active_balls, 255);
+    CRGB color = ColorFromPalette(currentPalette, color_index, 255);
     balls[i].position = balls[i].position + float(rate) * float(now - last_update) / 500.0;
 
     if (balls[i].position > edge_strip_length(this, balls[i].current_edge))

@@ -41,6 +41,7 @@
 #define COMMAND_FIREWORKS 15
 #define COMMAND_ROTATING_SECTORS 16
 #define COMMAND_FILL 17
+#define COMMAND_ROTATING_PLANE 18
 
 // -- EVENTS ------------------------------------------------------------------------------
 

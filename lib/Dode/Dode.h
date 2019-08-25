@@ -68,6 +68,8 @@ struct Coordinates
     float theta;
 };
 extern Coordinates coordinates[NR_TOTAL_LEDS];
+#define COORDINATES_MAX_R 1.40125854
+#define COORDINATES_MIN_R 1.11351636
 
 static uint16_t edges[EDGE_COUNT][3] = {
     {0, 0, NR_LEDS_EDGE_01},
@@ -174,6 +176,7 @@ public:
     void rotating_sectors(char *data);
     void fill(char *data);
     void mapped_swipe(char *data);
+    void rotating_plane(char *data);
 
 private:
     void set_led_mirrored_middle(uint8_t edge_index, uint8_t led_index, CRGB color);
