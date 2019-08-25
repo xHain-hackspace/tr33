@@ -7,8 +7,7 @@ void Dode::twang(char *data)
     twang_render(this);
 }
 
-void Dode::twang_joystick(char *data) 
+void Dode::joystick(char *data) 
 {
-    twang_set_tilt(data[0]);
-    twang_set_wobble(data[1]);
+    twang_joystick(data);
 }

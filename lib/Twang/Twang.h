@@ -24,8 +24,7 @@
 // void setup();
 void twang_loop();
 void twang_render(Leds* leds);
-void twang_set_tilt(uint8_t tilt);
-void twang_set_wobble(uint8_t wobble);
+void twang_joystick(char * data);
 
 
 // ---------------------------------

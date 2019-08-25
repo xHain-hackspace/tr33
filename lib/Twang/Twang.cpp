@@ -51,7 +51,7 @@ iSin isin = iSin();
 #define JOYSTICK_DIRECTION   1     // 0/1 to flip joystick direction
 #define ATTACK_THRESHOLD     30000 // The threshold that triggers an attack
 #define JOYSTICK_DEADZONE    5     // Angle to ignore
-int joystickTilt = 100;              // Stores the angle of the joystick
+int joystickTilt = 0;              // Stores the angle of the joystick
 int joystickWobble = 0;            // Stores the max amount of acceleration (wobble)
 
 // WOBBLE ATTACK
@@ -128,12 +128,10 @@ void clear() {
     }
 }
 
-void twang_set_tilt(int8_t tilt) {
-    joystickTilt = tilt;
-}
-
-void twang_set_wobble(int8_t wobble) {
-    joystickWobble = wobble;
+void twang_joystick(char * data) {
+    joystickTilt = (int) data[0];
+    // TODO: Moped
+    joystickWobble = (int) data[1];
 }
 
 void twang_render(Leds* leds) {
