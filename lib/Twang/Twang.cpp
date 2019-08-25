@@ -6,6 +6,7 @@
 // #include "toneAC.h"
 #include "iSin.h"
 // #include "RunningMedian.h"
+#include <Dode.h>
 
 // Included libs
 #include "Enemy.h"
@@ -27,7 +28,38 @@ int count = 0;
 #define max_compare(a,b) ((a)>(b)?(a):(b))
 
 // LED setup
-#define NUM_LEDS             80
+//#define NUM_LEDS             80
+
+//Define Path to follow (edge number): 19, -9, 22, -12, 25, -15, 28, -3, 16, -6
+#define NUM_LEDS    (NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25 + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_28 + NR_LEDS_EDGE_03 + NR_LEDS_EDGE_16 + NR_LEDS_EDGE_06)
+//Calculate number of LEDs from path and running total in array
+int running_total_leds[] = {
+        NR_LEDS_EDGE_19,
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09,
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22,
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12,
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25,
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25
+    + NR_LEDS_EDGE_15,
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25
+    + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_28,
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25
+    + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_28 + NR_LEDS_EDGE_03,
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25
+    + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_28 + NR_LEDS_EDGE_03 + NR_LEDS_EDGE_16, 
+
+        NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25
+    + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_28 + NR_LEDS_EDGE_03 + NR_LEDS_EDGE_16 + NR_LEDS_EDGE_06
+    };
+
 // #define DATA_PIN             4
 //#define CLOCK_PIN            4
 // #define LED_COLOR_ORDER      BGR//GBR
@@ -95,6 +127,7 @@ Conveyor conveyorPool[2] = {
 int const conveyorCount = 2;
 Boss boss = Boss();
 
+
 CRGB twang_leds[NUM_LEDS];
 //RunningMedian MPUAngleSamples = RunningMedian(5);
 //RunningMedian MPUWobbleSamples = RunningMedian(5);
@@ -135,14 +168,72 @@ void twang_joystick(char * data) {
 }
 
 void twang_render(Leds* leds) {
+    //Define Path to follow (edge number): 19, -9, 22, -12, 25, -15, 28, -3, 16, -6
+    //Calculate number of LEDs from path and running total in array (see defines above)
+    int twang_edge_index = 0;
+    int twang_led_index = 0;
+
     for(int i=0; i<NUM_LEDS; i++) {
-        // if (twang_leds[i] != CRGB(0,0,0)) {
-            // uint8_t strip_index = i / 80;
-            // uint8_t led_index = i % 3;
-            leds -> set_led(0, i, twang_leds[i]);
-        // }
+        if (i < running_total_leds[0]) {
+            twang_edge_index = 18; // edge 19 (positive direction)
+            twang_led_index = i;
+        }
+        else if (i < running_total_leds[1])
+        {
+            twang_edge_index = 8; // edge - 9 (negative direction)
+            twang_led_index = NR_LEDS_EDGE_09 - (i - running_total_leds[0]);
+        }
+        else if (i < running_total_leds[2])
+        {
+            twang_edge_index = 21; // edge 22 (positive direction)
+            twang_led_index = i -  running_total_leds[1];
+        }
+        else if (i < running_total_leds[3])
+        {
+            twang_edge_index = 11; // edge - 12 (negative direction)
+            twang_led_index = NR_LEDS_EDGE_12 - (i - running_total_leds[2]);
+        }
+        else if (i < running_total_leds[4])
+        {
+            twang_edge_index = 24; // edge 25 (positive direction)
+            twang_led_index = i -  running_total_leds[3];
+        }
+        else if (i < running_total_leds[5])
+        {
+            twang_edge_index = 14; // edge - 15 (negative direction)
+            twang_led_index = NR_LEDS_EDGE_15 - (i - running_total_leds[4]);
+        }
+        else if (i < running_total_leds[6])
+        {
+            twang_edge_index = 27; // edge 28 (positive direction)
+            twang_led_index = i -  running_total_leds[5];
+        }
+        else if (i < running_total_leds[7])
+        {
+            twang_edge_index = 2; // edge - 3 (negative direction)
+            twang_led_index = NR_LEDS_EDGE_03 - (i - running_total_leds[6]);
+        }
+        else if (i < running_total_leds[8])
+        {
+            twang_edge_index = 15; // edge 16 (positive direction)
+            twang_led_index = i -  running_total_leds[7];
+        }
+        else if (i < running_total_leds[9])
+        {
+            twang_edge_index = 5; // edge -6 (negative direction)
+            twang_led_index = NR_LEDS_EDGE_06 - (i - running_total_leds[8]);
+        }
+        else {
+            // ERROR: index out of bound
+        }
+    // if (twang_leds[i] != CRGB(0,0,0)) {
+        // uint8_t strip_index = i / 80;
+        // uint8_t led_index = i % 3;
+        leds -> set_led(twang_edge_index, twang_led_index, twang_leds[i]);
+    // }
     }
 }
+
 
 void twang_loop() {
     long mm = millis();
