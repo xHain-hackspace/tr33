@@ -87,10 +87,12 @@ public:
   void beats(char *data);
   void mapped_swipe(char *data);
   void mapped_shape(char *data);
+  void twang(char *data);
 
   // events - rendered once
   void gravity_event();
   void beat(char *data);
+  void joystick(char *data);
 
 private:
   // ball rendering

@@ -27,8 +27,8 @@ public:
   virtual void fill(char *data);
   virtual void rotating_plane(char *data);
   virtual void twang(char *data);
-  virtual void joystick(char *data);
 
   // events - rendered once
   virtual void gravity_event();
+  virtual void joystick(char *data);
 };

@@ -17,11 +17,11 @@ const uint8_t SERIAL_TIMEOUT = 100;
 
 Commands commands;
 
-// HardwareSerial CommandSerial(2);
-HardwareSerial CommandSerial(0);
+HardwareSerial CommandSerial(2);
+// HardwareSerial CommandSerial(0);
 
-// Tr33 led_structure = Tr33();
-Dode led_structure = Dode();
+Tr33 led_structure = Tr33();
+// Dode led_structure = Dode();
 
 void flush_serial()
 {
@@ -36,7 +36,7 @@ void flush_serial()
 void setup()
 {
   Serial.begin(921600);
-  CommandSerial.begin(921600);
+  CommandSerial.begin(1000000);
   while (!Serial || !CommandSerial)
   {
     // do nothing

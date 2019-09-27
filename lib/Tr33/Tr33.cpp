@@ -67,12 +67,15 @@ void Tr33::init()
   // command_buffer[0].data[1] = 0;
   // command_buffer[0].data[2] = 20;
 
-  command_buffer[0].type = COMMAND_RAINBOW_SINE;
-  command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = 60;
-  command_buffer[0].data[2] = 50;
-  command_buffer[0].data[3] = 50;
-  command_buffer[0].data[4] = 255;
+  // command_buffer[0].type = COMMAND_RAINBOW_SINE;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[0].data[1] = 60;
+  // command_buffer[0].data[2] = 50;
+  // command_buffer[0].data[3] = 50;
+  // command_buffer[0].data[4] = 255;
+
+  command_buffer[0].type = COMMAND_TWANG;
+  // command_buffer[0].data[0] = 0;
 }
 
 //

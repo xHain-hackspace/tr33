@@ -23,7 +23,8 @@
 
 // void setup();
 void twang_loop();
-void twang_render(Leds* leds);
+void twang_render_dode(Leds* leds);
+void twang_render_tr33(Leds* leds);
 void twang_joystick(char * data);
 
 
