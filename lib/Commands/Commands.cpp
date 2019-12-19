@@ -55,6 +55,9 @@ void Commands::run()
 
   switch (currentMode)
   {
+  case MODE_ARTNET:
+    run_commands = false;
+    break;
   case MODE_STREAM:
     run_commands = false;
     break;

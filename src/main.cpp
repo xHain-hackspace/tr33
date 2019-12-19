@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include <Commands.h>
+// #include <Artnet.h>
 #include <Twang.h>
 #include <Tr33.h>
 #include <Dode.h>
@@ -94,16 +95,16 @@ void loop()
     }
     else
     {
-      // Serial.print("Expected header, got: ");
-      // Serial.println(byte);
+      Serial.print("Expected header, got: ");
+      Serial.println(byte);
     }
   }
   else if (byte != -1)
   {
-    // Serial.print("Expected RTS, got: ");
-    // Serial.println(byte);
-    // flush_serial();
-    // CommandSerial.write(SERIAL_REQUEST_RESYNC);
+    Serial.print("Expected RTS, got: ");
+    Serial.println(byte);
+    flush_serial();
+    CommandSerial.write(SERIAL_REQUEST_RESYNC);
   }
 
   commands.run();

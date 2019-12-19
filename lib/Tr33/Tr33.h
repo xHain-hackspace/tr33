@@ -8,25 +8,25 @@
 
 // trunk config
 #define TRUNK_PIN_1 23
-#define TRUNK_PIN_2 22
-#define TRUNK_PIN_3 14
-#define TRUNK_PIN_4 32
+#define TRUNK_PIN_2 23
+#define TRUNK_PIN_3 23
+#define TRUNK_PIN_4 23
 #define HW_TRUNK_PIXEL_COUNT 100
 #define HW_TRUNK_STRIP_COUNT 4
 #define TRUNK_PIXEL_COUNT HW_TRUNK_PIXEL_COUNT / 2
 #define TRUNK_STRIP_COUNT HW_TRUNK_STRIP_COUNT * 2
 
 // branch config
-#define BRANCH_PIN_1 15
-#define BRANCH_PIN_2 33
-#define BRANCH_PIN_3 27
-#define BRANCH_PIN_4 12
-#define BRANCH_PIN_5 21
-#define BRANCH_PIN_6 19
-#define BRANCH_PIN_7 18
-#define BRANCH_PIN_8 5
-#define BRANCH_PIN_9 4
-#define BRANCH_PIN_10 25
+#define BRANCH_PIN_1 33
+#define BRANCH_PIN_2 32
+#define BRANCH_PIN_3 25
+#define BRANCH_PIN_4 27
+#define BRANCH_PIN_5 14
+#define BRANCH_PIN_6 13
+#define BRANCH_PIN_7 15
+#define BRANCH_PIN_8 22
+#define BRANCH_PIN_9 12
+#define BRANCH_PIN_10 4
 #define BRANCH_PIN_11 26
 #define BRANCH_PIN_12 13
 #define BRANCH_PIXEL_COUNT 90

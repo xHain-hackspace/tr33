@@ -11,6 +11,7 @@
 
 #define MODE_COMMANDS 0
 #define MODE_STREAM 1
+#define MODE_ARTNET 2
 
 // colors
 #define HUE_RED 0
