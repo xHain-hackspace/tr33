@@ -13,6 +13,8 @@
 // Packet
 #define ARTNET_ID "Art-Net\0"
 #define ARTNET_DMX_START 18
+#define W5500_RESET_PIN 21
+static uint8_t eth_MAC[] = {0x02, 0xF0, 0x0D, 0xBE, 0xEF, 0x01};
 
 struct artnet_reply_s
 {
@@ -58,8 +60,7 @@ class Artnet
 public:
   Artnet();
 
-  void begin(byte mac[], byte ip[]);
-  void begin();
+  void begin(IPAddress ip);
   uint16_t read();
   void printPacketHeader();
   void printPacketContent();

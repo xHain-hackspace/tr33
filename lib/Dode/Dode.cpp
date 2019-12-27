@@ -23,10 +23,10 @@ void Dode::init()
 
   //  command_buffer[12].type = COMMAND_WHITE;
 
-  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
-  // command_buffer[0].data[0] = 31;
-  // command_buffer[0].data[1] = HUE_PURPLE;
-  // command_buffer[0].data[2] = 20;
+  command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  command_buffer[0].data[0] = 31;
+  command_buffer[0].data[1] = HUE_PURPLE;
+  command_buffer[0].data[2] = 50;
 
   // command_buffer[5].type = COMMAND_ROTATING_SECTORS;
   // command_buffer[5].data[0] = HUE_ORANGE;
@@ -49,13 +49,13 @@ void Dode::init()
   // command_buffer[1].data[1] = 255;
   // command_buffer[1].data[2] = 20;
 
-  // command_buffer[8].type = COMMAND_RANDOM_WALK;
-  // command_buffer[8].data[0] = HUE_RED;
-  // command_buffer[8].data[1] = 255;
-  // command_buffer[8].data[2] = 27;
-  // command_buffer[8].data[3] = 100;
-  // command_buffer[8].data[4] = 5;
-  // command_buffer[8].data[5] = BALL_TYPE_NYAN;
+  command_buffer[8].type = COMMAND_RANDOM_WALK;
+  command_buffer[8].data[0] = HUE_RED;
+  command_buffer[8].data[1] = 255;
+  command_buffer[8].data[2] = 27;
+  command_buffer[8].data[3] = 100;
+  command_buffer[8].data[4] = 5;
+  command_buffer[8].data[5] = BALL_TYPE_NYAN;
 
   // command_buffer[0].type = COMMAND_SPARKLE;
   // command_buffer[0].data[0] = 31;
@@ -111,7 +111,7 @@ void Dode::init()
   // command_buffer[7].data[4] = 10;
   // command_buffer[7].data[5] = SWIPE_X;
 
-  command_buffer[7].type = COMMAND_TWANG;
+  // command_buffer[7].type = COMMAND_TWANG;
 
   // for (int i = 0; i < 30; i++)
   // {
@@ -203,5 +203,20 @@ uint16_t Dode::strip_length(uint8_t strip_index)
   else
   {
     return EDGE_MAX_LENGTH;
+  }
+}
+
+void Dode::artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data)
+{
+  if (universe < HW_STRIP_COUNT * 2)
+  {
+    if (universe % 2 == 0)
+    {
+      memcpy(edge_leds[universe / 2], data, 170 * sizeof(CRGB));
+    }
+    else
+    {
+      memcpy(edge_leds[universe / 2] + 170, data, (HW_STRIP_PIXEL_COUNT - 170) * sizeof(CRGB));
+    }
   }
 }

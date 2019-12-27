@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <FastLED.h>
+#include <Artnet.h>
 
 #ifndef LEDS_H
 #define LEDS_H
@@ -92,6 +93,7 @@ struct Command
 extern Command command_buffer[COMMAND_BUFFER_SIZE];
 extern CRGBPalette256 currentPalette;
 extern uint8_t currentMode;
+extern Artnet artnet;
 
 class Commands
 {
@@ -125,4 +127,9 @@ public:
   static void render_ball(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
   static void render_nyan(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, bool reverse);
   static void render_comet(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, bool reverse);
+
+  static void artnet_sync_callback();
+
+private:
+  void render_commands();
 };

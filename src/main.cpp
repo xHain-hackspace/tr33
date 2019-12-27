@@ -1,7 +1,6 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include <Commands.h>
-// #include <Artnet.h>
 #include <Twang.h>
 #include <Tr33.h>
 #include <Dode.h>
@@ -11,18 +10,20 @@
 #define SERIAL_CLEAR_TO_SEND 0xBB
 #define SERIAL_REQUEST_RESYNC 0xCC
 
-const uint8_t SERIAL_BUFFER_SIZE = 1024;
+const uint16_t SERIAL_BUFFER_SIZE = 1024;
 char serial_buffer[SERIAL_BUFFER_SIZE];
 const uint8_t SERIAL_PACKET_SIZE = 2 + COMMAND_DATA_SIZE;
 const uint8_t SERIAL_TIMEOUT = 100;
 
+IPAddress artnet_ip(192, 168, 2, 2);
+
 Commands commands;
 
-HardwareSerial CommandSerial(2);
-// HardwareSerial CommandSerial(0);
+// HardwareSerial CommandSerial(2);
+HardwareSerial CommandSerial(0);
 
-Tr33 led_structure = Tr33();
-// Dode led_structure = Dode();
+// Tr33 led_structure = Tr33();
+Dode led_structure = Dode();
 
 void flush_serial()
 {
@@ -45,6 +46,8 @@ void setup()
 
   CommandSerial.setTimeout(SERIAL_TIMEOUT);
 
+  Serial.println("\n\tLED Controller\r\n");
+
   Serial.println("Starting up...");
 
   commands.init(&led_structure);
@@ -52,9 +55,13 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
 
-  Serial.println("Startup complete");
-
   CommandSerial.write(SERIAL_REQUEST_RESYNC);
+
+  // artnet.begin(artnet_ip);
+  // artnet.setArtDmxCallback(led_structure.artnet_packet_callback);
+  // artnet.setArtSyncCallback(commands.artnet_sync_callback);
+
+  Serial.println("Startup complete");
 }
 
 void loop()

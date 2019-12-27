@@ -31,4 +31,7 @@ public:
   // events - rendered once
   virtual void gravity_event();
   virtual void joystick(char *data);
+
+  // artnet
+  static void artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data);
 };

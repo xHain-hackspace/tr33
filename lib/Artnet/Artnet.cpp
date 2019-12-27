@@ -2,8 +2,32 @@
 
 Artnet::Artnet() {}
 
-void Artnet::begin()
+void Artnet::begin(IPAddress ip)
 {
+  Serial.println("Setting up ethernet controller for ArtNet");
+
+  Ethernet.setCsPin(5);
+  Ethernet.setRstPin(W5500_RESET_PIN);
+  Ethernet.softreset();
+  Ethernet.hardreset();
+  Ethernet.init(1);
+  Serial.print("Starting ETHERNET connection.");
+  Ethernet.begin(eth_MAC, ip);
+
+  int count = 10;
+  while (!Ethernet.link() && count-- > 0)
+  {
+    delay(100);
+    Serial.print(".");
+  }
+
+  Serial.println();
+  Serial.print("Ethernet IP is: ");
+  Serial.println(Ethernet.localIP());
+  Serial.print("The link speed is: ");
+  Serial.println(Ethernet.speedReport());
+  Serial.print("Initializing ArtNet on port: ");
+  Serial.println(ARTNET_PORT);
   Udp.begin(ARTNET_PORT);
 }
 
