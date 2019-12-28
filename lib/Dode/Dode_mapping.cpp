@@ -1,4 +1,3 @@
-
 #include <Dode.h>
 #include <math.h>
 #include <stdlib.h>
@@ -35,34 +34,33 @@ void Dode::generate_mapping()
     const float z_h = radius * cos(theta_h);
     const float z_l = -z_h;
 
-    //Eckkoordinaten Baseplate B
-    const float corner_B1[3] = {0, y_b1, z_b};
-    const float corner_B2[3] = {x_b2, y_b2, z_b};
-    const float corner_B2_[3] = {-x_b2, y_b2, z_b};
-    const float corner_B3[3] = {a / 2, -y_b3, z_b};
-    const float corner_B3_[3] = {-a / 2, -y_b3, z_b};
+    //Eckkoordinaten Base Level (BL)
+    const float corner_BL1[3] = {x_b2, y_b2, z_b};    
+    const float corner_BL2[3] = {a / 2, -y_b3, z_b};
+    const float corner_BL3[3] = {-a / 2, -y_b3, z_b};
+    const float corner_BL4[3] = {-x_b2, y_b2, z_b};
+    const float corner_BL5[3] = {0, y_b1, z_b};
 
-    //Eckkoordinaten Topplate T
-    const float corner_T1[3] = {0, -y_b1, z_t};
-    const float corner_T2[3] = {x_b2, -y_b2, z_t};
-    const float corner_T2_[3] = {-x_b2, -y_b2, z_t};
-    const float corner_T3[3] = {a / 2, y_b3, z_t};
-    const float corner_T3_[3] = {-a / 2, y_b3, z_t};
+    //Eckkoordinaten Top Level (TL)
+    const float corner_TL1[3] = {-a / 2, y_b3, z_t};
+    const float corner_TL2[3] = {a / 2, y_b3, z_t};
+    const float corner_TL3[3] = {x_b2, -y_b2, z_t};
+    const float corner_TL4[3] = {0, -y_b1, z_t};
+    const float corner_TL5[3] = {-x_b2, -y_b2, z_t};   
 
-    //Zwischenebene H (Higher/Upper plane)
-    const float corner_H1[3] = {0, -y_l1, z_h};
-    const float corner_H2[3] = {x_l2, -y_l2, z_h};
-    const float corner_H2_[3] = {-x_l2, -y_l2, z_h};
-    const float corner_H3[3] = {d / 2, y_l3, z_h};
-    const float corner_H3_[3] = {-d / 2, y_l3, z_h};
+    //Zwischenebene Higher Level (HL)
+    const float corner_HL1[3] = {d / 2, y_l3, z_h};
+    const float corner_HL2[3] = {x_l2, -y_l2, z_h};
+    const float corner_HL3[3] = {0, -y_l1, z_h};
+    const float corner_HL4[3] = {-x_l2, -y_l2, z_h};
+    const float corner_HL5[3] = {-d / 2, y_l3, z_h};
 
-    //Zwischenebene L (Lower plane)
-    const float corner_L1[3] = {0, y_l1, z_l};
-    const float corner_L2[3] = {x_l2, y_l2, z_l};
-    const float corner_L2_[3] = {-x_l2, y_l2, z_l};
-    const float corner_L3[3] = {d / 2, -y_l3, z_l};
-    const float corner_L3_[3] = {-d / 2, -y_l3, z_l};
-    
+    //Zwischenebene Lower Level (LL)
+    const float corner_LL1[3] = {0, y_l1, z_l};
+    const float corner_LL2[3] = {x_l2, y_l2, z_l};
+    const float corner_LL3[3] = {d / 2, -y_l3, z_l};
+    const float corner_LL4[3] = {-d / 2, -y_l3, z_l};
+    const float corner_LL5[3] = {-x_l2, y_l2, z_l};
 
     // Längen (Anzhal LEDs) der Kanten #1 bis #30
     const int edge_LEDs[EDGE_COUNT] = {
@@ -73,102 +71,141 @@ void Dode::generate_mapping()
         NR_LEDS_EDGE_21, NR_LEDS_EDGE_22, NR_LEDS_EDGE_23, NR_LEDS_EDGE_24, NR_LEDS_EDGE_25,
         NR_LEDS_EDGE_26, NR_LEDS_EDGE_27, NR_LEDS_EDGE_28, NR_LEDS_EDGE_29, NR_LEDS_EDGE_30};
 
-    // Einzel-Vektoren der LED-Abstände: Zwischenräume = Anzahl_LEDs-1;
+    // Einzel-Vektoren der LED-Abstände in XYZ-Koordinaten: Zwischenräume = Anzahl_LEDs-1;
+    // C-förmige LED-Streifen im Uhrzeigersinn (von innen betrachtet)
     float Vektor[EDGE_COUNT][3] = {
-        // Kante1: corner_B1 --> corner_B2_
-        {(corner_B2_[0] - corner_B1[0]) / (edge_LEDs[0] - 1), (corner_B2_[1] - corner_B1[1]) / (edge_LEDs[0] - 1), (corner_B2_[2] - corner_B1[2]) / (edge_LEDs[0] - 1)},
-        // Kante2: corner_B2_ --> corner_L2_
-        {(corner_L2_[0] - corner_B2_[0]) / (edge_LEDs[1] - 1), (corner_L2_[1] - corner_B2_[1]) / (edge_LEDs[1] - 1), (corner_L2_[2] - corner_B2_[2]) / (edge_LEDs[1] - 1)},
-        // Kante3: corner_L2_ --> corner_H3_
-        {(corner_H3_[0] - corner_L2_[0]) / (edge_LEDs[2] - 1), (corner_H3_[1] - corner_L2_[1]) / (edge_LEDs[2] - 1), (corner_H3_[2] - corner_L2_[2]) / (edge_LEDs[2] - 1)},
-        // Kante4: corner_B2_ --> corner_B3_
-        {(corner_B3_[0] - corner_B2_[0]) / (edge_LEDs[3] - 1), (corner_B3_[1] - corner_B2_[1]) / (edge_LEDs[3] - 1), (corner_B3_[2] - corner_B2_[2]) / (edge_LEDs[3] - 1)},
-        // Kante5: corner_B3_ --> corner_L3_
-        {(corner_L3_[0] - corner_B3_[0]) / (edge_LEDs[4] - 1), (corner_L3_[1] - corner_B3_[1]) / (edge_LEDs[4] - 1), (corner_L3_[2] - corner_B3_[2]) / (edge_LEDs[4] - 1)},
-        // Kante6: corner_L3_ --> corner_H2_
-        {(corner_H2_[0] - corner_L3_[0]) / (edge_LEDs[5] - 1), (corner_H2_[1] - corner_L3_[1]) / (edge_LEDs[5] - 1), (corner_H2_[2] - corner_L3_[2]) / (edge_LEDs[5] - 1)},
-        // Kante7: corner_B3_ --> corner_B3
-        {(corner_B3[0] - corner_B3_[0]) / (edge_LEDs[6] - 1), (corner_B3[1] - corner_B3_[1]) / (edge_LEDs[6] - 1), (corner_B3[2] - corner_B3_[2]) / (edge_LEDs[6] - 1)},
-        // Kante8: corner_B3 --> corner_L3
-        {(corner_L3[0] - corner_B3[0]) / (edge_LEDs[7] - 1), (corner_L3[1] - corner_B3[1]) / (edge_LEDs[7] - 1), (corner_L3[2] - corner_B3[2]) / (edge_LEDs[7] - 1)},
-        // Kante9: corner_L3 --> corner_H1
-        {(corner_H1[0] - corner_L3[0]) / (edge_LEDs[8] - 1), (corner_H1[1] - corner_L3[1]) / (edge_LEDs[8] - 1), (corner_H1[2] - corner_L3[2]) / (edge_LEDs[8] - 1)},
-        // Kante10: corner_B3 --> corner_B2
-        {(corner_B2[0] - corner_B3[0]) / (edge_LEDs[9] - 1), (corner_B2[1] - corner_B3[1]) / (edge_LEDs[9] - 1), (corner_B2[2] - corner_B3[2]) / (edge_LEDs[9] - 1)},
-        // Kante11: corner_B2 --> corner_L2
-        {(corner_L2[0] - corner_B2[0]) / (edge_LEDs[10] - 1), (corner_L2[1] - corner_B2[1]) / (edge_LEDs[10] - 1), (corner_L2[2] - corner_B2[2]) / (edge_LEDs[10] - 1)},
-        // Kante12: corner_L2 --> corner_H2
-        {(corner_H2[0] - corner_L2[0]) / (edge_LEDs[11] - 1), (corner_H2[1] - corner_L2[1]) / (edge_LEDs[11] - 1), (corner_H2[2] - corner_L2[2]) / (edge_LEDs[11] - 1)},
-        // Kante13: corner_B2 --> corner_B1
-        {(corner_B1[0] - corner_B2[0]) / (edge_LEDs[12] - 1), (corner_B1[1] - corner_B2[1]) / (edge_LEDs[12] - 1), (corner_B1[2] - corner_B2[2]) / (edge_LEDs[12] - 1)},
-        // Kante14: corner_B1 --> corner_L1
-        {(corner_L1[0] - corner_B1[0]) / (edge_LEDs[13] - 1), (corner_L1[1] - corner_B1[1]) / (edge_LEDs[13] - 1), (corner_L1[2] - corner_B1[2]) / (edge_LEDs[13] - 1)},
-        // Kante15: corner_L1 --> corner_H3
-        {(corner_H3[0] - corner_L1[0]) / (edge_LEDs[14] - 1), (corner_H3[1] - corner_L1[1]) / (edge_LEDs[14] - 1), (corner_H3[2] - corner_L1[2]) / (edge_LEDs[14] - 1)},
-        // Kante16: corner_L2_ --> corner_H2_
-        {(corner_H2_[0] - corner_L2_[0]) / (edge_LEDs[15] - 1), (corner_H2_[1] - corner_L2_[1]) / (edge_LEDs[15] - 1), (corner_H2_[2] - corner_L2_[2]) / (edge_LEDs[15] - 1)},
-        // Kante17: corner_H2_ --> corner_T2_
-        {(corner_T2_[0] - corner_H2_[0]) / (edge_LEDs[16] - 1), (corner_T2_[1] - corner_H2_[1]) / (edge_LEDs[16] - 1), (corner_T2_[2] - corner_H2_[2]) / (edge_LEDs[16] - 1)},
-        // Kante18: corner_T2_ --> corner_T3_
-        {(corner_T3_[0] - corner_T2_[0]) / (edge_LEDs[17] - 1), (corner_T3_[1] - corner_T2_[1]) / (edge_LEDs[17] - 1), (corner_T3_[2] - corner_T2_[2]) / (edge_LEDs[17] - 1)},
-        // Kante19: corner_L3_ --> corner_H1
-        {(corner_H1[0] - corner_L3_[0]) / (edge_LEDs[18] - 1), (corner_H1[1] - corner_L3_[1]) / (edge_LEDs[18] - 1), (corner_H1[2] - corner_L3_[2]) / (edge_LEDs[18] - 1)},
-        // Kante20: corner_H1 --> corner_T1
-        {(corner_T1[0] - corner_H1[0]) / (edge_LEDs[19] - 1), (corner_T1[1] - corner_H1[1]) / (edge_LEDs[19] - 1), (corner_T1[2] - corner_H1[2]) / (edge_LEDs[19] - 1)},
-        // Kante21: corner_T1 --> corner_T2_
-        {(corner_T2_[0] - corner_T1[0]) / (edge_LEDs[20] - 1), (corner_T2_[1] - corner_T1[1]) / (edge_LEDs[20] - 1), (corner_T2_[2] - corner_T1[2]) / (edge_LEDs[20] - 1)},
-        // Kante22: corner_L3 --> corner_H2
-        {(corner_H2[0] - corner_L3[0]) / (edge_LEDs[21] - 1), (corner_H2[1] - corner_L3[1]) / (edge_LEDs[21] - 1), (corner_H2[2] - corner_L3[2]) / (edge_LEDs[21] - 1)},
-        // Kante23: corner_H2 --> corner_T2
-        {(corner_T2[0] - corner_H2[0]) / (edge_LEDs[22] - 1), (corner_T2[1] - corner_H2[1]) / (edge_LEDs[22] - 1), (corner_T2[2] - corner_H2[2]) / (edge_LEDs[22] - 1)},
-        // Kante24: corner_T2 --> corner_T1
-        {(corner_T1[0] - corner_T2[0]) / (edge_LEDs[23] - 1), (corner_T1[1] - corner_T2[1]) / (edge_LEDs[23] - 1), (corner_T2[2] - corner_T1[2]) / (edge_LEDs[23] - 1)},
-        // Kante25: corner_L2 --> corner_H3
-        {(corner_H3[0] - corner_L2[0]) / (edge_LEDs[24] - 1), (corner_H3[1] - corner_L2[1]) / (edge_LEDs[24] - 1), (corner_H3[2] - corner_L2[2]) / (edge_LEDs[24] - 1)},
-        // Kante26: corner_H3 --> corner_T3
-        {(corner_T3[0] - corner_H3[0]) / (edge_LEDs[25] - 1), (corner_T3[1] - corner_H3[1]) / (edge_LEDs[25] - 1), (corner_T3[2] - corner_H3[2]) / (edge_LEDs[25] - 1)},
-        // Kante27: corner_T3 --> corner_T2
-        {(corner_T2[0] - corner_T3[0]) / (edge_LEDs[26] - 1), (corner_T2[1] - corner_T3[1]) / (edge_LEDs[26] - 1), (corner_T2[2] - corner_T3[2]) / (edge_LEDs[26] - 1)},
-        // Kante28: corner_L1 --> corner_H3_
-        {(corner_H3_[0] - corner_L1[0]) / (edge_LEDs[27] - 1), (corner_H3_[1] - corner_L1[1]) / (edge_LEDs[27] - 1), (corner_H3_[2] - corner_L1[2]) / (edge_LEDs[27] - 1)},
-        // Kante29: corner_H3_ --> corner_T3_
-        {(corner_T3_[0] - corner_H3_[0]) / (edge_LEDs[28] - 1), (corner_T3_[1] - corner_H3_[1]) / (edge_LEDs[28] - 1), (corner_T3_[2] - corner_H3_[2]) / (edge_LEDs[28] - 1)},
-        // Kante30: corner_T3_ --> corner_T3
-        {(corner_T3[0] - corner_T3_[0]) / (edge_LEDs[29] - 1), (corner_T3[1] - corner_T3_[1]) / (edge_LEDs[29] - 1), (corner_T3[2] - corner_T3_[2]) / (edge_LEDs[29] - 1)}};
-
+        // LED-Streifen 1B: Kanten 1-2-3
+        // Kante1: corner_BL1 --> corner_BL5
+        {(corner_BL5[0] - corner_BL1[0]) / (edge_LEDs[12] - 1), (corner_BL5[1] - corner_BL1[1]) / (edge_LEDs[12] - 1), (corner_BL5[2] - corner_BL1[2]) / (edge_LEDs[12] - 1)},
+        // Kante2: corner_BL5 --> corner_LL1
+        {(corner_LL1[0] - corner_BL5[0]) / (edge_LEDs[13] - 1), (corner_LL1[1] - corner_BL5[1]) / (edge_LEDs[13] - 1), (corner_LL1[2] - corner_BL5[2]) / (edge_LEDs[13] - 1)},
+        // Kante3: corner_LL1 --> corner_HL1
+        {(corner_HL1[0] - corner_LL1[0]) / (edge_LEDs[14] - 1), (corner_HL1[1] - corner_LL1[1]) / (edge_LEDs[14] - 1), (corner_HL1[2] - corner_LL1[2]) / (edge_LEDs[14] - 1)},
+        
+        // LED-Streifen 2B: Kanten 4-5-6
+        // Kante4: corner_BL2 --> corner_BL1
+        {(corner_BL1[0] - corner_BL2[0]) / (edge_LEDs[9] - 1), (corner_BL1[1] - corner_BL2[1]) / (edge_LEDs[9] - 1), (corner_BL1[2] - corner_BL2[2]) / (edge_LEDs[9] - 1)},
+        // Kante5: corner_BL1 --> corner_LL2
+        {(corner_LL2[0] - corner_BL1[0]) / (edge_LEDs[10] - 1), (corner_LL2[1] - corner_BL1[1]) / (edge_LEDs[10] - 1), (corner_LL2[2] - corner_BL1[2]) / (edge_LEDs[10] - 1)},
+        // Kante6: corner_LL2 --> corner_HL2
+        {(corner_HL2[0] - corner_LL2[0]) / (edge_LEDs[11] - 1), (corner_HL2[1] - corner_LL2[1]) / (edge_LEDs[11] - 1), (corner_HL2[2] - corner_LL2[2]) / (edge_LEDs[11] - 1)},
+        
+        // LED-Streifen 3B: Kanten 7-8-9
+        // Kante7: corner_BL3 --> corner_BL2
+        {(corner_BL2[0] - corner_BL3[0]) / (edge_LEDs[6] - 1), (corner_BL2[1] - corner_BL3[1]) / (edge_LEDs[6] - 1), (corner_BL2[2] - corner_BL3[2]) / (edge_LEDs[6] - 1)},
+        // Kante8: corner_BL2 --> corner_LL3
+        {(corner_LL3[0] - corner_BL2[0]) / (edge_LEDs[7] - 1), (corner_LL3[1] - corner_BL2[1]) / (edge_LEDs[7] - 1), (corner_LL3[2] - corner_BL2[2]) / (edge_LEDs[7] - 1)},
+        // Kante9: corner_LL3 --> corner_HL3
+        {(corner_HL3[0] - corner_LL3[0]) / (edge_LEDs[8] - 1), (corner_HL3[1] - corner_LL3[1]) / (edge_LEDs[8] - 1), (corner_HL3[2] - corner_LL3[2]) / (edge_LEDs[8] - 1)},
+        
+        // LED-Streifen 4B: Kanten 10-11-12
+        // Kante10: corner_BL4 --> corner_BL3
+        {(corner_BL3[0] - corner_BL4[0]) / (edge_LEDs[3] - 1), (corner_BL3[1] - corner_BL4[1]) / (edge_LEDs[3] - 1), (corner_BL3[2] - corner_BL4[2]) / (edge_LEDs[3] - 1)},
+        // Kante11: corner_BL3 --> corner_LL4
+        {(corner_LL4[0] - corner_BL3[0]) / (edge_LEDs[4] - 1), (corner_LL4[1] - corner_BL3[1]) / (edge_LEDs[4] - 1), (corner_LL4[2] - corner_BL3[2]) / (edge_LEDs[4] - 1)},
+        // Kante12: corner_LL4 --> corner_HL4
+        {(corner_HL4[0] - corner_LL4[0]) / (edge_LEDs[5] - 1), (corner_HL4[1] - corner_LL4[1]) / (edge_LEDs[5] - 1), (corner_HL4[2] - corner_LL4[2]) / (edge_LEDs[5] - 1)},
+        
+        // LED-Streifen 5B: Kanten 13-14-15
+        // Kante13: corner_BL5 --> corner_BL4
+        {(corner_BL4[0] - corner_BL5[0]) / (edge_LEDs[0] - 1), (corner_BL4[1] - corner_BL5[1]) / (edge_LEDs[0] - 1), (corner_BL4[2] - corner_BL5[2]) / (edge_LEDs[0] - 1)},
+        // Kante14: corner_BL4 --> corner_LL5
+        {(corner_LL5[0] - corner_BL4[0]) / (edge_LEDs[1] - 1), (corner_LL5[1] - corner_BL4[1]) / (edge_LEDs[1] - 1), (corner_LL5[2] - corner_BL4[2]) / (edge_LEDs[1] - 1)},
+        // Kante15: corner_LL5 --> corner_HL5
+        {(corner_HL5[0] - corner_LL5[0]) / (edge_LEDs[2] - 1), (corner_HL5[1] - corner_LL5[1]) / (edge_LEDs[2] - 1), (corner_HL5[2] - corner_LL5[2]) / (edge_LEDs[2] - 1)},
+        
+        // LED-Streifen 1A: Kanten 16-17-18
+        // Kante16: corner_LL1 --> corner_HL5
+        {(corner_HL5[0] - corner_LL1[0]) / (edge_LEDs[27] - 1), (corner_HL5[1] - corner_LL1[1]) / (edge_LEDs[27] - 1), (corner_HL5[2] - corner_LL1[2]) / (edge_LEDs[27] - 1)},
+        // Kante17: corner_HL5 --> corner_TL1
+        {(corner_TL1[0] - corner_HL5[0]) / (edge_LEDs[28] - 1), (corner_TL1[1] - corner_HL5[1]) / (edge_LEDs[28] - 1), (corner_TL1[2] - corner_HL5[2]) / (edge_LEDs[28] - 1)},
+        // Kante18: corner_TL1 --> corner_TL2
+        {(corner_TL2[0] - corner_TL1[0]) / (edge_LEDs[29] - 1), (corner_TL2[1] - corner_TL1[1]) / (edge_LEDs[29] - 1), (corner_TL2[2] - corner_TL1[2]) / (edge_LEDs[29] - 1)}};
+        
+        // LED-Streifen 2A: Kanten 19-20-21
+        // Kante19: corner_LL2 --> corner_HL1
+        {(corner_HL1[0] - corner_LL2[0]) / (edge_LEDs[24] - 1), (corner_HL1[1] - corner_LL2[1]) / (edge_LEDs[24] - 1), (corner_HL1[2] - corner_LL2[2]) / (edge_LEDs[24] - 1)},
+        // Kante20: corner_HL1 --> corner_TL2
+        {(corner_TL2[0] - corner_HL1[0]) / (edge_LEDs[25] - 1), (corner_TL2[1] - corner_HL1[1]) / (edge_LEDs[25] - 1), (corner_TL2[2] - corner_HL1[2]) / (edge_LEDs[25] - 1)},
+        // Kante21: corner_TL2 --> corner_TL3
+        {(corner_TL3[0] - corner_TL2[0]) / (edge_LEDs[26] - 1), (corner_TL3[1] - corner_TL2[1]) / (edge_LEDs[26] - 1), (corner_TL3[2] - corner_TL2[2]) / (edge_LEDs[26] - 1)},
+        
+        // LED-Streifen 3A: Kanten 22-23-24
+        // Kante22: corner_LL3 --> corner_HL2
+        {(corner_HL2[0] - corner_LL3[0]) / (edge_LEDs[21] - 1), (corner_HL2[1] - corner_LL3[1]) / (edge_LEDs[21] - 1), (corner_HL2[2] - corner_LL3[2]) / (edge_LEDs[21] - 1)},
+        // Kante23: corner_HL2 --> corner_TL3
+        {(corner_TL3[0] - corner_HL2[0]) / (edge_LEDs[22] - 1), (corner_TL3[1] - corner_HL2[1]) / (edge_LEDs[22] - 1), (corner_TL3[2] - corner_HL2[2]) / (edge_LEDs[22] - 1)},
+        // Kante24: corner_TL3 --> corner_TL4
+        {(corner_TL4[0] - corner_TL3[0]) / (edge_LEDs[23] - 1), (corner_TL4[1] - corner_TL3[1]) / (edge_LEDs[23] - 1), (corner_TL3[2] - corner_TL4[2]) / (edge_LEDs[23] - 1)},
+        
+        // LED-Streifen 4A: Kanten 25-26-27
+        // Kante25: corner_LL4 --> corner_HL3
+        {(corner_HL3[0] - corner_LL4[0]) / (edge_LEDs[18] - 1), (corner_HL3[1] - corner_LL4[1]) / (edge_LEDs[18] - 1), (corner_HL3[2] - corner_LL4[2]) / (edge_LEDs[18] - 1)},
+        // Kante26: corner_HL3 --> corner_TL4
+        {(corner_TL4[0] - corner_HL3[0]) / (edge_LEDs[19] - 1), (corner_TL4[1] - corner_HL3[1]) / (edge_LEDs[19] - 1), (corner_TL4[2] - corner_HL3[2]) / (edge_LEDs[19] - 1)},
+        // Kante27: corner_TL4 --> corner_TL5
+        {(corner_TL5[0] - corner_TL4[0]) / (edge_LEDs[20] - 1), (corner_TL5[1] - corner_TL4[1]) / (edge_LEDs[20] - 1), (corner_TL5[2] - corner_TL4[2]) / (edge_LEDs[20] - 1)},
+        
+        // LED-Streifen 5A: Kanten 28-29-30
+        // Kante28: corner_LL5 --> corner_HL4
+        {(corner_HL4[0] - corner_LL5[0]) / (edge_LEDs[15] - 1), (corner_HL4[1] - corner_LL5[1]) / (edge_LEDs[15] - 1), (corner_HL4[2] - corner_LL5[2]) / (edge_LEDs[15] - 1)},
+        // Kante29: corner_HL4 --> corner_TL5
+        {(corner_TL5[0] - corner_HL4[0]) / (edge_LEDs[16] - 1), (corner_TL5[1] - corner_HL4[1]) / (edge_LEDs[16] - 1), (corner_TL5[2] - corner_HL4[2]) / (edge_LEDs[16] - 1)},
+        // Kante30: corner_TL5 --> corner_TL1
+        {(corner_TL1[0] - corner_TL5[0]) / (edge_LEDs[17] - 1), (corner_TL1[1] - corner_TL5[1]) / (edge_LEDs[17] - 1), (corner_TL1[2] - corner_TL5[2]) / (edge_LEDs[17] - 1)},
     
-    // Urpsrung der Vektoren
+    // Startpunkt (Eck-Koordinaten XYZ) der 30 Kanten-Vektoren
     float Ursprung[][3] = {
-        {corner_B1[0], corner_B1[1], corner_B1[2]}, 
-        {corner_B2_[0], corner_B2_[1], corner_B2_[2]}, 
-        {corner_L2_[0], corner_L2_[1], corner_L2_[2]}, 
-        {corner_B2_[0], corner_B2_[1], corner_B2_[2]}, 
-        {corner_B3_[0], corner_B3_[1], corner_B3_[2]}, //5
-        {corner_L3_[0], corner_L3_[1], corner_L3_[2]}, 
-        {corner_B3_[0], corner_B3_[1], corner_B3_[2]}, 
-        {corner_B3[0], corner_B3[1], corner_B3[2]}, 
-        {corner_L3[0], corner_L3[1], corner_L3[2]}, 
-        {corner_B3[0], corner_B3[1], corner_B3[2]}, //10
-        {corner_B2[0], corner_B2[1], corner_B2[2]}, 
-        {corner_L2[0], corner_L2[1], corner_L2[2]}, 
-        {corner_B2[0], corner_B2[1], corner_B2[2]}, 
-        {corner_B1[0], corner_B1[1], corner_B1[2]}, 
-        {corner_L1[0], corner_L1[1], corner_L1[2]}, //15
-        {corner_L2_[0], corner_L2_[1], corner_L2_[2]}, 
-        {corner_H2_[0], corner_H2_[1], corner_H2_[2]}, 
-        {corner_T2_[0], corner_T2_[1], corner_T2_[2]}, 
-        {corner_L3_[0], corner_L3_[1], corner_L3_[2]}, 
-        {corner_H1[0], corner_H1[1], corner_H1[2]}, //20
-        {corner_T1[0], corner_T1[1], corner_T1[2]}, 
-        {corner_L3[0], corner_L3[1], corner_L3[2]}, 
-        {corner_H2[0], corner_H2[1], corner_H2[2]}, 
-        {corner_T2[0], corner_T2[1], corner_T2[2]}, 
-        {corner_L2[0], corner_L2[1], corner_L2[2]}, //25
-        {corner_H3[0], corner_H3[1], corner_H3[2]}, 
-        {corner_T3[0], corner_T3[1], corner_T3[2]}, 
-        {corner_L1[0], corner_L1[1], corner_L1[2]}, 
-        {corner_H3_[0], corner_H3_[1], corner_H3_[2]}, 
-        {corner_T3_[0], corner_T3_[1], corner_T3_[2]}}; // 30
+        // LED-Streifen 1B
+        {corner_BL1[0], corner_BL1[1], corner_BL1[2]}, 
+        {corner_BL5[0], corner_BL5[1], corner_BL5[2]}, 
+        {corner_LL1[0], corner_LL1[1], corner_LL1[2]},
+
+        // LED-Streifen 2B
+        {corner_BL2[0], corner_BL2[1], corner_BL2[2]}, // Kante 4
+        {corner_BL1[0], corner_BL1[1], corner_BL1[2]},
+        {corner_LL2[0], corner_LL2[1], corner_LL2[2]},
+
+        // LED-Streifen 3B
+        {corner_BL3[0], corner_BL3[1], corner_BL3[2]}, // Kante 7
+        {corner_BL2[0], corner_BL2[1], corner_BL2[2]},
+        {corner_LL3[0], corner_LL3[1], corner_LL3[2]}, 
+
+        // LED-Streifen 4B
+        {corner_BL4[0], corner_BL4[1], corner_BL4[2]}, // Kante 10
+        {corner_BL3[0], corner_BL3[1], corner_BL3[2]}, 
+        {corner_LL4[0], corner_LL4[1], corner_LL4[2]}, 
+
+        // LED-Streifen 5B
+        {corner_BL5[0], corner_BL5[1], corner_BL5[2]}, // Kante 13
+        {corner_BL4[0], corner_BL4[1], corner_BL4[2]}, 
+        {corner_LL5[0], corner_LL5[1], corner_LL5[2]}, 
+
+        // LED-Streifen 1A
+        {corner_LL1[0], corner_LL1[1], corner_LL1[2]}, // Kante 16
+        {corner_HL5[0], corner_HL5[1], corner_HL5[2]}, 
+        {corner_TL1[0], corner_TL1[1], corner_TL1[2]}}
+
+        // LED-Streifen 2A
+        {corner_LL2[0], corner_LL2[1], corner_LL2[2]}, // Kante 19
+        {corner_HL1[0], corner_HL1[1], corner_HL1[2]}, 
+        {corner_TL1[0], corner_TL1[1], corner_TL1[2]}}
+
+        // LED-Streifen 3A
+        {corner_LL3[0], corner_LL3[1], corner_LL3[2]},  // Kante 22
+        {corner_HL2[0], corner_HL2[1], corner_HL2[2]}, 
+        {corner_TL3[0], corner_TL3[1], corner_TL3[2]},
+
+        // LED-Streifen 4A
+        {corner_LL4[0], corner_LL4[1], corner_LL4[2]}, // Kante 25
+        {corner_HL3[0], corner_HL3[1], corner_HL3[2]}, 
+        {corner_TL4[0], corner_TL4[1], corner_TL4[2]}, 
+
+        // LED-Streifen 5A
+        {corner_LL5[0], corner_LL5[1], corner_LL5[2]}, // Kante 28
+        {corner_HL4[0], corner_HL4[1], corner_HL4[2]}, 
+        {corner_TL5[0], corner_TL5[1], corner_TL5[2]}
+        };
 
     // Generieren der Koordinaten
     // Kartesische Koordinaten:  {X, Y, Z}
