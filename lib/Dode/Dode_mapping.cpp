@@ -120,7 +120,7 @@ void Dode::generate_mapping()
         // Kante17: corner_HL5 --> corner_TL1
         {(corner_TL1[0] - corner_HL5[0]) / (edge_LEDs[28] - 1), (corner_TL1[1] - corner_HL5[1]) / (edge_LEDs[28] - 1), (corner_TL1[2] - corner_HL5[2]) / (edge_LEDs[28] - 1)},
         // Kante18: corner_TL1 --> corner_TL2
-        {(corner_TL2[0] - corner_TL1[0]) / (edge_LEDs[29] - 1), (corner_TL2[1] - corner_TL1[1]) / (edge_LEDs[29] - 1), (corner_TL2[2] - corner_TL1[2]) / (edge_LEDs[29] - 1)}};
+        {(corner_TL2[0] - corner_TL1[0]) / (edge_LEDs[29] - 1), (corner_TL2[1] - corner_TL1[1]) / (edge_LEDs[29] - 1), (corner_TL2[2] - corner_TL1[2]) / (edge_LEDs[29] - 1)},
         
         // LED-Streifen 2A: Kanten 19-20-21
         // Kante19: corner_LL2 --> corner_HL1
@@ -152,7 +152,8 @@ void Dode::generate_mapping()
         // Kante29: corner_HL4 --> corner_TL5
         {(corner_TL5[0] - corner_HL4[0]) / (edge_LEDs[16] - 1), (corner_TL5[1] - corner_HL4[1]) / (edge_LEDs[16] - 1), (corner_TL5[2] - corner_HL4[2]) / (edge_LEDs[16] - 1)},
         // Kante30: corner_TL5 --> corner_TL1
-        {(corner_TL1[0] - corner_TL5[0]) / (edge_LEDs[17] - 1), (corner_TL1[1] - corner_TL5[1]) / (edge_LEDs[17] - 1), (corner_TL1[2] - corner_TL5[2]) / (edge_LEDs[17] - 1)},
+        {(corner_TL1[0] - corner_TL5[0]) / (edge_LEDs[17] - 1), (corner_TL1[1] - corner_TL5[1]) / (edge_LEDs[17] - 1), (corner_TL1[2] - corner_TL5[2]) / (edge_LEDs[17] - 1)}
+        };
     
     // Startpunkt (Eck-Koordinaten XYZ) der 30 Kanten-Vektoren
     float Ursprung[][3] = {
@@ -184,12 +185,12 @@ void Dode::generate_mapping()
         // LED-Streifen 1A
         {corner_LL1[0], corner_LL1[1], corner_LL1[2]}, // Kante 16
         {corner_HL5[0], corner_HL5[1], corner_HL5[2]}, 
-        {corner_TL1[0], corner_TL1[1], corner_TL1[2]}}
+        {corner_TL1[0], corner_TL1[1], corner_TL1[2]},
 
         // LED-Streifen 2A
         {corner_LL2[0], corner_LL2[1], corner_LL2[2]}, // Kante 19
         {corner_HL1[0], corner_HL1[1], corner_HL1[2]}, 
-        {corner_TL1[0], corner_TL1[1], corner_TL1[2]}}
+        {corner_TL1[0], corner_TL1[1], corner_TL1[2]},
 
         // LED-Streifen 3A
         {corner_LL3[0], corner_LL3[1], corner_LL3[2]},  // Kante 22
