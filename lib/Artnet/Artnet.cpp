@@ -12,9 +12,12 @@ void Artnet::begin(IPAddress ip)
   Ethernet.hardreset();
   Ethernet.init(1);
   Serial.print("Starting ETHERNET connection.");
+  Serial.println();
+  Serial.print(ip);
+
   Ethernet.begin(eth_MAC, ip);
 
-  int count = 10;
+  int count = 50;
   while (!Ethernet.link() && count-- > 0)
   {
     delay(100);

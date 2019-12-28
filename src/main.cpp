@@ -15,7 +15,7 @@ char serial_buffer[SERIAL_BUFFER_SIZE];
 const uint8_t SERIAL_PACKET_SIZE = 2 + COMMAND_DATA_SIZE;
 const uint8_t SERIAL_TIMEOUT = 100;
 
-IPAddress artnet_ip(192, 168, 2, 2);
+IPAddress artnet_ip(2, 23, 42, 24);
 
 Commands commands;
 
@@ -29,16 +29,16 @@ void flush_serial()
 {
   while (CommandSerial.available())
   {
-    int byte = CommandSerial.read();
-    Serial.print("Flushing from serial: ");
-    Serial.println(byte);
+    // int byte = CommandSerial.read();
+    // Serial.print("Flushing from serial: ");
+    // Serial.println(byte);
   }
 }
 
 void setup()
 {
   Serial.begin(921600);
-  CommandSerial.begin(1000000);
+  CommandSerial.begin(921600);
   while (!Serial || !CommandSerial)
   {
     // do nothing
@@ -57,9 +57,9 @@ void setup()
 
   CommandSerial.write(SERIAL_REQUEST_RESYNC);
 
-  // artnet.begin(artnet_ip);
-  // artnet.setArtDmxCallback(led_structure.artnet_packet_callback);
-  // artnet.setArtSyncCallback(commands.artnet_sync_callback);
+  artnet.begin(artnet_ip);
+  artnet.setArtDmxCallback(led_structure.artnet_packet_callback);
+  artnet.setArtSyncCallback(commands.artnet_sync_callback);
 
   Serial.println("Startup complete");
 }
@@ -102,14 +102,14 @@ void loop()
     }
     else
     {
-      Serial.print("Expected header, got: ");
-      Serial.println(byte);
+      // Serial.print("Expected header, got: ");
+      // Serial.println(byte);
     }
   }
   else if (byte != -1)
   {
-    Serial.print("Expected RTS, got: ");
-    Serial.println(byte);
+    // Serial.print("Expected RTS, got: ");
+    // Serial.println(byte);
     flush_serial();
     CommandSerial.write(SERIAL_REQUEST_RESYNC);
   }

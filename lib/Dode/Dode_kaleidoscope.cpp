@@ -9,7 +9,7 @@ void Dode::kaleidoscope(char *data)
     uint8_t length = strip_length(i);
     for (int j = 0; j < length / 2; j++)
     {
-      set_led(i, length - j, get_led(i, j));
+      set_led(i, length - j - 1, get_led(i, j));
     }
   }
 }

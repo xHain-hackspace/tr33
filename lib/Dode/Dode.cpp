@@ -156,7 +156,6 @@ CRGB Dode::get_led(uint8_t strip_index, int led)
 
 void Dode::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
 {
-  // todo: remove strip_length lookup
   if (led >= 0 && led < strip_length(strip_index))
   {
     CRGB current = get_led(strip_index, led);
@@ -196,18 +195,20 @@ uint8_t Dode::random_strip(uint8_t strip_index)
 
 uint16_t Dode::strip_length(uint8_t strip_index)
 {
-  if (strip_index < EDGE_COUNT)
-  {
-    return edges[strip_index][2];
-  }
-  else
-  {
-    return EDGE_MAX_LENGTH;
-  }
+  // if (strip_index < EDGE_COUNT)
+  // {
+  //   return edges[strip_index][2];
+  // }
+  // else
+  // {
+  //   return EDGE_MAX_LENGTH;
+  // }
+  return EDGE_MAX_LENGTH;
 }
 
 void Dode::artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data)
 {
+  universe = universe - 256;
   if (universe < HW_STRIP_COUNT * 2)
   {
     if (universe % 2 == 0)
