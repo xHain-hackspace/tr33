@@ -46,7 +46,7 @@ void Commands::sparkle(Leds *leds, char *data)
   {
     if (sparkles[i].enabled)
     {
-      float brightness = Commands::ease_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (100.0 * float(SPARKLES_DIM_RATE)));
+      float brightness = Commands::ease_in_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (100.0 * float(SPARKLES_DIM_RATE)));
       if (brightness > 0)
       {
         render_ball(leds, sparkles[i].strip_index, sparkles[i].center, sparkles[i].width, sparkles[i].color, brightness);

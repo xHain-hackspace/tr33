@@ -122,11 +122,15 @@ public:
   static float ease_in_cubic(float t);
   static float ease_out_cubic(float t);
   static float ease_in_out_cubic(float t);
+  static float ease_in_power(float t, uint8_t p);
+  static float ease_out_power(float t, uint8_t p);
+  static float ease_in_out_power(float t, uint8_t p);
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
   static void render_ball(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
   static void render_nyan(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, bool reverse);
   static void render_comet(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, bool reverse);
+  static void render_power_ball(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, uint8_t power);
 
   static void artnet_sync_callback();
 
