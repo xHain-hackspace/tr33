@@ -23,8 +23,8 @@ void Commands::sparkle(Leds *leds, char *data)
   uint8_t strip_index = data[0];
   uint8_t color_index = random_or_value(data[1], 0, 255);
   float width = float(random_or_value(data[2], 0, 255)) / 10.0;
-  uint8_t frequency = data[3]; // sparkles per seconds
-
+  uint8_t frequency = data[3];    // sparkles per seconds
+  uint8_t duration = data[4] + 1; // should never be 0
   int now = millis();
 
   if (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency)
@@ -46,7 +46,7 @@ void Commands::sparkle(Leds *leds, char *data)
   {
     if (sparkles[i].enabled)
     {
-      float brightness = Commands::ease_in_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (100.0 * float(SPARKLES_DIM_RATE)));
+      float brightness = Commands::ease_in_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (10.0 * float(duration)));
       if (brightness > 0)
       {
         render_ball(leds, sparkles[i].strip_index, sparkles[i].center, sparkles[i].width, sparkles[i].color, brightness);
