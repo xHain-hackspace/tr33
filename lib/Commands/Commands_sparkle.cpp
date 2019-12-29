@@ -27,37 +27,12 @@ void Commands::sparkle(Leds *leds, char *data)
   uint8_t duration = data[4];  // should never be 0
   int now = millis();
 
-  static uint flicker_position;
-  static uint flicker_count = 0;
-  static uint flicker_width = 20;
-  static uint flicker_maxwidth = 20;
-  static uint flicker_delay = 1000; //ms
-  static uint flicker_timestamp;
-  static bool flicker_on = true;
-  static uint flicker_stripindex = 0;
-
-  flicker_on = data[5];
-  flicker_delay = data[6] * 100;
-  flicker_width = data[7];
-  bool timesup = (now - flicker_timestamp) >= flicker_delay;
-
   if (duration == 0)
   {
     duration = 200;
   }
 
-  if (flicker_on && flicker_count < 1 && timesup)
-  {
-    flicker_count = random(1, 5);
-    flicker_width = random(1, min(int(flicker_maxwidth), leds->strip_length(sparkles[sparkle_index].strip_index) - 1));
-    flicker_position = random(1, leds->strip_length(sparkles[sparkle_index].strip_index) - 1 - flicker_width);
-    //sparkles[sparkle_index].strip_index = leds->random_strip(strip_index);
-    flicker_stripindex = leds->random_strip(strip_index);
-    flicker_timestamp = millis();
-  }
-
-  bool checkcase = flicker_on && timesup || (flicker_count > 0 && (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency));
-  if (checkcase || (!flicker_on && (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency)))
+  if (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency)
   {
     if (sparkle_index++ >= MAX_SPARKLES)
     {
@@ -67,18 +42,8 @@ void Commands::sparkle(Leds *leds, char *data)
     sparkles[sparkle_index].color = color_index == 255 ? COLOR_WHITE : ColorFromPalette(currentPalette, color_index);
     sparkles[sparkle_index].width = width;
     sparkles[sparkle_index].brightness = float(random(10)) / 20.0 + 0.5;
-
-    if (flicker_on)
-    {
-      flicker_count--;
-      sparkles[sparkle_index].center = flicker_position + random(0, flicker_width);
-      sparkles[sparkle_index].strip_index = flicker_stripindex;
-    }
-    else
-    {
-      sparkles[sparkle_index].strip_index = leds->random_strip(strip_index);
-      sparkles[sparkle_index].center = random(0, leds->strip_length(sparkles[sparkle_index].strip_index) - 1);
-    }
+    sparkles[sparkle_index].strip_index = leds->random_strip(strip_index);
+    sparkles[sparkle_index].center = random(0, leds->strip_length(sparkles[sparkle_index].strip_index) - 1);
     sparkles[sparkle_index].start_time = now;
   }
 

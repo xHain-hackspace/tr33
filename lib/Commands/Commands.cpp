@@ -74,6 +74,9 @@ void Commands::render_commands()
     case COMMAND_SPARKLE:
       sparkle(leds, command_buffer[i].data);
       break;
+    case COMMAND_FLICKER_SPARKLE:
+      flicker_sparkle(leds, command_buffer[i].data);
+      break;
     case COMMAND_SHOW_NUMBER:
       show_number(leds, command_buffer[i].data);
       break;

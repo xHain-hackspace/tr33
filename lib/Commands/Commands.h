@@ -45,6 +45,7 @@
 #define COMMAND_FILL 17
 #define COMMAND_ROTATING_PLANE 18
 #define COMMAND_TWANG 19
+#define COMMAND_FLICKER_SPARKLE 20
 
 // -- EVENTS ------------------------------------------------------------------------------
 
@@ -106,6 +107,7 @@ public:
   // Commands
   void single_color(Leds *leds, char *data);
   void sparkle(Leds *leds, char *data);
+  void flicker_sparkle(Leds *leds, char *data);
   void show_number(Leds *leds, char *data);
 
   // Events
