@@ -17,30 +17,42 @@ struct Sparkle
 };
 
 Sparkle sparkles[MAX_SPARKLES];
-uint flicker_position;
-uint flicker_count = 0;
-uint flicker_width = 5;
-uint flicker_maxwidth = 20;
-uint flicker_delay = 3000; //ms
-uint flicker_timestamp;
-bool flicker_on = false;
 
 void Commands::sparkle(Leds *leds, char *data)
 {
   uint8_t strip_index = data[0];
   uint8_t color_index = random_or_value(data[1], 0, 255);
   float width = float(random_or_value(data[2], 0, 255)) / 10.0;
-  uint8_t frequency = data[3];    // sparkles per seconds
-  uint8_t duration = data[4] + 1; // should never be 0
+  uint8_t frequency = data[3]; // sparkles per seconds
+  uint8_t duration = data[4];  // should never be 0
   int now = millis();
+
+  static uint flicker_position;
+  static uint flicker_count = 0;
+  static uint flicker_width = 20;
+  static uint flicker_maxwidth = 20;
+  static uint flicker_delay = 1000; //ms
+  static uint flicker_timestamp;
+  static bool flicker_on = true;
+  static uint flicker_stripindex = 0;
+
+  flicker_on = data[5];
+  flicker_delay = data[6] * 100;
+  flicker_width = data[7];
   bool timesup = (now - flicker_timestamp) >= flicker_delay;
+
+  if (duration == 0)
+  {
+    duration = 200;
+  }
 
   if (flicker_on && flicker_count < 1 && timesup)
   {
     flicker_count = random(1, 5);
     flicker_width = random(1, min(int(flicker_maxwidth), leds->strip_length(sparkles[sparkle_index].strip_index) - 1));
-    flicker_position = random(0, leds->strip_length(sparkles[sparkle_index].strip_index) - 1 - flicker_width);
-    sparkles[sparkle_index].strip_index = leds->random_strip(strip_index);
+    flicker_position = random(1, leds->strip_length(sparkles[sparkle_index].strip_index) - 1 - flicker_width);
+    //sparkles[sparkle_index].strip_index = leds->random_strip(strip_index);
+    flicker_stripindex = leds->random_strip(strip_index);
     flicker_timestamp = millis();
   }
 
@@ -55,10 +67,12 @@ void Commands::sparkle(Leds *leds, char *data)
     sparkles[sparkle_index].color = color_index == 255 ? COLOR_WHITE : ColorFromPalette(currentPalette, color_index);
     sparkles[sparkle_index].width = width;
     sparkles[sparkle_index].brightness = float(random(10)) / 20.0 + 0.5;
+
     if (flicker_on)
     {
       flicker_count--;
       sparkles[sparkle_index].center = flicker_position + random(0, flicker_width);
+      sparkles[sparkle_index].strip_index = flicker_stripindex;
     }
     else
     {
