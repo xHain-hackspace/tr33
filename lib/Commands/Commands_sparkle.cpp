@@ -25,11 +25,16 @@ void Commands::sparkle(Leds *leds, char *data)
   float width = float(random_or_value(data[2], 0, 255)) / 10.0;
   uint8_t frequency = data[3]; // sparkles per seconds
   uint8_t duration = data[4];  // should never be 0
+  float brightness_factor = float(data[5]) / 100.0;
   int now = millis();
 
   if (duration == 0)
   {
     duration = 200;
+  }
+  if (brightness_factor == 0)
+  {
+    brightness_factor = 1; // for downgrade compatiblity
   }
 
   if (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency)
@@ -41,7 +46,7 @@ void Commands::sparkle(Leds *leds, char *data)
     sparkles[sparkle_index].enabled = true;
     sparkles[sparkle_index].color = color_index == 255 ? COLOR_WHITE : ColorFromPalette(currentPalette, color_index);
     sparkles[sparkle_index].width = width;
-    sparkles[sparkle_index].brightness = float(random(10)) / 20.0 + 0.5;
+    sparkles[sparkle_index].brightness = (float(random(10)) / 20.0 + 0.5) * brightness_factor;
     sparkles[sparkle_index].strip_index = leds->random_strip(strip_index);
     sparkles[sparkle_index].center = random(0, leds->strip_length(sparkles[sparkle_index].strip_index) - 1);
     sparkles[sparkle_index].start_time = now;
