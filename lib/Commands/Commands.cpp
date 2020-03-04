@@ -4,7 +4,7 @@ Leds *leds;
 
 Command command_buffer[COMMAND_BUFFER_SIZE];
 CRGBPalette256 currentPalette = Rainbow_gp;
-uint8_t currentMode = MODE_ARTNET;
+uint8_t currentMode = MODE_COMMANDS;
 Artnet artnet;
 
 void Commands::init(Leds *leds_instance)

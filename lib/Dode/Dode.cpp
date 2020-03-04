@@ -26,7 +26,7 @@ void Dode::init()
   command_buffer[0].type = COMMAND_SINGLE_COLOR;
   command_buffer[0].data[0] = 31;
   command_buffer[0].data[1] = HUE_PURPLE;
-  command_buffer[0].data[2] = 50;
+  command_buffer[0].data[2] = 255;
 
   // command_buffer[5].type = COMMAND_ROTATING_SECTORS;
   // command_buffer[5].data[0] = HUE_ORANGE;

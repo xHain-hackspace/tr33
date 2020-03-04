@@ -4,6 +4,7 @@
 #include <Twang.h>
 #include <Tr33.h>
 #include <Dode.h>
+#include <Keller.h>
 
 #define SERIAL_HEADER 42
 #define SERIAL_READY_TO_SEND 0xAA
@@ -23,7 +24,8 @@ Commands commands;
 HardwareSerial CommandSerial(0);
 
 // Tr33 led_structure = Tr33();
-Dode led_structure = Dode();
+// Dode led_structure = Dode();
+Keller led_structure = Keller();
 
 void flush_serial()
 {
@@ -57,9 +59,9 @@ void setup()
 
   CommandSerial.write(SERIAL_REQUEST_RESYNC);
 
-  artnet.begin(artnet_ip);
-  artnet.setArtDmxCallback(led_structure.artnet_packet_callback);
-  artnet.setArtSyncCallback(commands.artnet_sync_callback);
+  // artnet.begin(artnet_ip);
+  // artnet.setArtDmxCallback(led_structure.artnet_packet_callback);
+  // artnet.setArtSyncCallback(commands.artnet_sync_callback);
 
   Serial.println("Startup complete");
 }
