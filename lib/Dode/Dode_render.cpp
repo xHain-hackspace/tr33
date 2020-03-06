@@ -10,5 +10,5 @@ void Dode::render(char *data)
 
   CRGB color = ColorFromPalette(currentPalette, color_index, 255);
 
-  Commands::render(this, type, EDGE_COUNT, position, width, color, brightness);
+  Commands::render(this, type, EDGE_COUNT, position, width, color, brightness, false);
 }

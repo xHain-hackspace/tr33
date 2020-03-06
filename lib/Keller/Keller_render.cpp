@@ -12,5 +12,5 @@ void Keller::render(char *data)
 
   CRGB color = ColorFromPalette(currentPalette, color_index, 255);
 
-  Commands::render(this, render_type, strip_index, position, width, color, brightness);
+  Commands::render(this, render_type, strip_index, position, width, color, brightness, false);
 }

@@ -106,6 +106,7 @@ public:
   void sparkle(Leds *leds, char *data);
   void flicker_sparkle(Leds *leds, char *data);
   void show_number(Leds *leds, char *data);
+  void rain(Leds *leds, char *data);
 
   // Events
   void pixel(Leds *leds, char *data);
@@ -124,10 +125,10 @@ public:
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
   // Render
-  static void render(Leds *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness);
+  static void render(Leds *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction);
   static void render_ball(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness);
-  static void render_comet(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool nyan, bool bounce);
-  static void render_fill(Leds *leds, uint8_t strip_index, float position, CRGB color, float brightness);
+  static void render_comet(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce);
+  static void render_fill(Leds *leds, uint8_t strip_index, float position, CRGB color, float brightness, bool direction);
 
   static void artnet_sync_callback();
 

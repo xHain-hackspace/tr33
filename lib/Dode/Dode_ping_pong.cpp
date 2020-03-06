@@ -34,5 +34,5 @@ void Dode::ping_pong(char *data)
 
   CRGB color = ColorFromPalette(currentPalette, color_index, 255);
 
-  Commands::render(this, render_type, EDGE_COUNT, position, width, color, brightness);
+  Commands::render(this, render_type, EDGE_COUNT, fabs(position), width, color, brightness, position > 0);
 }

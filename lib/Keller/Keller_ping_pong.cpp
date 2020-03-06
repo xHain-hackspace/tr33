@@ -18,16 +18,14 @@ void Keller::ping_pong(char *data)
   switch (ping_pong_type)
   {
   case PING_PONG_LINEAR:
-    position = Commands::ping_pong_linear(period, offset) * float(STRIP_PIXEL_COUNT);
+    position = Commands::ping_pong_linear(period, offset) * float(STRIP_PIXEL_COUNT - 1);
     break;
   case PING_PONG_SINE:
-    position = Commands::ping_pong_sine(period, offset) * float(STRIP_PIXEL_COUNT);
-    break;
   case PING_PONG_COSINE:
-    position = Commands::ping_pong_cosine(period, offset) * float(STRIP_PIXEL_COUNT);
+    position = Commands::ping_pong_sine(period, offset) * float(STRIP_PIXEL_COUNT - 1);
     break;
   case PING_PONG_SAWTOOTH:
-    position = Commands::ping_pong_sawtooth(period, offset) * float(STRIP_PIXEL_COUNT);
+    position = Commands::ping_pong_sawtooth(period, offset) * float(STRIP_PIXEL_COUNT - 1);
     break;
   }
 
@@ -35,5 +33,5 @@ void Keller::ping_pong(char *data)
 
   CRGB color = ColorFromPalette(currentPalette, color_index, 255);
 
-  Commands::render(this, render_type, strip_index, position, width, color, brightness);
+  Commands::render(this, render_type, strip_index, fabs(position), width, color, brightness, position > 0);
 }

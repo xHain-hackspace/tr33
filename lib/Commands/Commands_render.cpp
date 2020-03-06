@@ -1,7 +1,7 @@
 #include <Tr33.h>
 #include <Commands.h>
 
-void Commands::render(Leds *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness)
+void Commands::render(Leds *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction)
 {
   switch (render_type)
   {
@@ -9,26 +9,26 @@ void Commands::render(Leds *leds, uint8_t render_type, uint8_t strip_index, floa
     render_ball(leds, strip_index, position, width, color, brightness);
     break;
   case RENDER_COMET:
-    render_comet(leds, strip_index, position, width, color, brightness, false, false);
+    render_comet(leds, strip_index, position, width, color, brightness, direction, false, false);
     break;
   case RENDER_COMET_BOUNCE:
-    render_comet(leds, strip_index, position, width, color, brightness, false, true);
+    render_comet(leds, strip_index, position, width, color, brightness, direction, false, true);
     break;
   case RENDER_NYAN:
-    render_comet(leds, strip_index, position, width, color, brightness, true, false);
+    render_comet(leds, strip_index, position, width, color, brightness, direction, true, false);
     break;
   case RENDER_NYAN_BOUNCE:
-    render_comet(leds, strip_index, position, width, color, brightness, true, true);
+    render_comet(leds, strip_index, position, width, color, brightness, direction, true, true);
     break;
   case RENDER_FILL:
-    render_fill(leds, strip_index, position, color, brightness);
+    render_fill(leds, strip_index, position, color, brightness, direction);
     break;
   }
 }
 
 void Commands::render_ball(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float ball_brightness)
 {
-  position = fabs(position);
+  position = position;
   int start_led = max(0, int(ceilf(position - width / 2.0)));
   int end_led = min((int)leds->strip_length(strip_index), int(floorf(position + width / 2.0)));
   float brightness = 0.0;
@@ -41,61 +41,19 @@ void Commands::render_ball(Leds *leds, uint8_t strip_index, float position, floa
   }
 }
 
-// void Commands::render_nyan(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool bounce)
-// {
-//   bool reverse = false;
-//   if (position < 0)
-//   {
-//     position = position * -1;
-//     reverse = true;
-//   }
-
-//   if (width != 0)
-//   {
-//     float start = position - 0.5;
-//     float end = start - width;
-
-//     if (reverse)
-//     {
-//       start = position + 0.5;
-//       end = start + width;
-//     }
-
-//     float max_brightness = brightness * 0.8;
-//     float slope = max_brightness / (start - end);
-
-//     int first_led = min(floorf(start), floorf(end));
-//     int last_led = max(ceilf(start), ceilf(end));
-
-//     for (int i = first_led; i < last_led; i++)
-//     {
-//       float brightness = Commands::ease_in_out_cubic(slope * (float(i) - end));
-//       if (brightness > 0)
-//       {
-//         CRGB nyan_color = ColorFromPalette(currentPalette, i * 3);
-//         leds->fade_led(strip_index, i, nyan_color, brightness);
-//       }
-//     }
-//   }
-
-//   Commands::render_ball(leds, strip_index, position, 5, CRGB(255, 255, 255), brightness);
-// }
-
-void Commands::render_comet(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool nyan, bool bounce)
+void Commands::render_comet(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce)
 {
-  bool reverse = false;
-  if (position < 0)
-  {
-    position = fabs(position);
-    reverse = true;
-  }
-
   if (width != 0)
   {
-    float start = position - 0.5;
-    float end = start - width;
+    float start;
+    float end;
 
-    if (reverse)
+    if (direction)
+    {
+      start = position - 0.5;
+      end = start - width;
+    }
+    else
     {
       start = position + 0.5;
       end = start + width;
@@ -110,7 +68,6 @@ void Commands::render_comet(Leds *leds, uint8_t strip_index, float position, flo
     int led = 0;
     for (int i = first_led; i < last_led; i++)
     {
-
       float tail_brightness = Commands::ease_in_out_cubic(slope * (float(i) - end));
       if (tail_brightness > 0)
       {
@@ -140,11 +97,11 @@ void Commands::render_comet(Leds *leds, uint8_t strip_index, float position, flo
   Commands::render_ball(leds, strip_index, position, 5, color, brightness);
 }
 
-void Commands::render_fill(Leds *leds, uint8_t strip_index, float position, CRGB color, float brightness)
+void Commands::render_fill(Leds *leds, uint8_t strip_index, float position, CRGB color, float brightness, bool direction)
 {
   int first_led = 0;
   int last_led = 0;
-  if (position > 0)
+  if (direction)
   {
     last_led = floorf(position);
   }

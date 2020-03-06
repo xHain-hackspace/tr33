@@ -17,7 +17,18 @@ float Commands::ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms)
 
 float Commands::ping_pong_sine(uint8_t period_100ms, uint8_t offset_100ms)
 {
-  return (sinf(float(millis() - offset_100ms * 100) * 2.0 * PI / float(period_100ms * 100)) + 1.0) / 2.0;
+  int rem = (millis() + offset_100ms * 100) % (period_100ms * 100);
+
+  float res = (sinf(float(rem) * 2.0 * PI / float(period_100ms * 100) - PI / 2) + 1.0) / 2.0;
+
+  if (rem <= period_100ms * 100 / 2)
+  {
+    return res;
+  }
+  else
+  {
+    return res * -1;
+  }
 }
 
 float Commands::ping_pong_cosine(uint8_t period_100ms, uint8_t offset_100ms)

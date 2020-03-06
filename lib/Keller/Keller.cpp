@@ -37,14 +37,14 @@ void Keller::init()
   // command_buffer[1].data[5] = 50;
 
   command_buffer[2].type = COMMAND_PING_PONG;
-  command_buffer[2].data[0] = RENDER_NYAN_BOUNCE;
-  // command_buffer[2].data[0] = RENDER_COMET_BOUNCE;
+  // command_buffer[2].data[0] = RENDER_NYAN_BOUNCE;
+  command_buffer[2].data[0] = RENDER_COMET_BOUNCE;
   command_buffer[2].data[1] = STRIP_INDEX_ALL;
   command_buffer[2].data[2] = HUE_RED;
   command_buffer[2].data[3] = 255;
-  command_buffer[2].data[4] = 100;
-  command_buffer[2].data[5] = PING_PONG_LINEAR;
-  command_buffer[2].data[6] = 70;
+  command_buffer[2].data[4] = 50;
+  command_buffer[2].data[5] = PING_PONG_SINE;
+  command_buffer[2].data[6] = 170;
   command_buffer[2].data[7] = 0;
   command_buffer[2].data[8] = 255;
 
@@ -151,7 +151,14 @@ void Keller::all_white()
 
 uint8_t Keller::random_strip(uint8_t strip_index)
 {
-  return random8(0, STRIP_COUNT);
+  if (strip_index < STRIP_COUNT)
+  {
+    return strip_index;
+  }
+  else if (strip_index == STRIP_COUNT)
+  {
+    return random8(0, STRIP_COUNT);
+  }
 }
 
 uint8_t Keller::strip_count()

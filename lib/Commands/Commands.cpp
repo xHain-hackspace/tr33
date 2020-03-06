@@ -81,7 +81,7 @@ void Commands::render_commands()
       show_number(leds, command_buffer[i].data);
       break;
     case COMMAND_RAIN:
-      leds->rain(command_buffer[i].data);
+      rain(leds, command_buffer[i].data);
       break;
     case COMMAND_BEATS:
       leds->beats(command_buffer[i].data);
