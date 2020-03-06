@@ -66,7 +66,7 @@ void Dode::fireworks(char *data)
 
   for (int i = 0; i < active_sparks; i++)
   {
-    render_ball(this, sparks[i].edge, relative_position * edge_strip_length(this, sparks[i].edge), width, color, brightness, BALL_TYPE_COMET);
+    render_ball(this, sparks[i].edge, relative_position * edge_strip_length(this, sparks[i].edge), width, color, brightness, RENDER_COMET);
   }
 
   if (active_sparks == 0)

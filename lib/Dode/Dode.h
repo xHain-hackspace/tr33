@@ -213,7 +213,7 @@ public:
     void debug(char *data);
     void fireworks(char *data);
     void rotating_sectors(char *data);
-    void fill(char *data);
+    void render(char *data);
     void mapped_swipe(char *data);
     void rotating_plane(char *data);
     void twang(char *data);
@@ -225,5 +225,4 @@ private:
     void render_ball(Leds *leds, int8_t edge, float center, float width, CRGB color, float brightness, uint8_t ball_type);
     uint16_t edge_strip_length(Leds *leds, int8_t edge);
     void generate_mapping();
-    void fill(Leds *leds, float rel_position, float width, CRGB color, float brightness, uint8_t type);
 };

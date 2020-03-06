@@ -27,7 +27,7 @@ void Keller::init()
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
   command_buffer[0].data[1] = HUE_BLUE;
   command_buffer[0].data[2] = 120;
-  
+
   // command_buffer[1].type = COMMAND_FILL;
   // command_buffer[1].data[0] = STRIP_INDEX_ALL;
   // command_buffer[1].data[1] = FILL_BALL;
@@ -35,15 +35,16 @@ void Keller::init()
   // command_buffer[1].data[3] = 255;
   // command_buffer[1].data[4] = 120;
   // command_buffer[1].data[5] = 50;
-  
+
   command_buffer[2].type = COMMAND_PING_PONG;
-  command_buffer[2].data[0] = STRIP_INDEX_ALL;
-  command_buffer[1].data[1] = FILL_BALL;
-  command_buffer[2].data[2] = PING_PONG_SINE;
-  command_buffer[2].data[3] = HUE_RED;
-  command_buffer[2].data[4] = 255;
-  command_buffer[2].data[5] = 50;
-  command_buffer[2].data[6] = 100;
+  command_buffer[2].data[0] = RENDER_NYAN_BOUNCE;
+  // command_buffer[2].data[0] = RENDER_COMET_BOUNCE;
+  command_buffer[2].data[1] = STRIP_INDEX_ALL;
+  command_buffer[2].data[2] = HUE_RED;
+  command_buffer[2].data[3] = 255;
+  command_buffer[2].data[4] = 100;
+  command_buffer[2].data[5] = PING_PONG_LINEAR;
+  command_buffer[2].data[6] = 70;
   command_buffer[2].data[7] = 0;
   command_buffer[2].data[8] = 255;
 
@@ -93,7 +94,6 @@ void Keller::init()
 // -- Set leds ----------------------------------------
 //
 
-
 uint16_t Keller::strip_length(uint8_t strip_index)
 {
   return STRIP_PIXEL_COUNT;
@@ -101,13 +101,13 @@ uint16_t Keller::strip_length(uint8_t strip_index)
 
 void Keller::set_led(uint8_t strip_index, int led, CRGB color)
 {
-  if(strip_index < STRIP_COUNT) 
+  if (strip_index < STRIP_COUNT)
   {
     strip_leds[strip_index][led] = color;
   }
-  else if (strip_index == STRIP_COUNT) 
+  if (strip_index == STRIP_COUNT)
   {
-    for (int i=0; i<STRIP_COUNT; i++) 
+    for (int i = 0; i < STRIP_COUNT; i++)
     {
       strip_leds[i][led] = color;
     }
@@ -116,12 +116,20 @@ void Keller::set_led(uint8_t strip_index, int led, CRGB color)
 
 CRGB get_led(uint8_t strip_index, int led)
 {
-  return strip_leds[strip_index][led];
+
+  if (strip_index < STRIP_COUNT)
+  {
+    return strip_leds[strip_index][led];
+  }
+  if (strip_index == STRIP_COUNT)
+  {
+    return strip_leds[0][led];
+  }
 }
 
 void Keller::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
 {
-  if (led > 0 && led < strip_length(strip_index))
+  if (led >= 0 && led < strip_length(strip_index))
   {
     CRGB current = get_led(strip_index, led);
     CRGB faded = blend(current, target, amount * 255.0);
@@ -143,8 +151,7 @@ void Keller::all_white()
 
 uint8_t Keller::random_strip(uint8_t strip_index)
 {
-    return random8(0, STRIP_COUNT);
-  
+  return random8(0, STRIP_COUNT);
 }
 
 uint8_t Keller::strip_count()

@@ -55,7 +55,7 @@ void Dode::init()
   command_buffer[8].data[2] = 27;
   command_buffer[8].data[3] = 100;
   command_buffer[8].data[4] = 5;
-  command_buffer[8].data[5] = BALL_TYPE_NYAN;
+  command_buffer[8].data[5] = RENDER_NYAN;
 
   // command_buffer[0].type = COMMAND_SPARKLE;
   // command_buffer[0].data[0] = 31;

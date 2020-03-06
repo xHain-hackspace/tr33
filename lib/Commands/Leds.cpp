@@ -66,7 +66,7 @@ void Leds::rotating_sectors(char *data)
   return;
 }
 
-void Leds::fill(char *data)
+void Leds::render(char *data)
 {
   return;
 }

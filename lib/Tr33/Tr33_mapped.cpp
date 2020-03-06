@@ -5,7 +5,7 @@
 float fraction = 0.0;
 long last_mapped_update = millis();
 
-bool render(int i, float fraction, uint8_t swipe_direction)
+bool render_led(int i, float fraction, uint8_t swipe_direction)
 {
   if (swipe_direction == SWIPE_TOP_BOTTOM && mapping[i][3] < (Y_MAX - Y_MIN) * fraction + Y_MIN)
   {
@@ -45,7 +45,7 @@ void Tr33::mapped_swipe(char *data)
 
   for (int i = 0; i < MAPPING_SIZE; i++)
   {
-    if (render(i, fraction, swipe_direction))
+    if (render_led(i, fraction, swipe_direction))
     {
       set_led(int(mapping[i][0]), int(mapping[i][1]), color);
     }

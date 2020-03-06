@@ -66,7 +66,7 @@ public:
   void all_white();
   void rainbow_sine(char *data);
   void ping_pong(char *data);
-  void fill(char *data);
+  void render(char *data);
 
   // void gravity(char *data);
   // void rain(char *data);
@@ -81,10 +81,6 @@ public:
   // void joystick(char *data);
 
 private:
-  // ball rendering
-  void render_ball(Leds *leds, int8_t edge, float center, float width, CRGB color, float brightness, uint8_t ball_type);
-  void fill(Leds *leds, uint8_t strip_index, float rel_position, float width, CRGB color, float brightness, uint8_t type);
-
   // // mapped rendering
   // void render_mapped_square(float x, float y, float size, CRGB color, bool fill);
   // void render_mapped_circle(float x, float y, float size, CRGB color, bool fuzz);

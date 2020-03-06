@@ -24,7 +24,7 @@ public:
   virtual void debug(char *data);
   virtual void fireworks(char *data);
   virtual void rotating_sectors(char *data);
-  virtual void fill(char *data);
+  virtual void render(char *data);
   virtual void rotating_plane(char *data);
   virtual void twang(char *data);
 

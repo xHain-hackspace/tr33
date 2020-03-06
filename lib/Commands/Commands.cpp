@@ -107,8 +107,8 @@ void Commands::render_commands()
     case COMMAND_ROTATING_SECTORS:
       leds->rotating_sectors(command_buffer[i].data);
       break;
-    case COMMAND_FILL:
-      leds->fill(command_buffer[i].data);
+    case COMMAND_RENDER:
+      leds->render(command_buffer[i].data);
       break;
     case COMMAND_ROTATING_PLANE:
       leds->rotating_plane(command_buffer[i].data);

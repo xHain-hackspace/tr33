@@ -7,7 +7,7 @@
 #include <Leds.h>
 #endif
 
-#define COMMAND_DATA_SIZE 8
+#define COMMAND_DATA_SIZE 10
 #define COMMAND_BUFFER_SIZE 32
 
 #define MODE_COMMANDS 0
@@ -42,7 +42,7 @@
 #define COMMAND_DEBUG 14
 #define COMMAND_FIREWORKS 15
 #define COMMAND_ROTATING_SECTORS 16
-#define COMMAND_FILL 17
+#define COMMAND_RENDER 17
 #define COMMAND_ROTATING_PLANE 18
 #define COMMAND_TWANG 19
 #define COMMAND_FLICKER_SPARKLE 20
@@ -56,12 +56,6 @@
 #define EVENT_PIXEL_RGB 104
 #define EVENT_JOYSTICK 105
 
-// -- BALLS ------------------------------------------------------------------------------
-
-#define BALL_TYPE_SINE 1
-#define BALL_TYPE_COMET 2
-#define BALL_TYPE_NYAN 3
-
 // -- PING_PONG ------------------------------------------------------------------------------
 
 #define PING_PONG_LINEAR 0
@@ -69,11 +63,14 @@
 #define PING_PONG_COSINE 2
 #define PING_PONG_SAWTOOTH 3
 
-// -- FILL ------------------------------------------------------------------------------
+// -- RENDER ------------------------------------------------------------------------------
 
-#define FILL_BALL 0
-#define FILL_TOP 1
-#define FILL_BOTTOM 2
+#define RENDER_BALL 0
+#define RENDER_COMET 1
+#define RENDER_COMET_BOUNCE 2
+#define RENDER_NYAN 3
+#define RENDER_NYAN_BOUNCE 4
+#define RENDER_FILL 5
 
 // -- SWIPE ------------------------------------------------------------------------------
 
@@ -114,7 +111,7 @@ public:
   void pixel(Leds *leds, char *data);
   void pixel_rgb(Leds *leds, char *data);
 
-  // Helpers
+  // Ping Pong
   static float ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms);
   static float ping_pong_sine(uint8_t period_100ms, uint8_t offset_100ms);
   static float ping_pong_cosine(uint8_t period_100ms, uint8_t offset_100ms);
@@ -126,9 +123,11 @@ public:
   static float ease_in_out_cubic(float t);
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
-  static void render_ball(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness);
-  static void render_nyan(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, bool reverse);
-  static void render_comet(Leds *leds, uint8_t strip_index, float center, float width, CRGB color, float ball_brightness, bool reverse);
+  // Render
+  static void render(Leds *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness);
+  static void render_ball(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness);
+  static void render_comet(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool nyan, bool bounce);
+  static void render_fill(Leds *leds, uint8_t strip_index, float position, CRGB color, float brightness);
 
   static void artnet_sync_callback();
 
