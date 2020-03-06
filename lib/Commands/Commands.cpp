@@ -63,10 +63,10 @@ void Commands::render_commands()
       leds->all_white();
       break;
     case COMMAND_RAINBOW_SINE:
-      leds->rainbow_sine(command_buffer[i].data);
+      rainbow_sine(leds, command_buffer[i].data);
       break;
     case COMMAND_PING_PONG:
-      leds->ping_pong(command_buffer[i].data);
+      ping_pong(leds, command_buffer[i].data);
       break;
     case COMMAND_GRAVITY:
       leds->gravity(command_buffer[i].data);
@@ -93,7 +93,7 @@ void Commands::render_commands()
       leds->mapped_shape(command_buffer[i].data);
       break;
     case COMMAND_KALEIDOSCOPE:
-      leds->kaleidoscope(command_buffer[i].data);
+      kaleidoscope(leds, command_buffer[i].data);
       break;
     case COMMAND_RANDOM_WALK:
       leds->random_walk(command_buffer[i].data);
@@ -108,7 +108,7 @@ void Commands::render_commands()
       leds->rotating_sectors(command_buffer[i].data);
       break;
     case COMMAND_RENDER:
-      leds->render(command_buffer[i].data);
+      render(leds, command_buffer[i].data);
       break;
     case COMMAND_ROTATING_PLANE:
       leds->rotating_plane(command_buffer[i].data);

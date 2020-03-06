@@ -114,7 +114,7 @@ void Keller::set_led(uint8_t strip_index, int led, CRGB color)
   }
 }
 
-CRGB get_led(uint8_t strip_index, int led)
+CRGB Keller::get_led(uint8_t strip_index, int led)
 {
 
   if (strip_index < STRIP_COUNT)

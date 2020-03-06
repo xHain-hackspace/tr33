@@ -60,7 +60,7 @@
 
 #define PING_PONG_LINEAR 0
 #define PING_PONG_SINE 1
-#define PING_PONG_COSINE 2
+#define PING_PONG_NONE 2
 #define PING_PONG_SAWTOOTH 3
 
 // -- RENDER ------------------------------------------------------------------------------
@@ -103,10 +103,14 @@ public:
 
   // Commands
   void single_color(Leds *leds, char *data);
+  void rainbow_sine(Leds *leds, char *data);
   void sparkle(Leds *leds, char *data);
   void flicker_sparkle(Leds *leds, char *data);
   void show_number(Leds *leds, char *data);
   void rain(Leds *leds, char *data);
+  void render(Leds *leds, char *data);
+  void ping_pong(Leds *leds, char *data);
+  void kaleidoscope(Leds *leds, char *data);
 
   // Events
   void pixel(Leds *leds, char *data);

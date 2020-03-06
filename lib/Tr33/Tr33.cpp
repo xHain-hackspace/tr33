@@ -191,7 +191,7 @@ void Tr33::set_led(uint8_t strip_index, int led, CRGB color)
   }
 }
 
-CRGB get_led(uint8_t strip_index, int led)
+CRGB Tr33::get_led(uint8_t strip_index, int led)
 {
   // single trunk
   if (strip_index < TRUNK_STRIP_COUNT)

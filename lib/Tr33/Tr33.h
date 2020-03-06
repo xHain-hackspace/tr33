@@ -73,6 +73,7 @@ public:
   Tr33();
   void init();
   void set_led(uint8_t strip_index, int led, CRGB color);
+  CRGB get_led(uint8_t strip_index, int led);
   void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
   uint8_t random_strip(uint8_t strip_index);
   uint16_t strip_length(uint8_t strip_index);
@@ -83,7 +84,6 @@ public:
   void rainbow_sine(char *data);
   void ping_pong(char *data);
   void gravity(char *data);
-  void rain(char *data);
   void beats(char *data);
   void mapped_swipe(char *data);
   void mapped_shape(char *data);

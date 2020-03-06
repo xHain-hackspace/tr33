@@ -28,14 +28,6 @@
 #define GRAVITY_DAMPING 70
 #define MAX_RAIN_DROPS 500
 
-// -- BALL_TYPES --------------------------------------------------------------------------
-
-#define BALL_TYPE_SINE 1
-#define BALL_TYPE_COMET 2
-#define BALL_TYPE_NYAN 3
-#define BALL_TYPE_FILL_TOP 4
-#define BALL_TYPE_FILL_BOTTOM 5
-
 // -- MAPPED -----------------------------------------------------------------------
 
 #define SWIPE_TOP_BOTTOM 0
@@ -57,6 +49,7 @@ public:
   Keller();
   void init();
   void set_led(uint8_t strip_index, int led, CRGB color);
+  CRGB get_led(uint8_t strip_index, int led);
   void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
   uint8_t random_strip(uint8_t strip_index);
   uint16_t strip_length(uint8_t strip_index);
@@ -64,13 +57,8 @@ public:
 
   // commands - rendered on each loop
   void all_white();
-  void rainbow_sine(char *data);
-  void ping_pong(char *data);
-  void render(char *data);
 
   // void gravity(char *data);
-  // void rain(char *data);
-  // void beats(char *data);
   // void mapped_swipe(char *data);
   // void mapped_shape(char *data);
   // void twang(char *data);

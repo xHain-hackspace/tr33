@@ -6,6 +6,7 @@ public:
 
   // set leds
   virtual void set_led(uint8_t strip_index, int led, CRGB color) = 0;
+  virtual CRGB get_led(uint8_t strip_index, int led);
   virtual void fade_led(uint8_t strip_index, int led, CRGB target, float amount) = 0;
   virtual uint8_t random_strip(uint8_t strip_index) = 0;
   virtual uint16_t strip_length(uint8_t strip_index) = 0;

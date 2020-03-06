@@ -1,7 +1,6 @@
-#include <Keller.h>
 #include <Commands.h>
 
-void Keller::rainbow_sine(char *data)
+void Commands::rainbow_sine(Leds *leds, char *data)
 {
   uint8_t strip_index = data[0];
   uint8_t rate = data[1];
@@ -12,7 +11,7 @@ void Keller::rainbow_sine(char *data)
   uint8_t brightness = 0;
   uint8_t color_index = 0;
   uint8_t offset = 0;
-  uint16_t length = strip_length(strip_index);
+  uint16_t length = leds->strip_length(strip_index);
   uint16_t width_pixel = float(length) * float(width_percent) / 100.0;
 
   uint8_t min_brightness = 60;
@@ -28,6 +27,6 @@ void Keller::rainbow_sine(char *data)
     offset = float(i % wavelength) / float(wavelength) * 255.0 * -1.0;
     brightness = beatsin8(rate, min_brightness, max_brightness, 0, offset);
     color_index = float(i % width_pixel) / float(width_pixel) * 255.0;
-    set_led(strip_index, i, ColorFromPalette(currentPalette, color_index, brightness));
+    leds->set_led(strip_index, i, ColorFromPalette(currentPalette, color_index, brightness));
   }
 }
