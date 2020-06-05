@@ -17,7 +17,7 @@
 #define STRIP_PIN_8 13
 #define STRIP_PIN_9 27
 #define STRIP_PIN_10 32
-#define STRIP_PIXEL_COUNT 249
+#define STRIP_PIXEL_COUNT 300
 #define STRIP_COUNT 10
 
 // strip index

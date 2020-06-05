@@ -16,16 +16,15 @@ char serial_buffer[SERIAL_BUFFER_SIZE];
 const uint8_t SERIAL_PACKET_SIZE = 2 + COMMAND_DATA_SIZE;
 const uint8_t SERIAL_TIMEOUT = 100;
 
-IPAddress artnet_ip(2, 23, 42, 24);
-
 Commands commands;
-
+// PINS
 // HardwareSerial CommandSerial(2);
+// USB
 HardwareSerial CommandSerial(0);
 
-// Tr33 led_structure = Tr33();
+Tr33 led_structure = Tr33();
 // Dode led_structure = Dode();
-Keller led_structure = Keller();
+// Keller led_structure = Keller();
 
 void flush_serial()
 {
@@ -110,8 +109,9 @@ void loop()
   }
   else if (byte != -1)
   {
-    // Serial.print("Expected RTS, got: ");
-    // Serial.println(byte);
+    Serial.print("Expected RTS, got: ");
+    Serial.println(byte);
+    Serial.println("Requesting resync");
     flush_serial();
     CommandSerial.write(SERIAL_REQUEST_RESYNC);
   }

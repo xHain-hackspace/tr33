@@ -5,7 +5,6 @@ Leds *leds;
 Command command_buffer[COMMAND_BUFFER_SIZE];
 CRGBPalette256 currentPalette = Rainbow_gp;
 uint8_t currentMode = MODE_COMMANDS;
-Artnet artnet;
 
 void Commands::init(Leds *leds_instance)
 {
@@ -126,13 +125,14 @@ void Commands::run()
 {
   switch (currentMode)
   {
-  case MODE_ARTNET:
-    artnet.read();
-    break;
+  // case MODE_ARTNET:
+  //   artnet.read();
+  //   break;
   case MODE_STREAM:
     FastLED.show();
     break;
   default:
+    // Serial.println("RUN");
     FastLED.clearData();
     render_commands();
     FastLED.show();

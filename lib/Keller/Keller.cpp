@@ -23,10 +23,17 @@ void Keller::init()
   // uncomment this to show the pin number on each strip
   // show_pin_numbers();
 
-  command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[0].data[1] = HUE_BLUE;
+  // command_buffer[0].data[2] = 120;
+
+  command_buffer[0].type = COMMAND_RAINBOW_SINE;
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = HUE_BLUE;
-  command_buffer[0].data[2] = 120;
+  command_buffer[0].data[1] = 10;
+  command_buffer[0].data[2] = 100;
+  command_buffer[0].data[3] = 100;
+  command_buffer[0].data[4] = 255;
 
   // command_buffer[1].type = COMMAND_FILL;
   // command_buffer[1].data[0] = STRIP_INDEX_ALL;
@@ -36,17 +43,17 @@ void Keller::init()
   // command_buffer[1].data[4] = 120;
   // command_buffer[1].data[5] = 50;
 
-  command_buffer[2].type = COMMAND_PING_PONG;
+  // command_buffer[2].type = COMMAND_PING_PONG;
   // command_buffer[2].data[0] = RENDER_NYAN_BOUNCE;
-  command_buffer[2].data[0] = RENDER_COMET_BOUNCE;
-  command_buffer[2].data[1] = STRIP_INDEX_ALL;
-  command_buffer[2].data[2] = HUE_RED;
-  command_buffer[2].data[3] = 255;
-  command_buffer[2].data[4] = 50;
-  command_buffer[2].data[5] = PING_PONG_SINE;
-  command_buffer[2].data[6] = 170;
-  command_buffer[2].data[7] = 0;
-  command_buffer[2].data[8] = 255;
+  // command_buffer[2].data[0] = RENDER_COMET_BOUNCE;
+  // command_buffer[2].data[1] = STRIP_INDEX_ALL;
+  // command_buffer[2].data[2] = HUE_RED;
+  // command_buffer[2].data[3] = 255;
+  // command_buffer[2].data[4] = 50;
+  // command_buffer[2].data[5] = PING_PONG_SINE;
+  // command_buffer[2].data[6] = 170;
+  // command_buffer[2].data[7] = 0;
+  // command_buffer[2].data[8] = 255;
 
   // command_buffer[1].type = MAPPED_SWIPE;
   // command_buffer[1].data[0] = SWIPE_BOTTOM_TOP;

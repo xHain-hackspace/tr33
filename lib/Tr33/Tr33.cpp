@@ -15,12 +15,14 @@ Tr33::Tr33(void)
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_2>(branch_leds[1], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_3>(branch_leds[2], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_4>(branch_leds[3], BRANCH_PIXEL_COUNT);
-  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_5>(branch_leds[4], BRANCH_PIXEL_COUNT);
+  // not connected
+  // FastLED.addLeds<NEOPIXEL, BRANCH_PIN_5>(branch_leds[4], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_6>(branch_leds[5], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_7>(branch_leds[6], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_8>(branch_leds[7], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_9>(branch_leds[8], BRANCH_PIXEL_COUNT);
-  FastLED.addLeds<NEOPIXEL, BRANCH_PIN_10>(branch_leds[9], BRANCH_PIXEL_COUNT);
+  // not connected
+  // FastLED.addLeds<NEOPIXEL, BRANCH_PIN_10>(branch_leds[9], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_11>(branch_leds[10], BRANCH_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_12>(branch_leds[11], BRANCH_PIXEL_COUNT);
 }
@@ -31,7 +33,7 @@ void Tr33::init()
   // uncomment this to show the pin number on each strip
   // show_pin_numbers();
 
-  // command_buffer[0].type = SINGLE_COLOR;
+  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
   // command_buffer[0].data[0] = STRIP_INDEX_ALL;
   // command_buffer[0].data[1] = HUE_BLUE;
   // command_buffer[0].data[2] = 255;
@@ -67,14 +69,14 @@ void Tr33::init()
   // command_buffer[0].data[1] = 0;
   // command_buffer[0].data[2] = 20;
 
-  // command_buffer[0].type = COMMAND_RAINBOW_SINE;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[0].data[1] = 60;
-  // command_buffer[0].data[2] = 50;
-  // command_buffer[0].data[3] = 50;
-  // command_buffer[0].data[4] = 255;
+  command_buffer[0].type = COMMAND_RAINBOW_SINE;
+  command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  command_buffer[0].data[1] = 60;
+  command_buffer[0].data[2] = 50;
+  command_buffer[0].data[3] = 50;
+  command_buffer[0].data[4] = 255;
 
-  command_buffer[0].type = COMMAND_TWANG;
+  // command_buffer[0].type = COMMAND_TWANG;
   // command_buffer[0].data[0] = 0;
 }
 

@@ -1,6 +1,6 @@
+#define FASTLED_ESP32_FLASH_LOCK 1
 #include <Arduino.h>
 #include <FastLED.h>
-#include <Artnet.h>
 
 #ifndef LEDS_H
 #define LEDS_H
@@ -91,7 +91,6 @@ struct Command
 extern Command command_buffer[COMMAND_BUFFER_SIZE];
 extern CRGBPalette256 currentPalette;
 extern uint8_t currentMode;
-extern Artnet artnet;
 
 class Commands
 {
