@@ -19,7 +19,7 @@ Drop drops[MAX_RAIN_DROPS];
 
 int drop_duration = 7500; // ms
 
-void Commands::rain(Leds *leds, char *data)
+void Commands::rain(LedStructure *leds, char *data)
 {
   uint8_t strip_index = data[0];
   uint8_t color_index = Commands::random_or_value(data[1], 0, 255);

@@ -3,7 +3,7 @@
 
 #ifndef LEDS_H
 #define LEDS_H
-#include <Leds.h>
+#include <LedStructure.h>
 #endif
 
 // #include "I2Cdev.h"
@@ -23,10 +23,9 @@
 
 // void setup();
 void twang_loop();
-void twang_render_dode(Leds* leds);
-void twang_render_tr33(Leds* leds);
-void twang_joystick(char * data);
-
+void twang_render_dode(LedStructure *leds);
+void twang_render_tr33(LedStructure *leds);
+void twang_joystick(char *data);
 
 // ---------------------------------
 // ------------ LEVELS -------------
@@ -35,7 +34,7 @@ void loadLevel();
 void spawnBoss();
 void moveBoss();
 void spawnEnemy(int pos, int dir, int sp, int wobble);
-void spawnLava(int left, int right, int ontime, int offtime, int offset, char* state);
+void spawnLava(int left, int right, int ontime, int offtime, int offset, char *state);
 void spawnConveyor(int startPoint, int endPoint, int dir);
 void cleanupLevel();
 void levelComplete();
@@ -58,7 +57,6 @@ void drawAttack();
 int getLED(int pos);
 bool inLava(int pos);
 void updateLives();
-
 
 // ---------------------------------
 // --------- SCREENSAVER -----------

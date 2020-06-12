@@ -4,7 +4,7 @@
 
 #ifndef LEDS_H
 #define LEDS_H
-#include <Leds.h>
+#include <LedStructure.h>
 #endif
 
 #define COMMAND_DATA_SIZE 10
@@ -94,26 +94,30 @@ extern uint8_t currentMode;
 
 class Commands
 {
+private:
+  LedStructure *leds;
+
 public:
-  void init(Leds *leds);
+  void init(LedStructure *leds);
   void process(char *command);
   void run();
   void update_settings(char *data);
 
   // Commands
-  void single_color(Leds *leds, char *data);
-  void rainbow_sine(Leds *leds, char *data);
-  void sparkle(Leds *leds, char *data);
-  void flicker_sparkle(Leds *leds, char *data);
-  void show_number(Leds *leds, char *data);
-  void rain(Leds *leds, char *data);
-  void render(Leds *leds, char *data);
-  void ping_pong(Leds *leds, char *data);
-  void kaleidoscope(Leds *leds, char *data);
+  void single_color(LedStructure *leds, char *data);
+  void rainbow_sine(LedStructure *leds, char *data);
+  void sparkle(LedStructure *leds, char *data);
+  void flicker_sparkle(LedStructure *leds, char *data);
+  void show_number(LedStructure *leds, char *data);
+  void rain(LedStructure *leds, char *data);
+  void render(LedStructure *leds, char *data);
+  void ping_pong(LedStructure *leds, char *data);
+  void kaleidoscope(LedStructure *leds, char *data);
+  void white(LedStructure *leds, char *data);
 
   // Events
-  void pixel(Leds *leds, char *data);
-  void pixel_rgb(Leds *leds, char *data);
+  void pixel(LedStructure *leds, char *data);
+  void pixel_rgb(LedStructure *leds, char *data);
 
   // Ping Pong
   static float ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms);
@@ -128,10 +132,10 @@ public:
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
   // Render
-  static void render(Leds *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction);
-  static void render_ball(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness);
-  static void render_comet(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce);
-  static void render_fill(Leds *leds, uint8_t strip_index, float position, CRGB color, float brightness, bool direction);
+  static void render(LedStructure *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction);
+  static void render_ball(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness);
+  static void render_comet(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce);
+  static void render_fill(LedStructure *leds, uint8_t strip_index, float position, CRGB color, float brightness, bool direction);
 
   static void artnet_sync_callback();
 

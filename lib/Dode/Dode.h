@@ -3,7 +3,7 @@
 
 #ifndef LEDS_H
 #define LEDS_H
-#include <Leds.h>
+#include <LedStructure.h>
 #endif
 
 #define HW_STRIP_COUNT 10
@@ -194,7 +194,7 @@ static EdgeCorner corners[EDGE_COUNT] = {
 
 struct Command;
 
-class Dode : public Leds
+class Dode : public LedStructure
 {
 public:
     Dode();
@@ -218,11 +218,12 @@ public:
     void rotating_plane(char *data);
     void twang(char *data);
     void joystick(char *data);
+    void write_info() { Serial.println("Dode"); }
     static void artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data);
 
 private:
     void set_led_mirrored_middle(uint8_t edge_index, uint8_t led_index, CRGB color);
-    void render_ball(Leds *leds, int8_t edge, float center, float width, CRGB color, float brightness, uint8_t ball_type);
-    uint16_t edge_strip_length(Leds *leds, int8_t edge);
+    void render_ball(LedStructure *leds, int8_t edge, float center, float width, CRGB color, float brightness, uint8_t ball_type);
+    uint16_t edge_strip_length(LedStructure *leds, int8_t edge);
     void generate_mapping();
 };

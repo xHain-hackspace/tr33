@@ -1,14 +1,12 @@
 #include <Commands.h>
 
-Leds *leds;
-
 Command command_buffer[COMMAND_BUFFER_SIZE];
 CRGBPalette256 currentPalette = Rainbow_gp;
 uint8_t currentMode = MODE_COMMANDS;
 
-void Commands::init(Leds *leds_instance)
+void Commands::init(LedStructure *init_leds)
 {
-  leds = leds_instance;
+  leds = init_leds;
   FastLED.setCorrection(TypicalLEDStrip);
   leds->init();
 };
@@ -29,9 +27,11 @@ void Commands::process(char *command_bin)
       break;
     case EVENT_PIXEL:
       pixel(leds, command.data);
+      FastLED.show();
       break;
     case EVENT_PIXEL_RGB:
       pixel_rgb(leds, command.data);
+      FastLED.show();
       break;
     case EVENT_JOYSTICK:
       leds->joystick(command.data);
@@ -59,7 +59,7 @@ void Commands::render_commands()
       single_color(leds, command_buffer[i].data);
       break;
     case COMMAND_WHITE:
-      leds->all_white();
+      white(leds, command_buffer[i].data);
       break;
     case COMMAND_RAINBOW_SINE:
       rainbow_sine(leds, command_buffer[i].data);
@@ -129,7 +129,7 @@ void Commands::run()
   //   artnet.read();
   //   break;
   case MODE_STREAM:
-    FastLED.show();
+    // FastLED.show();
     break;
   default:
     // Serial.println("RUN");

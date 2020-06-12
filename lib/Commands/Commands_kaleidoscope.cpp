@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::kaleidoscope(Leds *leds, char *data)
+void Commands::kaleidoscope(LedStructure *leds, char *data)
 {
   uint8_t strip_index = data[0];
 

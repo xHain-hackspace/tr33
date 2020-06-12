@@ -3,7 +3,7 @@
 
 #ifndef LEDS_H
 #define LEDS_H
-#include <Leds.h>
+#include <LedStructure.h>
 #endif
 
 // trunk config
@@ -66,7 +66,7 @@
 struct Command;
 struct Leds;
 
-class Tr33 : public Leds
+class Tr33 : public LedStructure
 {
 
 public:
@@ -91,6 +91,8 @@ public:
   void gravity_event();
   void beat(char *data);
   void joystick(char *data);
+
+  void write_info() { Serial.println("Tr33"); }
 
 private:
   // ball rendering

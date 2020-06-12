@@ -104,7 +104,7 @@ CRGB get_trunk_led(int trunk, int led)
   }
   else
   {
-    return trunk_leds[trunk - HW_TRUNK_STRIP_COUNT][led - TRUNK_PIXEL_COUNT];
+    return trunk_leds[trunk - HW_TRUNK_STRIP_COUNT][led + TRUNK_PIXEL_COUNT];
   }
 }
 
@@ -199,23 +199,23 @@ CRGB Tr33::get_led(uint8_t strip_index, int led)
   if (strip_index < TRUNK_STRIP_COUNT)
   {
     return get_trunk_led(strip_index, led);
-    // single branch
   }
+  // single branch
   else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT)
   {
     return branch_leds[strip_index - TRUNK_STRIP_COUNT][led];
-    // all trunks
   }
+  // all trunks
   else if (strip_index == STRIP_INDEX_ALL_TRUNKS)
   {
     return get_trunk_led(0, led);
-    // all branches
   }
+  // all branches
   else if (strip_index == STRIP_INDEX_ALL_BRANCHES)
   {
     return branch_leds[0][led];
-    // all trunks and branches
   }
+  // all trunks and branches
   else if (strip_index == STRIP_INDEX_ALL)
   {
     if (led < TRUNK_PIXEL_COUNT)

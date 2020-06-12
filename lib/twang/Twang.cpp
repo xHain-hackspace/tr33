@@ -159,7 +159,7 @@ void twang_joystick(char *data)
     joystickWobble = ((uint8_t)data[1]);
 }
 
-void twang_render_tr33(Leds *leds)
+void twang_render_tr33(LedStructure *leds)
 {
     for (int i = 0; i < NUM_LEDS; i++)
     {
@@ -167,7 +167,7 @@ void twang_render_tr33(Leds *leds)
     }
 }
 
-void twang_render_dode(Leds *leds)
+void twang_render_dode(LedStructure *leds)
 {
     //Define Path to follow (edge number): 19, -9, 22, -12, 25, -15, 28, -3, 16, -6
     //Calculate number of LEDs from path and running total in array (see defines above)

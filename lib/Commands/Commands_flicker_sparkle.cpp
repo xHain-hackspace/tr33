@@ -18,7 +18,7 @@ struct Flicker_Sparkle
 
 Flicker_Sparkle flicker_sparkles[MAX_FLICKER_SPARKLES];
 
-void Commands::flicker_sparkle(Leds *leds, char *data)
+void Commands::flicker_sparkle(LedStructure *leds, char *data)
 {
     uint8_t strip_index = data[0];
     uint8_t color_index = random_or_value(data[1], 0, 255);

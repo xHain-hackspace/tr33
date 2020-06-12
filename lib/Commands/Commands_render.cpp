@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::render(Leds *leds, char *data)
+void Commands::render(LedStructure *leds, char *data)
 {
   uint8_t render_type = data[0];
   uint8_t strip_index = data[1];
@@ -14,7 +14,7 @@ void Commands::render(Leds *leds, char *data)
   render(leds, render_type, strip_index, position, width, color, brightness, false);
 }
 
-void Commands::render(Leds *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction)
+void Commands::render(LedStructure *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction)
 {
   switch (render_type)
   {
@@ -39,7 +39,7 @@ void Commands::render(Leds *leds, uint8_t render_type, uint8_t strip_index, floa
   }
 }
 
-void Commands::render_ball(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float ball_brightness)
+void Commands::render_ball(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float ball_brightness)
 {
   position = position;
   int start_led = max(0, int(ceilf(position - width / 2.0)));
@@ -54,7 +54,7 @@ void Commands::render_ball(Leds *leds, uint8_t strip_index, float position, floa
   }
 }
 
-void Commands::render_comet(Leds *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce)
+void Commands::render_comet(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce)
 {
   if (width != 0)
   {
@@ -110,7 +110,7 @@ void Commands::render_comet(Leds *leds, uint8_t strip_index, float position, flo
   Commands::render_ball(leds, strip_index, position, 5, color, brightness);
 }
 
-void Commands::render_fill(Leds *leds, uint8_t strip_index, float position, CRGB color, float brightness, bool direction)
+void Commands::render_fill(LedStructure *leds, uint8_t strip_index, float position, CRGB color, float brightness, bool direction)
 {
   int first_led = 0;
   int last_led = 0;

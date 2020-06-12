@@ -4,7 +4,11 @@
 #include <Twang.h>
 #include <Tr33.h>
 #include <Dode.h>
-#include <Keller.h>
+
+#ifndef LEDS_H
+#define LEDS_H
+#include <LedStructure.h>
+#endif
 
 #define SERIAL_HEADER 42
 #define SERIAL_READY_TO_SEND 0xAA
@@ -18,21 +22,27 @@ const uint8_t SERIAL_TIMEOUT = 100;
 
 Commands commands;
 // PINS
-// HardwareSerial CommandSerial(2);
+HardwareSerial CommandSerial(2);
 // USB
-HardwareSerial CommandSerial(0);
+// HardwareSerial CommandSerial(0);
 
-Tr33 led_structure = Tr33();
-// Dode led_structure = Dode();
-// Keller led_structure = Keller();
+#ifdef LED_STRUCTURE_BASE
+LedStructure leds = LedStructure();
+#endif
+#ifdef LED_STRUCTURE_TR33
+Tr33 leds = Tr33();
+#endif
+#ifdef LED_STRUCTURE_DODE
+Dode leds = Dode();
+#endif
 
 void flush_serial()
 {
   while (CommandSerial.available())
   {
-    // int byte = CommandSerial.read();
-    // Serial.print("Flushing from serial: ");
-    // Serial.println(byte);
+    int byte = CommandSerial.read();
+    Serial.print("Flushing from serial: ");
+    Serial.println(byte);
   }
 }
 
@@ -51,18 +61,22 @@ void setup()
 
   Serial.println("Starting up...");
 
-  commands.init(&led_structure);
+  commands.init(&leds);
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
 
-  CommandSerial.write(SERIAL_REQUEST_RESYNC);
+  Serial.print("Initiating LED structure: ");
+  leds.write_info();
 
+  Serial.println("Sending resync request");
+
+  CommandSerial.write(SERIAL_REQUEST_RESYNC);
   // artnet.begin(artnet_ip);
   // artnet.setArtDmxCallback(led_structure.artnet_packet_callback);
   // artnet.setArtSyncCallback(commands.artnet_sync_callback);
 
-  Serial.println("Startup complete");
+  Serial.println("Startup complete, going into render loop");
 }
 
 void loop()
@@ -74,6 +88,7 @@ void loop()
   byte = CommandSerial.read();
 
   if (byte == SERIAL_READY_TO_SEND)
+
   {
     CommandSerial.write(SERIAL_CLEAR_TO_SEND);
     long cts_send_time = millis();
@@ -111,9 +126,9 @@ void loop()
   {
     Serial.print("Expected RTS, got: ");
     Serial.println(byte);
-    Serial.println("Requesting resync");
+    Serial.println("Flushing serial");
     flush_serial();
-    CommandSerial.write(SERIAL_REQUEST_RESYNC);
+    // CommandSerial.write(SERIAL_REQUEST_RESYNC);
   }
 
   commands.run();
