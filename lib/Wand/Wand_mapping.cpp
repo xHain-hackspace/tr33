@@ -1,5 +1,9 @@
+#ifdef LED_STRUCTURE_WAND
+
+#include <LedStructure.h>
+
 //Mapping started on 12.06.2020, 14:29:45
-static float mapping[][4] = {
+float LedStructure::mapping[][4] = {
     {0, 0, 347.09814453125, 301.8508605957031},
     {0, 1, 341.0950927734375, 299.2789001464844},
     {0, 2, 337.9474792480469, 296.04022216796875},
@@ -298,9 +302,6 @@ static float mapping[][4] = {
     {0, 295, 587.4172973632812, 322.3034362792969},
     {0, 296, 591.4692993164062, 319.566650390625},
     {0, 299, 239.49484252929688, 11.43017292022705}};
-#define X_MIN 29.225168228149414
-#define X_MAX 591.4692993164062
-#define Y_MIN 11.43017292022705
-#define Y_MAX 335.151123046875
-#define MAPPING_SIZE 298
+
 //Mapping finished on 12.06.2020, 14:31:06
+#endif

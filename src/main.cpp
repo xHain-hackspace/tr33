@@ -2,13 +2,6 @@
 #include <FastLED.h>
 #include <Commands.h>
 #include <Twang.h>
-#include <Tr33.h>
-#include <Dode.h>
-
-#ifndef LEDS_H
-#define LEDS_H
-#include <LedStructure.h>
-#endif
 
 #define SERIAL_HEADER 42
 #define SERIAL_READY_TO_SEND 0xAA
@@ -22,18 +15,27 @@ const uint8_t SERIAL_TIMEOUT = 100;
 
 Commands commands;
 // PINS
+#ifdef UART_COMMANDS_VIA_PINS
 HardwareSerial CommandSerial(2);
-// USB
-// HardwareSerial CommandSerial(0);
-
-#ifdef LED_STRUCTURE_BASE
-LedStructure leds = LedStructure();
 #endif
+#ifdef UART_COMMANDS_VIA_USB
+HardwareSerial CommandSerial(0);
+#endif
+
 #ifdef LED_STRUCTURE_TR33
+#include <Tr33.h>
 Tr33 leds = Tr33();
 #endif
 #ifdef LED_STRUCTURE_DODE
 Dode leds = Dode();
+#endif
+#ifdef LED_STRUCTURE_KELLER
+#include <Keller.h>
+Keller leds = Keller();
+#endif
+#ifdef LED_STRUCTURE_WAND
+#include <Wand.h>
+Wand leds = Wand();
 #endif
 
 void flush_serial()

@@ -1,8 +1,7 @@
 #include <Tr33.h>
-#include <Commands.h>
 
-CRGB trunk_leds[HW_TRUNK_STRIP_COUNT][HW_TRUNK_PIXEL_COUNT];
-CRGB branch_leds[BRANCH_STRIP_COUNT][BRANCH_PIXEL_COUNT];
+CRGB Tr33::trunk_leds[HW_TRUNK_STRIP_COUNT][HW_TRUNK_PIXEL_COUNT];
+CRGB Tr33::branch_leds[BRANCH_STRIP_COUNT][BRANCH_PIXEL_COUNT];
 
 Tr33::Tr33(void)
 {
@@ -27,59 +26,6 @@ Tr33::Tr33(void)
   FastLED.addLeds<NEOPIXEL, BRANCH_PIN_12>(branch_leds[11], BRANCH_PIXEL_COUNT);
 }
 
-void Tr33::init()
-{
-
-  // uncomment this to show the pin number on each strip
-  // show_pin_numbers();
-
-  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[0].data[1] = HUE_BLUE;
-  // command_buffer[0].data[2] = 255;
-
-  // command_buffer[1].type = MAPPED_SWIPE;
-  // command_buffer[1].data[0] = SWIPE_BOTTOM_TOP;
-  // command_buffer[1].data[1] = 200;
-  // command_buffer[1].data[2] = 100;
-
-  // command_buffer[1].type = MAPPED_SHAPE;
-  // command_buffer[1].data[0] = SHAPE_HOLLOW_SQUARE;
-  // command_buffer[1].data[1] = 50;
-  // command_buffer[1].data[2] = 128;
-  // command_buffer[1].data[3] = 128;
-  // command_buffer[1].data[4] = 50;
-
-  // command_buffer[0].type = MAPPED_SWIPE;
-  // command_buffer[0].data[0] = 200;
-  // command_buffer[0].data[1] = 100;
-  // command_buffer[0].data[2] = SWIPE_BOTTOM_TOP;
-
-  // command_buffer[1].type = PING_PONG;
-  // command_buffer[1].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[1].data[1] = 1;
-  // command_buffer[1].data[2] = 1;
-  // command_buffer[1].data[3] = 255;
-  // command_buffer[1].data[4] = 190;
-  // command_buffer[1].data[5] = 20;
-  // command_buffer[1].data[6] = 0;
-
-  // command_buffer[0].type = BEATS;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL_BRANCHES;
-  // command_buffer[0].data[1] = 0;
-  // command_buffer[0].data[2] = 20;
-
-  command_buffer[0].type = COMMAND_RAINBOW_SINE;
-  command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = 60;
-  command_buffer[0].data[2] = 50;
-  command_buffer[0].data[3] = 50;
-  command_buffer[0].data[4] = 255;
-
-  // command_buffer[0].type = COMMAND_TWANG;
-  // command_buffer[0].data[0] = 0;
-}
-
 //
 // -- Set leds ----------------------------------------
 //
@@ -88,11 +34,11 @@ void set_trunk_led(int trunk, int led, CRGB color)
 {
   if (trunk < HW_TRUNK_STRIP_COUNT)
   {
-    trunk_leds[trunk][TRUNK_PIXEL_COUNT - 1 - led] = color;
+    Tr33::trunk_leds[trunk][TRUNK_PIXEL_COUNT - 1 - led] = color;
   }
   else
   {
-    trunk_leds[trunk - HW_TRUNK_STRIP_COUNT][led + TRUNK_PIXEL_COUNT] = color;
+    Tr33::trunk_leds[trunk - HW_TRUNK_STRIP_COUNT][led + TRUNK_PIXEL_COUNT] = color;
   }
 }
 
@@ -100,11 +46,11 @@ CRGB get_trunk_led(int trunk, int led)
 {
   if (trunk < HW_TRUNK_STRIP_COUNT)
   {
-    return trunk_leds[trunk][TRUNK_PIXEL_COUNT - 1 - led];
+    return Tr33::trunk_leds[trunk][TRUNK_PIXEL_COUNT - 1 - led];
   }
   else
   {
-    return trunk_leds[trunk - HW_TRUNK_STRIP_COUNT][led + TRUNK_PIXEL_COUNT];
+    return Tr33::trunk_leds[trunk - HW_TRUNK_STRIP_COUNT][led + TRUNK_PIXEL_COUNT];
   }
 }
 
@@ -234,24 +180,6 @@ CRGB Tr33::get_led(uint8_t strip_index, int led)
   }
 }
 
-void Tr33::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
-{
-  if (led > 0 && led < strip_length(strip_index))
-  {
-    CRGB current = get_led(strip_index, led);
-    CRGB faded = blend(current, target, amount * 255.0);
-    set_led(strip_index, led, faded);
-  }
-}
-
-void Tr33::all_white()
-{
-  for (int i = 0; i < strip_length(STRIP_INDEX_ALL); i++)
-  {
-    set_led(STRIP_INDEX_ALL, i, CRGB(255, 255, 255));
-  }
-}
-
 //
 // -- Helper ------------------------------------------------------
 //
@@ -276,12 +204,7 @@ uint8_t Tr33::random_strip(uint8_t strip_index)
   }
 }
 
-uint8_t Tr33::strip_count()
-{
-  return BRANCH_STRIP_COUNT + TRUNK_STRIP_COUNT;
-}
-
-void Tr33::show_pin_numbers()
+void show_pin_numbers()
 {
   // Serial.println("Showing pin Numbers");
 

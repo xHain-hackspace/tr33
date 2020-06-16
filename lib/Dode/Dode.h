@@ -1,10 +1,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 
-#ifndef LEDS_H
-#define LEDS_H
 #include <LedStructure.h>
-#endif
 
 #define HW_STRIP_COUNT 10
 #define HW_STRIP_PIXEL_COUNT 249

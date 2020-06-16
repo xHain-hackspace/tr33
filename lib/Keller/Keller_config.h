@@ -9,8 +9,16 @@
 #define STRIP_PIN_8 13
 #define STRIP_PIN_9 27
 #define STRIP_PIN_10 32
+
 #define STRIP_PIXEL_COUNT 300
 #define STRIP_COUNT 10
 
 // strip index
 #define STRIP_INDEX_ALL STRIP_COUNT
+
+// mapping
+#define MAPPING_X_MIN 0
+#define MAPPING_X_MAX 0
+#define MAPPING_Y_MIN 0
+#define MAPPING_Y_MAX 0
+#define MAPPING_SIZE 0

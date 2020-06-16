@@ -1,11 +1,9 @@
-#define FASTLED_ESP32_FLASH_LOCK 1
+#ifndef __COMMANDS_H_INCLUDED__
+#define __COMMANDS_H_INCLUDED__
+
 #include <Arduino.h>
 #include <FastLED.h>
-
-#ifndef LEDS_H
-#define LEDS_H
 #include <LedStructure.h>
-#endif
 
 #define COMMAND_DATA_SIZE 10
 #define COMMAND_BUFFER_SIZE 32
@@ -35,7 +33,7 @@
 #define COMMAND_SHOW_NUMBER 7
 #define COMMAND_RAIN 8
 #define COMMAND_BEATS 9
-#define COMMAND_MAPPED_SWIPE 10
+#define COMMAND_MAPPED_SLOPE 10
 #define COMMAND_MAPPED_SHAPE 11
 #define COMMAND_KALEIDOSCOPE 12
 #define COMMAND_RANDOM_WALK 13
@@ -114,12 +112,14 @@ public:
   void ping_pong(LedStructure *leds, char *data);
   void kaleidoscope(LedStructure *leds, char *data);
   void white(LedStructure *leds, char *data);
+  void mapped_slope(LedStructure *leds, char *data);
 
   // Events
   void pixel(LedStructure *leds, char *data);
   void pixel_rgb(LedStructure *leds, char *data);
 
   // Ping Pong
+  static float ping_pong_fraction(uint8_t ping_pong_type, uint8_t period_100ms, uint8_t offset_100ms);
   static float ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms);
   static float ping_pong_sine(uint8_t period_100ms, uint8_t offset_100ms);
   static float ping_pong_cosine(uint8_t period_100ms, uint8_t offset_100ms);
@@ -142,3 +142,5 @@ public:
 private:
   void render_commands();
 };
+
+#endif // __COMMANDS_H_INCLUDED__

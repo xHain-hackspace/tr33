@@ -85,8 +85,8 @@ void Commands::render_commands()
     case COMMAND_BEATS:
       leds->beats(command_buffer[i].data);
       break;
-    case COMMAND_MAPPED_SWIPE:
-      leds->mapped_swipe(command_buffer[i].data);
+    case COMMAND_MAPPED_SLOPE:
+      mapped_slope(leds, command_buffer[i].data);
       break;
     case COMMAND_MAPPED_SHAPE:
       leds->mapped_shape(command_buffer[i].data);

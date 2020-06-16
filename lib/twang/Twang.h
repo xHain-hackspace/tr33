@@ -1,10 +1,7 @@
 // Required libs
 #include "FastLED.h"
 
-#ifndef LEDS_H
-#define LEDS_H
 #include <LedStructure.h>
-#endif
 
 // #include "I2Cdev.h"
 // #include "MPU6050.h"

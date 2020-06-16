@@ -1,39 +1,15 @@
-#include <Commands.h>
-
-#ifndef LEDS_H
-#define LEDS_H
 #include <LedStructure.h>
-#endif
 
-LedStructure::LedStructure()
-{
-  // todo: find a better way to do this
-  // #ifdef LED_STRUCTURE_BASE_HOME
-  FastLED.addLeds<NEOPIXEL, STRIP_PIN_1>(strip_leds[0], STRIP_PIXEL_COUNT);
-  // #endif
-
-#ifdef LED_STRUCTURE_BASE_KELLER
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_1>(strip_leds[0], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_2>(strip_leds[1], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_3>(strip_leds[2], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_4>(strip_leds[3], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_5>(strip_leds[4], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_6>(strip_leds[5], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_7>(strip_leds[6], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_8>(strip_leds[7], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_9>(strip_leds[8], STRIP_PIXEL_COUNT);
-  // FastLED.addLeds<NEOPIXEL, STRIP_PIN_10>(strip_leds[9], STRIP_PIXEL_COUNT);
-#endif
-}
+CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 
 void LedStructure::init()
 {
-  command_buffer[0].type = COMMAND_RAINBOW_SINE;
-  command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = 10;
-  command_buffer[0].data[2] = 100;
-  command_buffer[0].data[3] = 100;
-  command_buffer[0].data[4] = 255;
+  // command_buffer[0].type = COMMAND_RAINBOW_SINE;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[0].data[1] = 0;
+  // command_buffer[0].data[2] = 100;
+  // command_buffer[0].data[3] = 33;
+  // command_buffer[0].data[4] = 150;
 }
 
 //
@@ -44,13 +20,13 @@ void LedStructure::set_led(uint8_t strip_index, int led, CRGB color)
 {
   if (strip_index < STRIP_COUNT)
   {
-    strip_leds[strip_index][led] = color;
+    leds[strip_index][led] = color;
   }
   else
   {
     for (int i = 0; i < STRIP_COUNT; i++)
     {
-      strip_leds[i][led] = color;
+      leds[i][led] = color;
     }
   }
 }
@@ -60,11 +36,11 @@ CRGB LedStructure::get_led(uint8_t strip_index, int led)
 
   if (strip_index < STRIP_COUNT)
   {
-    return strip_leds[strip_index][led];
+    return leds[strip_index][led];
   }
   else
   {
-    return strip_leds[0][led];
+    return leds[0][led];
   }
 }
 

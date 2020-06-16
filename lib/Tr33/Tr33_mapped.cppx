@@ -1,5 +1,4 @@
 #include <Tr33.h>
-#include <Tr33_mapped.h>
 #include <Commands.h>
 
 float fraction = 0.0;
@@ -7,19 +6,19 @@ long last_mapped_update = millis();
 
 bool render_led(int i, float fraction, uint8_t swipe_direction)
 {
-  if (swipe_direction == SWIPE_TOP_BOTTOM && mapping[i][3] < (Y_MAX - Y_MIN) * fraction + Y_MIN)
+  if (swipe_direction == SWIPE_TOP_BOTTOM && mapping[i][3] < (MAPPING_Y_MAX - MAPPING_Y_MIN) * fraction + MAPPING_Y_MIN)
   {
     return true;
   }
-  else if (swipe_direction == SWIPE_BOTTOM_TOP && mapping[i][3] > (Y_MAX - Y_MIN) * (1.0 - fraction) + Y_MIN)
+  else if (swipe_direction == SWIPE_BOTTOM_TOP && mapping[i][3] > (MAPPING_Y_MAX - MAPPING_Y_MIN) * (1.0 - fraction) + MAPPING_Y_MIN)
   {
     return true;
   }
-  else if (swipe_direction == SWIPE_LEFT_RIGHT && mapping[i][2] < (X_MAX - X_MIN) * fraction + X_MIN)
+  else if (swipe_direction == SWIPE_LEFT_RIGHT && mapping[i][2] < (MAPPING_X_MAX - MAPPING_X_MIN) * fraction + MAPPING_X_MIN)
   {
     return true;
   }
-  else if (swipe_direction == SWIPE_RIGHT_LEFT && mapping[i][2] > (X_MAX - X_MIN) * (1.0 - fraction) + X_MIN)
+  else if (swipe_direction == SWIPE_RIGHT_LEFT && mapping[i][2] > (MAPPING_X_MAX - MAPPING_X_MIN) * (1.0 - fraction) + MAPPING_X_MIN)
   {
     return true;
   }
@@ -27,30 +26,6 @@ bool render_led(int i, float fraction, uint8_t swipe_direction)
   {
     return false;
   }
-}
-
-void Tr33::mapped_swipe(char *data)
-{
-  uint8_t swipe_direction = data[0];
-  uint8_t color_index = data[1];
-  float rate = 1.0 + float(data[2]) / 10;
-
-  CRGB color = ColorFromPalette(currentPalette, color_index);
-
-  fraction += float(millis() - last_mapped_update) / 1000.0 / rate;
-  if (fraction > 1)
-  {
-    fraction = 0;
-  }
-
-  for (int i = 0; i < MAPPING_SIZE; i++)
-  {
-    if (render_led(i, fraction, swipe_direction))
-    {
-      set_led(int(mapping[i][0]), int(mapping[i][1]), color);
-    }
-  }
-  last_mapped_update = millis();
 }
 
 void Tr33::mapped_shape(char *data)
@@ -63,9 +38,9 @@ void Tr33::mapped_shape(char *data)
 
   CRGB color = ColorFromPalette(currentPalette, color_index);
 
-  float x_mapped = X_MIN + (X_MAX - X_MIN) * (x / 255.0);
-  float y_mapped = Y_MIN + (Y_MAX - Y_MIN) * (y / 255.0);
-  float size_mapped = (Y_MAX - Y_MIN) * (size / 255.0);
+  float x_mapped = MAPPING_X_MIN + (MAPPING_X_MAX - MAPPING_X_MIN) * (x / 255.0);
+  float y_mapped = MAPPING_Y_MIN + (MAPPING_Y_MAX - MAPPING_Y_MIN) * (y / 255.0);
+  float size_mapped = (MAPPING_Y_MAX - MAPPING_Y_MIN) * (size / 255.0);
 
   switch (shape)
   {
@@ -94,7 +69,7 @@ void Tr33::render_mapped_square(float x, float y, float size, CRGB color, bool f
   float y_min = y - size / 2.0;
   float y_max = y + size / 2.0;
 
-  float border_width = (Y_MAX - Y_MIN) / 75.0;
+  float border_width = (MAPPING_Y_MAX - MAPPING_Y_MIN) / 75.0;
 
   for (int i = 0; i < MAPPING_SIZE; i++)
   {

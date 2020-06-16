@@ -1,42 +1,33 @@
+#ifndef __LEDSTRUCTURE_H_INCLUDED__
+#define __LEDSTRUCTURE_H_INCLUDED__
+
 #include <Arduino.h>
 #include <FastLED.h>
 
-#ifdef LED_STRUCTURE_BASE_HOME
-#include <Structures/Home.h>
+#ifdef LED_STRUCTURE_WAND
+#include <Wand_config.h>
 #endif
-
-#define GRAVITY_MAX_BALLS 50
-#define GRAVITY_VALUE 50
-#define GRAVITY_DAMPING 70
-#define MAX_RAIN_DROPS 500
-
-#define SWIPE_TOP_BOTTOM 0
-#define SWIPE_BOTTOM_TOP 1
-#define SWIPE_LEFT_RIGHT 2
-#define SWIPE_RIGHT_LEFT 3
-
-#define SHAPE_SQUARE 0
-#define SHAPE_HOLLOW_SQUARE 1
-#define SHAPE_CIRCLE 2
-
-struct Command;
+#ifdef LED_STRUCTURE_TR33
+#include <Tr33_config.h>
+#endif
+#ifdef LED_STRUCTURE_KELLER
+#include <Keller_config.h>
+#endif
 
 class LedStructure
 {
-private:
-  CRGB strip_leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
-
 public:
-  LedStructure();
-  void init();
+  static CRGB leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
+  static float mapping[][4];
+  virtual void init();
 
   // set leds
-  void set_led(uint8_t strip_index, int led, CRGB color);
-  CRGB get_led(uint8_t strip_index, int led);
-  void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
-  uint8_t random_strip(uint8_t strip_index);
-  uint16_t strip_length(uint8_t strip_index);
-  uint8_t strip_index_all();
+  virtual void set_led(uint8_t strip_index, int led, CRGB color);
+  virtual CRGB get_led(uint8_t strip_index, int led);
+  virtual void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
+  virtual uint8_t random_strip(uint8_t strip_index);
+  virtual uint16_t strip_length(uint8_t strip_index);
+  virtual uint8_t strip_index_all();
 
   // commands
   void gravity(char *data);
@@ -60,3 +51,5 @@ public:
   // misc
   virtual void write_info();
 };
+
+#endif // __LEDSTRUCTURE_H_INCLUDED__
