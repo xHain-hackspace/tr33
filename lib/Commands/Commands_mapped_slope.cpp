@@ -1,8 +1,5 @@
 #include <Commands.h>
 
-// TODO
-// prevent flipping when x1 and x2 crossz
-
 void Commands::mapped_slope(LedStructure *leds, char *data)
 {
   uint8_t color_index = data[0];

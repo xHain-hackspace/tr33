@@ -155,16 +155,6 @@ void LedStructure::beats(char *data)
   return;
 }
 
-void LedStructure::mapped_swipe(char *data)
-{
-  return;
-}
-
-void LedStructure::mapped_shape(char *data)
-{
-  return;
-}
-
 void LedStructure::random_walk(char *data)
 {
   return;

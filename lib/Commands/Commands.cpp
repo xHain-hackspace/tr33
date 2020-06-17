@@ -89,7 +89,7 @@ void Commands::render_commands()
       mapped_slope(leds, command_buffer[i].data);
       break;
     case COMMAND_MAPPED_SHAPE:
-      leds->mapped_shape(command_buffer[i].data);
+      mapped_shape(leds, command_buffer[i].data);
       break;
     case COMMAND_KALEIDOSCOPE:
       kaleidoscope(leds, command_buffer[i].data);

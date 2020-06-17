@@ -32,8 +32,6 @@ public:
   // commands
   void gravity(char *data);
   void beats(char *data);
-  void mapped_swipe(char *data);
-  void mapped_shape(char *data);
   void random_walk(char *data);
   void debug(char *data);
   void fireworks(char *data);

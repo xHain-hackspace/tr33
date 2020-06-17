@@ -79,6 +79,12 @@
 #define SWIPE_nY 4
 #define SWIPE_nZ 5
 
+// -- MAPPED_SHAPE ------------------------------------------------------------------------------
+
+#define SHAPE_SQUARE 0
+#define SHAPE_BALL 1
+#define SHAPE_RING 2
+
 struct Command
 {
   uint8_t index;
@@ -113,6 +119,7 @@ public:
   void kaleidoscope(LedStructure *leds, char *data);
   void white(LedStructure *leds, char *data);
   void mapped_slope(LedStructure *leds, char *data);
+  void mapped_shape(LedStructure *leds, char *data);
 
   // Events
   void pixel(LedStructure *leds, char *data);
