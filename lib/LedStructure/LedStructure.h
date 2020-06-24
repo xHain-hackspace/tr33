@@ -30,7 +30,6 @@ public:
   virtual uint8_t strip_index_all();
 
   // commands
-  void gravity(char *data);
   void beats(char *data);
   void random_walk(char *data);
   void debug(char *data);
@@ -40,7 +39,6 @@ public:
   void twang(char *data);
 
   // events - rendered once
-  void gravity_event();
   void joystick(char *data);
 
   // artnet

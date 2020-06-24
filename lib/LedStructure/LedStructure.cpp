@@ -145,11 +145,6 @@ uint8_t LedStructure::strip_index_all()
 //   // command_buffer[15].data[1] = STRIP_PIN_12;
 // }
 
-void LedStructure::gravity(char *data)
-{
-  return;
-}
-
 void LedStructure::beats(char *data)
 {
   return;
@@ -181,11 +176,6 @@ void LedStructure::rotating_plane(char *data)
 }
 
 void LedStructure::twang(char *data)
-{
-  return;
-}
-
-void LedStructure::gravity_event()
 {
   return;
 }

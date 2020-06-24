@@ -20,7 +20,7 @@ void Commands::process(char *command_bin)
     switch (command.type)
     {
     case EVENT_GRAVITY_ADD_BALL:
-      leds->gravity_event();
+      gravity_event(leds, command.data);
       break;
     case EVENT_UPDATE_SETTINGS:
       update_settings(command.data);
@@ -68,7 +68,7 @@ void Commands::render_commands()
       ping_pong(leds, command_buffer[i].data);
       break;
     case COMMAND_GRAVITY:
-      leds->gravity(command_buffer[i].data);
+      gravity(leds, command_buffer[i].data);
       break;
     case COMMAND_SPARKLE:
       sparkle(leds, command_buffer[i].data);

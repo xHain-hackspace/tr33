@@ -120,10 +120,12 @@ public:
   void white(LedStructure *leds, char *data);
   void mapped_slope(LedStructure *leds, char *data);
   void mapped_shape(LedStructure *leds, char *data);
+  void gravity(LedStructure *leds, char *data);
 
   // Events
   void pixel(LedStructure *leds, char *data);
   void pixel_rgb(LedStructure *leds, char *data);
+  void gravity_event(LedStructure *leds, char *data);
 
   // Ping Pong
   static float ping_pong_fraction(uint8_t ping_pong_type, uint8_t period_100ms, uint8_t offset_100ms);
