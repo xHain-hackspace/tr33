@@ -35,9 +35,9 @@ float distance_to_circle(float pixel[4], float x, float y, float size)
   return sqrtf(distance_x * distance_x + distance_y * distance_y) - size;
 }
 
-void Commands::mapped_render_ball(LedStructure *leds, float x, float y, float size, CRGB color, float brightness, float fade_distance)
+void Commands::mapped_render_ball(LedStructure *leds, float x, float y, float size, CRGB color, float render_brightness, float fade_distance)
 {
-  float distance;
+  float distance, brightness;
   for (int i = 0; i < MAPPING_SIZE; i++)
   {
     distance = distance_to_circle(leds->mapping[i], x, y, size);
@@ -45,12 +45,12 @@ void Commands::mapped_render_ball(LedStructure *leds, float x, float y, float si
     if (distance < 0)
     {
       // full brightness
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness);
+      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness);
     }
     else if (distance < fade_distance)
     {
       // fade
-      brightness = Commands::ease_in_out_cubic(brightness * (1 - distance / fade_distance));
+      brightness = Commands::ease_in_out_cubic(render_brightness * (1 - distance / fade_distance));
       leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness);
     }
   }
@@ -85,6 +85,9 @@ void Commands::mapped_shape(LedStructure *leds, char *data)
         break;
       case SHAPE_RING:
         distance = fabs(distance_to_circle(leds->mapping[i], x, y, size));
+        break;
+      case SHAPE_BALL:
+        distance = distance_to_circle(leds->mapping[i], x, y, size);
         break;
       }
 
