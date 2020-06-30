@@ -8,6 +8,8 @@ void Commands::mapped_slope(LedStructure *leds, char *data)
   float y1 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - data[3]) / 255.0 + MAPPING_Y_MIN;
   float x2 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(data[4]) / 255.0 + MAPPING_X_MIN;
   float y2 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - data[5]) / 255.0 + MAPPING_Y_MIN;
+  float fade_distance = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(data[6]) / 255.0 / 0.5;
+  float type = data[7];
 
   // avoid infitity
   if (x1 == x2)
@@ -22,7 +24,6 @@ void Commands::mapped_slope(LedStructure *leds, char *data)
 
   float brightness = 0;
   float distance = 0;
-  float fade_distance = (MAPPING_X_MAX - MAPPING_X_MIN) * 0.1;
 
   bool render_full = false;
   bool render_fade = false;
@@ -36,26 +37,36 @@ void Commands::mapped_slope(LedStructure *leds, char *data)
     render_full = false;
     render_fade = false;
 
-    if (x1 > x2)
+    if (type == SLOPE_LINE || type == SLOPE_LINE_INVERSE)
     {
-      if (distance > fade_distance)
-      {
-        render_full = true;
-      }
-      else if (distance > 0)
+      if (fabs(distance) < fade_distance)
       {
         render_fade = true;
       }
     }
-    else
+    else if (type == SLOPE_FILL)
     {
-      if (distance < fade_distance * -1)
+      if (x1 > x2)
       {
-        render_full = true;
+        if (distance > fade_distance)
+        {
+          render_full = true;
+        }
+        else if (distance > 0)
+        {
+          render_fade = true;
+        }
       }
-      else if (distance < 0)
+      else
       {
-        render_fade = true;
+        if (distance < fade_distance * -1)
+        {
+          render_full = true;
+        }
+        else if (distance < 0)
+        {
+          render_fade = true;
+        }
       }
     }
 
@@ -67,7 +78,14 @@ void Commands::mapped_slope(LedStructure *leds, char *data)
     else if (render_fade)
     {
       // fade
-      brightness = Commands::ease_in_out_cubic(render_brightness * fabsf(distance / fade_distance));
+      if (type == SLOPE_FILL || type == SLOPE_LINE_INVERSE)
+      {
+        brightness = Commands::ease_in_out_cubic(render_brightness * fabsf(distance / fade_distance));
+      }
+      else if (type == SLOPE_LINE)
+      {
+        brightness = Commands::ease_in_out_cubic(render_brightness * (1 - fabsf(distance / fade_distance)));
+      }
       leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness);
     }
   }

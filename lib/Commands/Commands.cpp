@@ -91,6 +91,12 @@ void Commands::render_commands()
     case COMMAND_MAPPED_SHAPE:
       mapped_shape(leds, command_buffer[i].data);
       break;
+    case COMMAND_MAPPED_TRIANGLE:
+      mapped_triangle(leds, command_buffer[i].data);
+      break;
+    case COMMAND_MAPPED_PARTICLES:
+      mapped_particles(leds, command_buffer[i].data);
+      break;
     case COMMAND_KALEIDOSCOPE:
       kaleidoscope(leds, command_buffer[i].data);
       break;

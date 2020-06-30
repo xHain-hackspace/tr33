@@ -44,6 +44,8 @@
 #define COMMAND_ROTATING_PLANE 18
 #define COMMAND_TWANG 19
 #define COMMAND_FLICKER_SPARKLE 20
+#define COMMAND_MAPPED_TRIANGLE 21
+#define COMMAND_MAPPED_PARTICLES 22
 
 // -- EVENTS ------------------------------------------------------------------------------
 
@@ -85,6 +87,12 @@
 #define SHAPE_BALL 1
 #define SHAPE_RING 2
 
+// -- MAPPED_SLOPE ------------------------------------------------------------------------------
+
+#define SLOPE_LINE 0
+#define SLOPE_FILL 1
+#define SLOPE_LINE_INVERSE 2
+
 struct Command
 {
   uint8_t index;
@@ -120,6 +128,8 @@ public:
   void white(LedStructure *leds, char *data);
   void mapped_slope(LedStructure *leds, char *data);
   void mapped_shape(LedStructure *leds, char *data);
+  void mapped_triangle(LedStructure *leds, char *data);
+  void mapped_particles(LedStructure *leds, char *data);
   void gravity(LedStructure *leds, char *data);
 
   // Events
@@ -145,6 +155,9 @@ public:
   static void render_ball(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness);
   static void render_comet(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce);
   static void render_fill(LedStructure *leds, uint8_t strip_index, float position, CRGB color, float brightness, bool direction);
+
+  // Mapped
+  static void mapped_render_ball(LedStructure *leds, float x, float y, float size, CRGB color, float brightness, float fade_distance);
 
   static void artnet_sync_callback();
 

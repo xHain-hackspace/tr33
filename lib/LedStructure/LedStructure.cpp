@@ -1,15 +1,16 @@
 #include <LedStructure.h>
+#include <Commands.h>
 
 CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 
 void LedStructure::init()
 {
-  // command_buffer[0].type = COMMAND_RAINBOW_SINE;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[0].data[1] = 0;
-  // command_buffer[0].data[2] = 100;
-  // command_buffer[0].data[3] = 33;
-  // command_buffer[0].data[4] = 150;
+  command_buffer[0].type = COMMAND_RAINBOW_SINE;
+  command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  command_buffer[0].data[1] = 50;  // rate
+  command_buffer[0].data[2] = 100; // wavelength
+  command_buffer[0].data[3] = 33;  // percent
+  command_buffer[0].data[4] = 255; // brightness
 }
 
 //
@@ -50,6 +51,16 @@ void LedStructure::fade_led(uint8_t strip_index, int led, CRGB target, float amo
   {
     CRGB current = get_led(strip_index, led);
     CRGB faded = blend(current, target, amount * 255.0);
+    set_led(strip_index, led, faded);
+  }
+}
+
+void LedStructure::shift_led(uint8_t strip_index, int led, uint8_t amount)
+{
+  if (led >= 0 && led < strip_length(strip_index))
+  {
+    CRGB current = get_led(strip_index, led);
+    CRGB faded = blend(current, 0, amount * 255.0);
     set_led(strip_index, led, faded);
   }
 }
