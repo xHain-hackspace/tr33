@@ -8,8 +8,8 @@ void LedStructure::init()
   command_buffer[0].type = COMMAND_RAINBOW_SINE;
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
   command_buffer[0].data[1] = 50;  // rate
-  command_buffer[0].data[2] = 100; // wavelength
-  command_buffer[0].data[3] = 33;  // percent
+  command_buffer[0].data[2] = 14; // wavelength
+  command_buffer[0].data[3] = 100;  // percent
   command_buffer[0].data[4] = 255; // brightness
 }
 
