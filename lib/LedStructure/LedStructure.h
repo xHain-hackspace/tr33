@@ -16,6 +16,9 @@
 #ifdef LED_STRUCTURE_TROMMEL
 #include <Trommel_config.h>
 #endif
+#ifdef LED_STRUCTURE_WOLKE
+#include <Wolke_config.h>
+#endif
 
 class LedStructure
 {

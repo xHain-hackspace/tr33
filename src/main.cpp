@@ -27,6 +27,10 @@ Wand leds = Wand();
 #include <Trommel.h>
 Trommel leds = Trommel();
 #endif
+#ifdef LED_STRUCTURE_WOLKE
+#include <Wolke.h>
+Wolke leds = Wolke();
+#endif
 
 Commands commands = Commands();
 
@@ -286,7 +290,7 @@ void wifi_loop()
       int packet_size = udp.parsePacket();
       if (packet_size)
       {
-        Serial.printf("Received command with size %d from %s, port %d\n", packet_size, udp.remoteIP().toString().c_str(), udp.remotePort());
+        // Serial.printf("Received command with size %d from %s, port %d\n", packet_size, udp.remoteIP().toString().c_str(), udp.remotePort());
         int len = udp.read(udp_buffer, UDP_BUFFER_SIZE);
         if (len > 0)
         {
@@ -342,8 +346,8 @@ void setup()
   Serial.println("Starting up...");
   commands.init(&leds);
 
-  pinMode(LED_BUILTIN, OUTPUT);
-  digitalWrite(LED_BUILTIN, HIGH);
+  // pinMode(LED_BUILTIN, OUTPUT);
+  // digitalWrite(LED_BUILTIN, HIGH);
 
   Serial.print("Initiating LED structure: ");
   leds.write_info();
