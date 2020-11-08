@@ -44,8 +44,8 @@ void setup()
   Serial.println("Starting up...");
   commands.init(&leds);
 
-  // pinMode(LED_BUILTIN, OUTPUT);
-  // digitalWrite(LED_BUILTIN, HIGH);
+  pinMode(LED_BUILTIN, OUTPUT);
+  digitalWrite(LED_BUILTIN, HIGH);
 
   Serial.print("Initiating LED structure: ");
   leds.write_info();
