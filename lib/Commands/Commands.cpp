@@ -33,8 +33,8 @@ void Commands::process(char *command_bin)
       pixel_rgb(leds, command.data);
       FastLED.show();
       break;
-    case EVENT_JOYSTICK:
-      leds->joystick(command.data);
+    case EVENT_TWANG_JOYSTICK:
+      twang_joystick(command.data);
       break;
     default:
       break;
@@ -119,7 +119,7 @@ void Commands::render_commands()
       leds->rotating_plane(command_buffer[i].data);
       break;
     case COMMAND_TWANG:
-      leds->twang(command_buffer[i].data);
+      twang(leds);
       break;
     default:
       break;

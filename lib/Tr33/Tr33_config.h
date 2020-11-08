@@ -32,8 +32,8 @@
 #define STRIP_INDEX_SPIRAL TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT + 3
 
 // dummy values, we are not using the normal leds array
-#define STRIP_COUNT 0
-#define STRIP_PIXEL_COUNT 0
+#define STRIP_COUNT BRANCH_STRIP_COUNT + TRUNK_PIXEL_COUNT
+#define STRIP_PIXEL_COUNT TRUNK_PIXEL_COUNT + BRANCH_PIXEL_COUNT
 
 // mapping
 #define MAPPING_SIZE 1290

@@ -54,7 +54,7 @@
 #define EVENT_BEAT 102
 #define EVENT_PIXEL 103
 #define EVENT_PIXEL_RGB 104
-#define EVENT_JOYSTICK 105
+#define EVENT_TWANG_JOYSTICK 105
 
 // -- PING_PONG ------------------------------------------------------------------------------
 
@@ -131,11 +131,13 @@ public:
   void mapped_triangle(LedStructure *leds, char *data);
   void mapped_particles(LedStructure *leds, char *data);
   void gravity(LedStructure *leds, char *data);
+  void twang(LedStructure *leds);
 
   // Events
   void pixel(LedStructure *leds, char *data);
   void pixel_rgb(LedStructure *leds, char *data);
   void gravity_event(LedStructure *leds, char *data);
+  void twang_joystick(char *data);
 
   // Ping Pong
   static float ping_pong_fraction(uint8_t ping_pong_type, uint8_t period_100ms, uint8_t offset_100ms);
