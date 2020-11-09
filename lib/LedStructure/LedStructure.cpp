@@ -6,28 +6,28 @@ CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 
 void LedStructure::init()
 {
-  // command_buffer[0].type = COMMAND_RAINBOW_SINE;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[0].data[1] = 50;  // rate
-  // command_buffer[0].data[2] = 14;  // wavelength
-  // command_buffer[0].data[3] = 100; // percent
-  // command_buffer[0].data[4] = 255; // brightness
-
-  command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  command_buffer[0].type = COMMAND_RAINBOW_SINE;
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = HUE_BLUE; // hue
-  command_buffer[0].data[2] = 255;      // brightness
+  command_buffer[0].data[1] = 50;  // rate
+  command_buffer[0].data[2] = 14;  // wavelength
+  command_buffer[0].data[3] = 100; // percent
+  command_buffer[0].data[4] = 255; // brightness
 
-  command_buffer[1].type = COMMAND_RENDER;
-  command_buffer[1].data[0] = RENDER_BALL;
-  command_buffer[1].data[1] = STRIP_INDEX_ALL;
-  command_buffer[1].data[2] = HUE_RED;
-  command_buffer[1].data[3] = 255; // brightness
-  command_buffer[1].data[4] = 128; // position1
-  command_buffer[1].data[5] = 0;   // position2
-  command_buffer[1].data[6] = 40;  // width
+  // command_buffer[0].type = COMMAND_SINGLE_COLOR;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[0].data[1] = HUE_BLUE; // hue
+  // command_buffer[0].data[2] = 255;      // brightness
 
-  Modifiers::test();
+  // command_buffer[1].type = COMMAND_RENDER;
+  // command_buffer[1].data[0] = RENDER_BALL;
+  // command_buffer[1].data[1] = STRIP_INDEX_ALL;
+  // command_buffer[1].data[2] = HUE_RED;
+  // command_buffer[1].data[3] = 255; // brightness
+  // command_buffer[1].data[4] = 128; // position1
+  // command_buffer[1].data[5] = 0;   // position2
+  // command_buffer[1].data[6] = 40;  // width
+
+  // Modifiers::test();
 }
 
 //

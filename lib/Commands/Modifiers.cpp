@@ -8,7 +8,7 @@ void Modifiers::test()
   modifiers[0].data_index = 4;
   modifiers[0].data_bytes = 2;
   modifiers[0].type = MODIFIER_RANDOM_TRANSITIONS;
-  modifiers[0].beats_per_minute = 20 * 256;
+  modifiers[0].beats_per_minute = 4 * 256;
   modifiers[0].max = 255;
 }
 
