@@ -4,7 +4,7 @@
 
 #define MAX_NR_OF_SECTORS 255
 
-void Dode::mapped_swipe(char *data)
+void Dode::mapped_swipe(uint8_t *data)
 {
   uint8_t color_index = data[0];
   float brightness_factor = float(data[1]) / 255.0;

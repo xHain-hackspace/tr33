@@ -1,6 +1,6 @@
 #include <Dode.h>
 #include <Commands.h>
-void Dode::render(char *data)
+void Dode::render(uint8_t *data)
 {
   uint8_t type = data[0];
   uint8_t color_index = data[1];

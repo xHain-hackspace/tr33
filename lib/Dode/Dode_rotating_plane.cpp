@@ -4,7 +4,7 @@
 
 #define MAX_NR_OF_SECTORS 255
 
-void Dode::rotating_plane(char *data)
+void Dode::rotating_plane(uint8_t *data)
 {
   uint8_t color_index = data[0];
   float plane_brightness = float(data[1]) / 255;

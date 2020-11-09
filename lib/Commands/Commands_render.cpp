@@ -1,13 +1,14 @@
 #include <Commands.h>
 
-void Commands::render(LedStructure *leds, char *data)
+void Commands::render(LedStructure *leds, uint8_t *data)
 {
   uint8_t render_type = data[0];
   uint8_t strip_index = data[1];
   uint8_t color_index = data[2];
   float brightness = float(data[3]) / 255;
-  float position = float(data[4]) / (255) * leds->strip_length(strip_index);
-  float width = data[5];
+  uint16_t position_int = data[4] << 8 | data[5];
+  float position = float(position_int) / 65535.0 * float(leds->strip_length(strip_index));
+  float width = data[6];
 
   CRGB color = ColorFromPalette(currentPalette, color_index, 255);
 

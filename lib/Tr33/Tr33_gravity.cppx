@@ -70,7 +70,7 @@ void Tr33::gravity_event()
   }
 }
 
-void Tr33::gravity(char *data)
+void Tr33::gravity(uint8_t *data)
 {
   gravity_strip_index = data[0];
   gravity_color_index = data[1];

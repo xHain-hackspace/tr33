@@ -6,7 +6,7 @@
 float height = 50;
 int last_update;
 
-void Tr33::beats(char *data)
+void Tr33::beats(uint8_t *data)
 {
   uint8_t strip_index = data[0];
   uint8_t color_index = data[1];
@@ -30,7 +30,7 @@ void Tr33::beats(char *data)
   last_update = now;
 }
 
-void Tr33::beat(char *data)
+void Tr33::beat(uint8_t *data)
 {
   // height = data[0];
   // height = random8(0, 100);

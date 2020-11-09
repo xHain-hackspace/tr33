@@ -7,7 +7,7 @@
 // long last_sectors_update = 0;
 // float last_start_angle = 0;
 
-void Dode::debug(char *data)
+void Dode::debug(uint8_t *data)
 {
   // float width = 30/360.0*2.0*PI; //radians
   // float rotation_period =15000;//ms

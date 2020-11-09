@@ -21,7 +21,7 @@ bool point_in_triange(float xp, float yp, float x1, float y1, float x2, float y2
   return !(has_neg && has_pos);
 }
 
-void Commands::mapped_triangle(LedStructure *leds, char *data)
+void Commands::mapped_triangle(LedStructure *leds, uint8_t *data)
 {
   uint8_t color_index = data[0];
   float render_brightness = float(data[1]) / 255.0;
@@ -37,7 +37,7 @@ void Commands::mapped_triangle(LedStructure *leds, char *data)
   {
 
     if (point_in_triange(leds->mapping[i][2], leds->mapping[i][3], x1, y1, x2, y2, x3, y3))
-    { 
+    {
       // full brightness
       leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness);
     }

@@ -14,7 +14,7 @@
 // UDP settings
 #define UDP_BUFFER_SIZE 1500
 #define LISTEN_PORT 1337
-char udp_buffer[UDP_BUFFER_SIZE];
+uint8_t udp_buffer[UDP_BUFFER_SIZE];
 WiFiUDP udp;
 bool udp_up = false;
 bool ota_up = false;
@@ -141,8 +141,8 @@ void wifi_loop(Commands commands)
   {
     if (wasdisconnected)
     { //if this is a reconnect restore the previous effect
-      char command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_DISABLE};
-      commands.process((char *)command_buffer);
+      uint8_t command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_DISABLE};
+      commands.process(command_buffer);
       commands.run();
       wasdisconnected = false;
     }
@@ -172,7 +172,7 @@ void wifi_loop(Commands commands)
         //   udp_buffer[len] = 0;
         // }
         // Serial.printf("UDP packet contents: %s\n", udp_buffer);
-        commands.process((char *)udp_buffer);
+        commands.process(udp_buffer);
         // udp.flush();
       }
       // else
@@ -194,8 +194,8 @@ void wifi_loop(Commands commands)
     udp_up = false;
     ota_up = false;
     wasdisconnected = true;
-    char command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_SINGLE_COLOR, STRIP_INDEX_ALL, HUE_GREEN, 255};
-    commands.process((char *)command_buffer);
+    uint8_t command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_SINGLE_COLOR, STRIP_INDEX_ALL, HUE_GREEN, 255};
+    commands.process(command_buffer);
     delay(500);
   }
   else
@@ -204,8 +204,8 @@ void wifi_loop(Commands commands)
     udp_up = false;
     ota_up = false;
     wasdisconnected = true;
-    char command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_SINGLE_COLOR, STRIP_INDEX_ALL, HUE_ORANGE, 255};
-    commands.process((char *)command_buffer);
+    uint8_t command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_SINGLE_COLOR, STRIP_INDEX_ALL, HUE_ORANGE, 255};
+    commands.process(command_buffer);
     wifi_init();
   }
 }

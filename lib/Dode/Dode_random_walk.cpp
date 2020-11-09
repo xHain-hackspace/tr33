@@ -52,7 +52,7 @@ void add_ball()
   }
 }
 
-void Dode::random_walk(char *data)
+void Dode::random_walk(uint8_t *data)
 {
   uint8_t color_index = data[0];
   float brightness = float(data[1]) / 255;

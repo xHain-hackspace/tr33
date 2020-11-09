@@ -8,7 +8,7 @@
 #define SERIAL_REQUEST_RESYNC 0xCC
 
 const uint16_t SERIAL_BUFFER_SIZE = 1024;
-char serial_buffer[SERIAL_BUFFER_SIZE];
+uint8_t serial_buffer[SERIAL_BUFFER_SIZE];
 const uint8_t SERIAL_PACKET_SIZE = 2 + COMMAND_DATA_SIZE;
 const uint8_t SERIAL_TIMEOUT = 100;
 
@@ -60,7 +60,7 @@ void uart_loop(Commands commands)
         bytes_read = CommandSerial.readBytes(serial_buffer, SERIAL_PACKET_SIZE);
         if (bytes_read == SERIAL_PACKET_SIZE)
         {
-          commands.process((char *)serial_buffer);
+          commands.process((uint8_t *)serial_buffer);
         }
         else
         {

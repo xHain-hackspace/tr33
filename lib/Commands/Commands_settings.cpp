@@ -107,7 +107,7 @@ DEFINE_GRADIENT_PALETTE(saga_02_gp){
     241, 255, 21, 2,
     255, 255, 14, 5};
 
-void Commands::update_settings(char *data)
+void Commands::update_settings(uint8_t *data)
 {
   switch (data[0])
   {

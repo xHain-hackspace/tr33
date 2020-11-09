@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::mapped_slope(LedStructure *leds, char *data)
+void Commands::mapped_slope(LedStructure *leds, uint8_t *data)
 {
   uint8_t color_index = data[0];
   float render_brightness = float(data[1]) / 255.0;

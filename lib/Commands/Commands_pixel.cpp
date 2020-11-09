@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::pixel(LedStructure *leds, char *data)
+void Commands::pixel(LedStructure *leds, uint8_t *data)
 {
   uint8_t strip_index = data[0];
   uint16_t led_index = data[1] << 8 | data[2];
@@ -9,7 +9,7 @@ void Commands::pixel(LedStructure *leds, char *data)
   leds->set_led(strip_index, led_index, ColorFromPalette(currentPalette, color_index));
 }
 
-void Commands::pixel_rgb(LedStructure *leds, char *data)
+void Commands::pixel_rgb(LedStructure *leds, uint8_t *data)
 {
   uint8_t strip_index = data[0];
   uint16_t led_index = data[1] << 8 | data[2];

@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::show_number(LedStructure *leds, char *data)
+void Commands::show_number(LedStructure *leds, uint8_t *data)
 {
   uint8_t strip_index = data[0];
   uint8_t number = data[1];

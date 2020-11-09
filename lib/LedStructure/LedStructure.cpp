@@ -1,16 +1,33 @@
 #include <LedStructure.h>
 #include <Commands.h>
+#include <Modifiers.h>
 
 CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 
 void LedStructure::init()
 {
-  command_buffer[0].type = COMMAND_RAINBOW_SINE;
+  // command_buffer[0].type = COMMAND_RAINBOW_SINE;
+  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
+  // command_buffer[0].data[1] = 50;  // rate
+  // command_buffer[0].data[2] = 14;  // wavelength
+  // command_buffer[0].data[3] = 100; // percent
+  // command_buffer[0].data[4] = 255; // brightness
+
+  command_buffer[0].type = COMMAND_SINGLE_COLOR;
   command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = 50;  // rate
-  command_buffer[0].data[2] = 14; // wavelength
-  command_buffer[0].data[3] = 100;  // percent
-  command_buffer[0].data[4] = 255; // brightness
+  command_buffer[0].data[1] = HUE_BLUE; // hue
+  command_buffer[0].data[2] = 255;      // brightness
+
+  command_buffer[1].type = COMMAND_RENDER;
+  command_buffer[1].data[0] = RENDER_BALL;
+  command_buffer[1].data[1] = STRIP_INDEX_ALL;
+  command_buffer[1].data[2] = HUE_RED;
+  command_buffer[1].data[3] = 255; // brightness
+  command_buffer[1].data[4] = 128; // position1
+  command_buffer[1].data[5] = 0;   // position2
+  command_buffer[1].data[6] = 40;  // width
+
+  Modifiers::test();
 }
 
 //
@@ -156,42 +173,37 @@ uint8_t LedStructure::strip_index_all()
 //   // command_buffer[15].data[1] = STRIP_PIN_12;
 // }
 
-void LedStructure::beats(char *data)
+void LedStructure::beats(uint8_t *data)
 {
   return;
 }
 
-void LedStructure::random_walk(char *data)
+void LedStructure::random_walk(uint8_t *data)
 {
   return;
 }
 
-void LedStructure::debug(char *data)
+void LedStructure::debug(uint8_t *data)
 {
   return;
 }
 
-void LedStructure::fireworks(char *data)
+void LedStructure::fireworks(uint8_t *data)
 {
   return;
 }
 
-void LedStructure::rotating_sectors(char *data)
+void LedStructure::rotating_sectors(uint8_t *data)
 {
   return;
 }
 
-void LedStructure::rotating_plane(char *data)
+void LedStructure::rotating_plane(uint8_t *data)
 {
   return;
 }
 
-void LedStructure::twang(char *data)
-{
-  return;
-}
-
-void LedStructure::joystick(char *data)
+void LedStructure::joystick(uint8_t *data)
 {
   return;
 }

@@ -21,16 +21,16 @@ public:
   void write_info() { Serial.println("Tr33"); }
 
   // commands - rendered on each loop
-  // void gravity(char *data);
-  // void beats(char *data);
-  // void mapped_swipe(char *data);
-  // void mapped_shape(char *data);
-  // void twang(char *data);
+  // void gravity(uint8_t *data);
+  // void beats(uint8_t *data);
+  // void mapped_swipe(uint8_t *data);
+  // void mapped_shape(uint8_t *data);
+  // void twang(uint8_t *data);
 
   // events - rendered once
   // void gravity_event();
-  // void beat(char *data);
-  // void joystick(char *data);
+  // void beat(uint8_t *data);
+  // void joystick(uint8_t *data);
 
 private:
   // // // ball rendering

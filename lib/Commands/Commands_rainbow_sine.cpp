@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::rainbow_sine(LedStructure *leds, char *data)
+void Commands::rainbow_sine(LedStructure *leds, uint8_t *data)
 {
   uint8_t strip_index = data[0];
   uint8_t rate = data[1];

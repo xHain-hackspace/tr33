@@ -17,7 +17,7 @@ Particle particles[PARTICLES_MAX_PARTICLES];
 
 long particles_last_update = 0;
 
-void Commands::mapped_particles(LedStructure *leds, char *data)
+void Commands::mapped_particles(LedStructure *leds, uint8_t *data)
 {
   //parameters
   uint8_t color_index = data[0];

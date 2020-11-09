@@ -51,7 +51,7 @@ void update_ball(int i)
   }
 }
 
-void Commands::gravity_event(LedStructure *leds, char *data)
+void Commands::gravity_event(LedStructure *leds, uint8_t *data)
 {
   Ball ball;
   ball.enabled = true;
@@ -73,7 +73,7 @@ void Commands::gravity_event(LedStructure *leds, char *data)
   }
 }
 
-void Commands::gravity(LedStructure *leds, char *data)
+void Commands::gravity(LedStructure *leds, uint8_t *data)
 {
   gravity_strip_index = data[0];
   gravity_color_index = data[1];

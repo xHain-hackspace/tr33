@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::single_color(LedStructure *leds, char *data)
+void Commands::single_color(LedStructure *leds, uint8_t *data)
 {
   uint8_t strip_index = data[0];
   uint8_t color_index = data[1];

@@ -7,6 +7,7 @@
 
 #define COMMAND_DATA_SIZE 10
 #define COMMAND_BUFFER_SIZE 32
+#define MODIFIER_BUFFER_SIZE 32
 
 #define MODE_COMMANDS 0
 #define MODE_STREAM 1
@@ -55,6 +56,7 @@
 #define EVENT_PIXEL 103
 #define EVENT_PIXEL_RGB 104
 #define EVENT_TWANG_JOYSTICK 105
+#define EVENT_MODIFIER_UPDATE 106
 
 // -- PING_PONG ------------------------------------------------------------------------------
 
@@ -97,10 +99,10 @@ struct Command
 {
   uint8_t index;
   uint8_t type;
-  char data[COMMAND_DATA_SIZE];
+  uint8_t data[COMMAND_DATA_SIZE];
 };
-
 extern Command command_buffer[COMMAND_BUFFER_SIZE];
+
 extern CRGBPalette256 currentPalette;
 extern uint8_t currentMode;
 
@@ -111,33 +113,33 @@ private:
 
 public:
   void init(LedStructure *leds);
-  void process(char *command);
+  void process(uint8_t *command);
   void run();
-  void update_settings(char *data);
+  void update_settings(uint8_t *data);
 
   // Commands
-  void single_color(LedStructure *leds, char *data);
-  void rainbow_sine(LedStructure *leds, char *data);
-  void sparkle(LedStructure *leds, char *data);
-  void flicker_sparkle(LedStructure *leds, char *data);
-  void show_number(LedStructure *leds, char *data);
-  void rain(LedStructure *leds, char *data);
-  void render(LedStructure *leds, char *data);
-  void ping_pong(LedStructure *leds, char *data);
-  void kaleidoscope(LedStructure *leds, char *data);
-  void white(LedStructure *leds, char *data);
-  void mapped_slope(LedStructure *leds, char *data);
-  void mapped_shape(LedStructure *leds, char *data);
-  void mapped_triangle(LedStructure *leds, char *data);
-  void mapped_particles(LedStructure *leds, char *data);
-  void gravity(LedStructure *leds, char *data);
+  void single_color(LedStructure *leds, uint8_t *data);
+  void rainbow_sine(LedStructure *leds, uint8_t *data);
+  void sparkle(LedStructure *leds, uint8_t *data);
+  void flicker_sparkle(LedStructure *leds, uint8_t *data);
+  void show_number(LedStructure *leds, uint8_t *data);
+  void rain(LedStructure *leds, uint8_t *data);
+  void render(LedStructure *leds, uint8_t *data);
+  void ping_pong(LedStructure *leds, uint8_t *data);
+  void kaleidoscope(LedStructure *leds, uint8_t *data);
+  void white(LedStructure *leds, uint8_t *data);
+  void mapped_slope(LedStructure *leds, uint8_t *data);
+  void mapped_shape(LedStructure *leds, uint8_t *data);
+  void mapped_triangle(LedStructure *leds, uint8_t *data);
+  void mapped_particles(LedStructure *leds, uint8_t *data);
+  void gravity(LedStructure *leds, uint8_t *data);
   void twang(LedStructure *leds);
 
   // Events
-  void pixel(LedStructure *leds, char *data);
-  void pixel_rgb(LedStructure *leds, char *data);
-  void gravity_event(LedStructure *leds, char *data);
-  void twang_joystick(char *data);
+  void pixel(LedStructure *leds, uint8_t *data);
+  void pixel_rgb(LedStructure *leds, uint8_t *data);
+  void gravity_event(LedStructure *leds, uint8_t *data);
+  void twang_joystick(uint8_t *data);
 
   // Ping Pong
   static float ping_pong_fraction(uint8_t ping_pong_type, uint8_t period_100ms, uint8_t offset_100ms);

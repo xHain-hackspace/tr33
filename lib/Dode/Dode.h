@@ -203,17 +203,17 @@ public:
     uint8_t strip_count();
 
     void all_white();
-    void kaleidoscope(char *data);
-    void ping_pong(char *data);
-    void random_walk(char *data);
-    void debug(char *data);
-    void fireworks(char *data);
-    void rotating_sectors(char *data);
-    void render(char *data);
-    void mapped_swipe(char *data);
-    void rotating_plane(char *data);
-    void twang(char *data);
-    void joystick(char *data);
+    void kaleidoscope(uint8_t *data);
+    void ping_pong(uint8_t *data);
+    void random_walk(uint8_t *data);
+    void debug(uint8_t *data);
+    void fireworks(uint8_t *data);
+    void rotating_sectors(uint8_t *data);
+    void render(uint8_t *data);
+    void mapped_swipe(uint8_t *data);
+    void rotating_plane(uint8_t *data);
+    void twang(uint8_t *data);
+    void joystick(uint8_t *data);
     void write_info() { Serial.println("Dode"); }
     static void artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data);
 

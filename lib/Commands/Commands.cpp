@@ -1,4 +1,5 @@
 #include <Commands.h>
+#include <Modifiers.h>
 
 Command command_buffer[COMMAND_BUFFER_SIZE];
 CRGBPalette256 currentPalette = Rainbow_gp;
@@ -11,7 +12,7 @@ void Commands::init(LedStructure *init_leds)
   leds->init();
 };
 
-void Commands::process(char *command_bin)
+void Commands::process(uint8_t *command_bin)
 {
   Command command = *(Command *)command_bin;
 
@@ -51,6 +52,8 @@ void Commands::process(char *command_bin)
 
 void Commands::render_commands()
 {
+  Modifiers::apply(command_buffer);
+
   for (int i = 0; i < COMMAND_BUFFER_SIZE; i++)
   {
     switch (command_buffer[i].type)

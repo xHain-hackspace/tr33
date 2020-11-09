@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::white(LedStructure *leds, char *data)
+void Commands::white(LedStructure *leds, uint8_t *data)
 {
   for (int i = 0; i < leds->strip_length(leds->strip_index_all()); i++)
   {

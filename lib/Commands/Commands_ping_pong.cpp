@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::ping_pong(LedStructure *leds, char *data)
+void Commands::ping_pong(LedStructure *leds, uint8_t *data)
 {
   uint8_t render_type = data[0];
   uint8_t strip_index = data[1];

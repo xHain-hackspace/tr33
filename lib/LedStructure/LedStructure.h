@@ -37,16 +37,16 @@ public:
   virtual uint8_t strip_index_all();
 
   // commands
-  void beats(char *data);
-  void random_walk(char *data);
-  void debug(char *data);
-  void fireworks(char *data);
-  void rotating_sectors(char *data);
-  void rotating_plane(char *data);
-  void twang(char *data);
+  void beats(uint8_t *data);
+  void random_walk(uint8_t *data);
+  void debug(uint8_t *data);
+  void fireworks(uint8_t *data);
+  void rotating_sectors(uint8_t *data);
+  void rotating_plane(uint8_t *data);
+  void twang(uint8_t *data);
 
   // events - rendered once
-  void joystick(char *data);
+  void joystick(uint8_t *data);
 
   // artnet
   static void artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data);

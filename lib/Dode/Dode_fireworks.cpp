@@ -15,7 +15,7 @@ uint8_t active_sparks = 0;
 float relative_position = 0.4;
 long f_last_update = millis();
 
-void Dode::fireworks(char *data)
+void Dode::fireworks(uint8_t *data)
 {
   uint8_t color_index = data[0];
   float brightness = data[1];
