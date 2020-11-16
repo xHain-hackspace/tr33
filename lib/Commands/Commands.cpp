@@ -37,6 +37,8 @@ void Commands::process(uint8_t *command_bin)
     case EVENT_TWANG_JOYSTICK:
       twang_joystick(command.data);
       break;
+    case EVENT_MODIFIER_UPDATE:
+      Modifiers::update(command_bin + 2);
     default:
       break;
     };

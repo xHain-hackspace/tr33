@@ -68,7 +68,11 @@ void setup()
 
 void loop()
 {
+
+#ifndef NO_WIFI
   wifi_loop(commands);
+#endif
+
 #ifdef COMMANDS_VIA_UART_PINS
   uart_loop(commands);
 #endif

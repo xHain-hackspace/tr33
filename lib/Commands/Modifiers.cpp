@@ -4,17 +4,32 @@ Modifier Modifiers::modifiers[];
 
 void Modifiers::test()
 {
-  modifiers[0].command_index = 1;
-  modifiers[0].data_index = 4;
-  modifiers[0].data_bytes = 2;
-  modifiers[0].type = MODIFIER_RANDOM_TRANSITIONS;
-  modifiers[0].beats_per_minute = 4 * 256;
-  modifiers[0].max = 255;
+  modifiers[1].command_index = 1;
+  modifiers[1].data_index = 4;
+  modifiers[1].data_length = 2;
+  modifiers[1].type = MODIFIER_LINEAR;
+  modifiers[1].beats_per_minute = 4 * 256;
+  modifiers[1].max = 255;
+}
+
+void Modifiers::update(uint8_t *data)
+{
+  for (int i = 0; i < MODIFIER_COUNT; i++)
+  {
+    modifiers[i].type = data[i * COMMAND_DATA_SIZE + 0];
+    modifiers[i].command_index = data[i * COMMAND_DATA_SIZE + 1];
+    modifiers[i].data_index = data[i * COMMAND_DATA_SIZE + 2];
+    modifiers[i].data_length = data[i * COMMAND_DATA_SIZE + 3];
+    modifiers[i].beats_per_minute = data[i * COMMAND_DATA_SIZE + 4] << 8 | data[i * COMMAND_DATA_SIZE + 5];
+    modifiers[i].offset_100ms = data[i * COMMAND_DATA_SIZE + 6] << 8 | data[i * COMMAND_DATA_SIZE + 7];
+    modifiers[i].max = data[i * COMMAND_DATA_SIZE + 8];
+    modifiers[i].min = data[i * COMMAND_DATA_SIZE + 9];
+  }
 }
 
 void Modifiers::apply(Command command_buffer[])
 {
-  for (uint8_t i; i < MODIFIER_COUNT; i++)
+  for (uint8_t i = 0; i < MODIFIER_COUNT; i++)
   {
     switch (modifiers[i].type)
     {
@@ -48,7 +63,7 @@ uint16_t linear(uint16_t in)
 
 void set_value(Modifier *modifier, uint16_t value, Command command_buffer[])
 {
-  if (modifier->data_bytes == 2)
+  if (modifier->data_length == 2)
   {
     command_buffer[modifier->command_index].data[modifier->data_index] = value >> 8;
     command_buffer[modifier->command_index].data[modifier->data_index + 1] = value;

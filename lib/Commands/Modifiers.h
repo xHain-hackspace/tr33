@@ -4,7 +4,8 @@
 #include <Arduino.h>
 #include <Commands.h>
 
-#define MODIFIER_COUNT 16
+#define MODIFIER_COUNT 8
+#define MODIFIER_COMMAND_SIZE 2 + COMMAND_DATA_SIZE
 
 // -- TYPES ------------------------------------------------------------------------------
 
@@ -25,7 +26,7 @@ struct Modifier
   uint8_t type;
   uint8_t command_index;
   uint8_t data_index;
-  uint8_t data_bytes;
+  uint8_t data_length;
   accum88 beats_per_minute;
   uint16_t offset_100ms;
   uint8_t max;
@@ -46,6 +47,7 @@ private:
 
 public:
   static void test();
+  static void update(uint8_t *data);
   static void apply(Command command_buffer[]);
   static void apply_envelope(Modifier *modifier, Command command_buffer[]);
   static void apply_random(Modifier *modifier, Command command_buffer[]);

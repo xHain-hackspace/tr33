@@ -6,8 +6,7 @@
 #include <LedStructure.h>
 
 #define COMMAND_DATA_SIZE 10
-#define COMMAND_BUFFER_SIZE 32
-#define MODIFIER_BUFFER_SIZE 32
+#define COMMAND_BUFFER_SIZE 16
 
 #define MODE_COMMANDS 0
 #define MODE_STREAM 1
