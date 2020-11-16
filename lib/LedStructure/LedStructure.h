@@ -34,6 +34,7 @@ public:
   virtual void shift_led(uint8_t strip_index, int led, uint8_t amount);
   virtual uint8_t random_strip(uint8_t strip_index);
   virtual uint16_t strip_length(uint8_t strip_index);
+  virtual uint16_t pixel_count(uint8_t strip_index);
   virtual uint8_t strip_index_all();
 
   // commands

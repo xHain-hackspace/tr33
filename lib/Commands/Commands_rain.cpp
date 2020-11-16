@@ -24,12 +24,12 @@ void Commands::rain(LedStructure *leds, uint8_t *data)
   uint8_t strip_index = data[0];
   uint8_t color_index = Commands::random_or_value(data[1], 0, 255);
   float width = float(Commands::random_or_value(data[2], 0, 255)) / 10.0;
-  uint8_t frequency = data[3];                                           // drops per seconds
-  float rate = float(Commands::random_or_value(data[4], 0, 255)) / 10.0; // drop speed
+  float frequency = float(data[3]) * float(leds->pixel_count(strip_index)) / 4000.0; // drops per second (scaled with pixel count)
+  float rate = float(Commands::random_or_value(data[4], 0, 255)) / 10.0;             // drop speed
 
   int now = millis();
 
-  if (frequency > 0 && (1000 / (now - drops[drop_index].start_time)) < frequency)
+  if (frequency > 0 && (1000.0 / float(now - drops[drop_index].start_time)) < frequency)
   {
     if (drop_index++ >= MAX_RAIN_DROPS)
     {

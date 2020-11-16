@@ -28,6 +28,12 @@ char hostname[] = "esp32_tr33";
 
 const char *ota_password_hash = "d3d57181ad9b5b2e5e82a6c0b94ba22e";
 
+// IPAddress resync_host(192, 168, 0, 134);
+const char resync_host[] = "tr33";
+const int resync_port = 1337;
+const int resync_reqest_length = 6;
+const char resync_request_content[] = "resync";
+
 void wifi_init()
 {
   WiFi.disconnect(true);
@@ -44,6 +50,13 @@ void upd_init()
   Serial.printf("Initializing UDP...\n");
   udp.begin(LISTEN_PORT);
   Serial.printf("Done. Listening on %s:%d\n", WiFi.localIP().toString().c_str(), LISTEN_PORT);
+  Serial.printf("Sending resync request to %s", resync_host);
+
+  // send resync request
+  udp.beginPacket(resync_host, resync_port);
+  udp.write((uint8_t *)resync_request_content, resync_reqest_length);
+  udp.endPacket();
+
   udp_up = true;
 }
 

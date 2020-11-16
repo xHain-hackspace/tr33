@@ -89,6 +89,18 @@ uint16_t LedStructure::strip_length(uint8_t strip_index)
   return STRIP_PIXEL_COUNT;
 }
 
+uint16_t LedStructure::pixel_count(uint8_t strip_index)
+{
+  if (strip_index < STRIP_COUNT)
+  {
+    return STRIP_PIXEL_COUNT;
+  }
+  else if (strip_index == STRIP_INDEX_ALL)
+  {
+    return STRIP_PIXEL_COUNT * STRIP_COUNT;
+  }
+}
+
 uint8_t LedStructure::random_strip(uint8_t strip_index)
 {
   if (strip_index < STRIP_COUNT)

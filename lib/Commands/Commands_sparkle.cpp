@@ -23,8 +23,8 @@ void Commands::sparkle(LedStructure *leds, uint8_t *data)
   uint8_t strip_index = data[0];
   uint8_t color_index = random_or_value(data[1], 0, 255);
   float width = float(random_or_value(data[2], 0, 255)) / 10.0;
-  uint8_t frequency = data[3]; // sparkles per seconds
-  uint8_t duration = data[4];  // should never be 0
+  float frequency = float(data[3]) * float(leds->pixel_count(strip_index)) / 1500.0; // sparkles per seconds
+  uint8_t duration = data[4];                                                        // should never be 0
   float brightness_factor = float(data[5]) / 100.0;
   int now = millis();
 
@@ -37,7 +37,7 @@ void Commands::sparkle(LedStructure *leds, uint8_t *data)
     brightness_factor = 1; // for downgrade compatiblity
   }
 
-  if (frequency > 0 && (1000 / (now - sparkles[sparkle_index].start_time)) < frequency)
+  if (frequency > 0 && (1000.0 / float(now - sparkles[sparkle_index].start_time)) < frequency)
   {
     if (sparkle_index++ >= MAX_SPARKLES)
     {
