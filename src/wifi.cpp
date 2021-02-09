@@ -28,7 +28,6 @@ char hostname[] = "esp32_tr33";
 
 const char *ota_password_hash = "d3d57181ad9b5b2e5e82a6c0b94ba22e";
 
-// const char resync_host[] = "";
 const int resync_port = 1337;
 const int resync_reqest_length = 6;
 const char resync_request_content[] = "resync";
