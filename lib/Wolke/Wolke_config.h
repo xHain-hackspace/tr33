@@ -1,8 +1,9 @@
 // strip config
 #define STRIP_PIN_1 14
+#define STRIP_PIN_2 34
 
 #define STRIP_PIXEL_COUNT 90
-#define STRIP_COUNT 1
+#define STRIP_COUNT 2
 
 // strip index
 #define STRIP_INDEX_ALL STRIP_COUNT

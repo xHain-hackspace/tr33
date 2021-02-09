@@ -28,8 +28,7 @@ char hostname[] = "esp32_tr33";
 
 const char *ota_password_hash = "d3d57181ad9b5b2e5e82a6c0b94ba22e";
 
-// IPAddress resync_host(192, 168, 0, 134);
-const char resync_host[] = "tr33";
+// const char resync_host[] = "";
 const int resync_port = 1337;
 const int resync_reqest_length = 6;
 const char resync_request_content[] = "resync";
@@ -50,12 +49,12 @@ void upd_init()
   Serial.printf("Initializing UDP...\n");
   udp.begin(LISTEN_PORT);
   Serial.printf("Done. Listening on %s:%d\n", WiFi.localIP().toString().c_str(), LISTEN_PORT);
-  Serial.printf("Sending resync request to %s", resync_host);
-
   // send resync request
+  Serial.printf("Sending resync request to %d.%d.%d.%d:%d\n", resync_host[0], resync_host[1], resync_host[2], resync_host[3], resync_port);
   udp.beginPacket(resync_host, resync_port);
   udp.write((uint8_t *)resync_request_content, resync_reqest_length);
   udp.endPacket();
+  Serial.println("... done");
 
   udp_up = true;
 }
@@ -65,6 +64,7 @@ void print_wifi_status(int wifi_status)
   if (wifi_status == WL_CONNECTED)
   {
     Serial.printf("WiFi status: WL_CONNECTED\n");
+    Serial.printf("IP:  %s\n", WiFi.localIP().toString().c_str());
   }
   else if (wifi_status == WL_NO_SHIELD)
   {
@@ -154,6 +154,7 @@ void wifi_loop(Commands commands)
   {
     if (wasdisconnected)
     { //if this is a reconnect restore the previous effect
+      print_wifi_status(wifi_status);
       uint8_t command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_DISABLE};
       commands.process(command_buffer);
       commands.run();

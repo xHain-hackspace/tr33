@@ -132,6 +132,8 @@ void Commands::render_commands()
   }
 }
 
+uint16_t fps;
+
 void Commands::run()
 {
   switch (currentMode)
@@ -149,6 +151,14 @@ void Commands::run()
     FastLED.show();
     break;
   }
+
+#ifdef SEND_FPS
+  if (FastLED.getFPS() != fps)
+  {
+    fps = FastLED.getFPS();
+    Serial.printf("FPS: %i\n", fps);
+  }
+#endif
 }
 
 void Commands::artnet_sync_callback()

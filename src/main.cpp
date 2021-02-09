@@ -1,3 +1,5 @@
+#define FASTLED_ESP32_I2S true
+
 #include <Arduino.h>
 #include <Commands.h>
 #include <FastLED.h>
@@ -81,4 +83,6 @@ void loop()
 #endif
 
   commands.run();
+
+  
 }

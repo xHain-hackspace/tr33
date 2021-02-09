@@ -74,6 +74,22 @@ uint16_t Tr33::strip_length(uint8_t strip_index)
   }
 }
 
+uint16_t Tr33::pixel_count(uint8_t strip_index)
+{
+  if (strip_index < TRUNK_STRIP_COUNT || strip_index == STRIP_INDEX_ALL_TRUNKS)
+  {
+    return TRUNK_PIXEL_COUNT;
+  }
+  else if (strip_index < TRUNK_STRIP_COUNT + BRANCH_STRIP_COUNT || strip_index == STRIP_INDEX_ALL_BRANCHES)
+  {
+    return BRANCH_PIXEL_COUNT;
+  }
+  else if (strip_index == STRIP_INDEX_ALL)
+  {
+    return TRUNK_PIXEL_COUNT * TRUNK_STRIP_COUNT + BRANCH_PIXEL_COUNT * BRANCH_STRIP_COUNT;
+  }
+}
+
 int spiral_strip(uint8_t index)
 {
   return index % 4;
