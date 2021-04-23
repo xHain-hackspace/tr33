@@ -21,6 +21,9 @@
 #ifdef LED_STRUCTURE_WOLKE
 #include <Wolke_config.h>
 #endif
+#ifdef LED_STRUCTURE_SCUBAR
+#include <Scubar_config.h>
+#endif
 
 class LedStructure
 {
