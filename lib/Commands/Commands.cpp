@@ -126,6 +126,9 @@ void Commands::render_commands()
     case COMMAND_TWANG:
       twang(leds);
       break;
+    case COMMAND_FAIRY_LIGHT:
+      fairy_light(leds, command_buffer[i].data);
+      break;
     default:
       break;
     }

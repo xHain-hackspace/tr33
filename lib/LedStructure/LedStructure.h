@@ -1,8 +1,10 @@
 #ifndef __LEDSTRUCTURE_H_INCLUDED__
 #define __LEDSTRUCTURE_H_INCLUDED__
 
+#include <array>
 #include <Arduino.h>
 #include <FastLED.h>
+#include <FairyLightsControl.h>
 
 #ifdef LED_STRUCTURE_WAND
 #include <Wand_config.h>
@@ -36,6 +38,9 @@ public:
   virtual uint16_t strip_length(uint8_t strip_index);
   virtual uint16_t pixel_count(uint8_t strip_index);
   virtual uint8_t strip_index_all();
+
+  // fairy lights
+  virtual FairyLightsControl* get_fairy_light(uint8_t index);
 
   // commands
   void beats(uint8_t *data);

@@ -46,6 +46,7 @@
 #define COMMAND_FLICKER_SPARKLE 20
 #define COMMAND_MAPPED_TRIANGLE 21
 #define COMMAND_MAPPED_PARTICLES 22
+#define COMMAND_FAIRY_LIGHT 23
 
 // -- EVENTS ------------------------------------------------------------------------------
 
@@ -133,6 +134,7 @@ public:
   void mapped_particles(LedStructure *leds, uint8_t *data);
   void gravity(LedStructure *leds, uint8_t *data);
   void twang(LedStructure *leds);
+  void fairy_light(LedStructure *leds, uint8_t *data);
 
   // Events
   void pixel(LedStructure *leds, uint8_t *data);

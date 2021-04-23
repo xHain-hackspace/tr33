@@ -118,6 +118,11 @@ uint8_t LedStructure::strip_index_all()
   return STRIP_INDEX_ALL;
 }
 
+FairyLightsControl* LedStructure::get_fairy_light(uint8_t index)
+{
+    return nullptr;
+}
+
 // void Tr33::show_pin_numbers()
 // {
 //   // Serial.println("Showing pin Numbers");
