@@ -1,13 +1,9 @@
 #include <Commands.h>
 
-void Commands::single_color(LedStructure *leds, uint8_t *data)
+void Commands::single_color(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t strip_index = data[0];
-  uint8_t color_index = data[1];
-  uint8_t brightness = data[2];
-
-  for (int i = 0; i < leds->strip_length(strip_index); i++)
+  for (int i = 0; i < leds->strip_length(cmd.strip_index); i++)
   {
-    leds->set_led(strip_index, i, ColorFromPalette(currentPalette, color_index, brightness));
+    leds->fade_led(cmd, i, color_from_palette(cmd, cmd.type_params.single_color.color));
   }
 }

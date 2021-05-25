@@ -1,8 +1,8 @@
 #define FASTLED_ESP32_I2S true
 
 #include <Arduino.h>
-#include <Commands.h>
 #include <FastLED.h>
+#include <Commands.h>
 #include <Twang.h>
 #include <wifi.h>
 #include <uart.h>
@@ -31,7 +31,7 @@ Trommel leds = Trommel();
 Wolke leds = Wolke();
 #endif
 
-Commands commands = Commands();
+Commands command_runner = Commands();
 
 void setup()
 {
@@ -44,7 +44,7 @@ void setup()
   Serial.println("\n\tLED Controller\r\n");
 
   Serial.println("Starting up...");
-  commands.init(&leds);
+  command_runner.init(&leds);
 
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
@@ -72,17 +72,15 @@ void loop()
 {
 
 #ifndef NO_WIFI
-  wifi_loop(commands);
+  wifi_loop(command_runner);
 #endif
 
 #ifdef COMMANDS_VIA_UART_PINS
-  uart_loop(commands);
+  uart_loop(command_runner);
 #endif
 #ifdef COMMANDS_VIA_UART_USB
-  uart_loop(commands);
+  uart_loop(command_runner);
 #endif
 
-  commands.run();
-
-  
+  command_runner.run();
 }

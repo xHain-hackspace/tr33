@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <FastLED.h>
 #include <LedStructure.h>
+#include <command_schemas.pb.h>
 #include <Tr33_config.h>
 
 class Tr33 : public LedStructure

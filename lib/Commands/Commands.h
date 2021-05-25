@@ -3,10 +3,15 @@
 
 #include <Arduino.h>
 #include <FastLED.h>
+#include <command_schemas.pb.h>
 #include <LedStructure.h>
 
+//
 #define COMMAND_DATA_SIZE 10
 #define COMMAND_BUFFER_SIZE 16
+//
+#define COMMAND_COUNT 16
+#define MAX_COMMAND_SIZE 32
 
 #define MODE_COMMANDS 0
 #define MODE_STREAM 1
@@ -94,6 +99,8 @@
 #define SLOPE_FILL 1
 #define SLOPE_LINE_INVERSE 2
 
+extern CommandParams commands[COMMAND_COUNT];
+
 struct Command
 {
   uint8_t index;
@@ -112,13 +119,19 @@ private:
 
 public:
   void init(LedStructure *leds);
-  void process(uint8_t *command);
+  void process(uint8_t *command, int bytes);
+  void process(CommandParams cmd);
   void run();
+
+  // Misc
   void update_settings(uint8_t *data);
+  CRGB color_from_palette(CommandParams cmd, uint8_t color);
+  CRGB color_from_palette(CommandParams cmd, uint8_t color, uint8_t brightness);
 
   // Commands
-  void single_color(LedStructure *leds, uint8_t *data);
-  void rainbow_sine(LedStructure *leds, uint8_t *data);
+  void white(LedStructure *leds, CommandParams cmd);
+  void single_color(LedStructure *leds, CommandParams cmd);
+  void rainbow(LedStructure *leds, CommandParams cmd);
   void sparkle(LedStructure *leds, uint8_t *data);
   void flicker_sparkle(LedStructure *leds, uint8_t *data);
   void show_number(LedStructure *leds, uint8_t *data);
@@ -126,7 +139,6 @@ public:
   void render(LedStructure *leds, uint8_t *data);
   void ping_pong(LedStructure *leds, uint8_t *data);
   void kaleidoscope(LedStructure *leds, uint8_t *data);
-  void white(LedStructure *leds, uint8_t *data);
   void mapped_slope(LedStructure *leds, uint8_t *data);
   void mapped_shape(LedStructure *leds, uint8_t *data);
   void mapped_triangle(LedStructure *leds, uint8_t *data);

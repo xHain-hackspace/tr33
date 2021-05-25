@@ -60,7 +60,8 @@ void uart_loop(Commands commands)
         bytes_read = CommandSerial.readBytes(serial_buffer, SERIAL_PACKET_SIZE);
         if (bytes_read == SERIAL_PACKET_SIZE)
         {
-          commands.process((uint8_t *)serial_buffer);
+          // todo
+          // commands.process((uint8_t *)serial_buffer);
         }
         else
         {

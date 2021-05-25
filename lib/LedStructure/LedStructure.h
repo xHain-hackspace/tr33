@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include <FastLED.h>
+#include <command_schemas.pb.h>
 
 #ifdef LED_STRUCTURE_WAND
 #include <Wand_config.h>
@@ -31,6 +32,7 @@ public:
   virtual void set_led(uint8_t strip_index, int led, CRGB color);
   virtual CRGB get_led(uint8_t strip_index, int led);
   virtual void fade_led(uint8_t strip_index, int led, CRGB target, float amount);
+  virtual void fade_led(CommandParams cmd, int led, CRGB target);
   virtual void shift_led(uint8_t strip_index, int led, uint8_t amount);
   virtual uint8_t random_strip(uint8_t strip_index);
   virtual uint16_t strip_length(uint8_t strip_index);

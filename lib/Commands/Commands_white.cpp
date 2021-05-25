@@ -1,11 +1,10 @@
 #include <Commands.h>
 
-void Commands::white(LedStructure *leds, uint8_t *data)
+void Commands::white(LedStructure *leds, CommandParams cmd)
 {
-
   CRGB color = CRGB(255, 255, 255);
 
-  switch (data[0])
+  switch (cmd.type_params.white.color_temperature)
   {
   case 1:
     color = CRGB(0xE1A024);
@@ -26,6 +25,6 @@ void Commands::white(LedStructure *leds, uint8_t *data)
 
   for (int i = 0; i < leds->strip_length(leds->strip_index_all()); i++)
   {
-    leds->set_led(leds->strip_index_all(), i, color);
+    leds->fade_led(cmd, i, color);
   }
 }

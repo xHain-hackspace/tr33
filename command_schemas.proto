@@ -1,0 +1,223 @@
+syntax = "proto2";
+
+enum ColorPalette {    
+  RAINBOW = 0;
+  FOREST = 1;
+  OCEAN = 2;
+  PARTY = 3;
+  HEAT = 4;
+  SPRING_ANGEL = 5;
+  SCOUTY = 6;
+  PURPLE_HEAT = 7;
+  LAVA = 8;
+  CLOUD = 9;
+  // parrot = 8;
+  SAGA = 10;
+  SAGA2 = 11;
+  // sunset
+  SUNSET = 12;
+  // rivendell
+  RIVENDELL = 13;
+  // ocean breeze
+  OCEAN_BREEZE = 14;
+  // 50_shades_of_pink
+  // shades_of_pink = 14;
+  // sun
+  SUN = 15;
+  // Analogous_1 = 16;
+  // pinksplash
+  // pinksplash = 17;
+  // Coral_reef = 18;
+  // es_ocean_breeze_068 = 19;
+  SHADES_OF_PINK = 20;
+  // es_vintage_01 = 21;
+  // departure = 22;
+  LANDSCAPE = 23;
+  // es_landscape_33 = 24;
+  RAINBOWSHERBET = 25;
+  BLUE_PINK = 26;
+  HULT = 27;
+  // GMT_drywet = 28;
+  JUL01 = 29;
+  // es_vintage_57 = 30;
+  // ib15 = 31;
+  FUSCHIA = 32;
+  // es_emerald_dragon_08 = 33;
+  // lava = 34;
+  // fire = 35;
+  COLORFULL = 36;
+  // Magenta_Evening = 37;
+  // Pink_Purple = 38;
+  // autumn = 39;
+  // BlacK_Blue_Magenta_White = 40;
+  // BlacK_Magenta_Red = 41;
+  // BlacK_Red_Magenta_Yellow = 42;
+  BLUE_CYAN_YELLOW = 43;
+}
+
+// todo
+enum StripSelect {
+  ALL = 0;
+  TRUNK = 1;
+  BRANCHES = 2;
+  WOLKE_1 = 3;
+  WOLKE_2 = 4;
+  WOLKE_3 = 5;
+  WOLKE_4 = 6;
+  WOLKE_5 = 7;
+  WOLKE_6 = 8;
+  WOLKE_7 = 9;
+  WOLKE_8 = 10;
+}
+
+enum Shape1D {
+  BALL = 0;
+  COMET = 1;
+  COMET_BOUNCE = 2;
+  NYAN = 3;
+  NYAN_BOUNCE = 4;
+  SOLID = 5;
+}
+
+enum Shape2D {
+  SQUARE = 0;
+  CIRCLE = 1;
+  RING = 2;
+}
+
+enum MovementType {
+  LINEAR = 0;
+  SINE = 1;
+  COSINE = 2;
+  SAWTOOTH = 3;
+}
+
+enum SlopeType {
+  LINE = 0;
+  FILL = 1;
+  COLOR_SHIFT = 2;
+}
+
+message CommandParams {
+  required int32 index = 1;  
+  optional bool enabled = 2 [default = true];
+  optional int32 brightness = 3 [default = 255];
+  optional int32 strip_index = 4 [default = 0]; 
+  optional ColorPalette color_palette = 5 [default = RAINBOW];
+  oneof type_params {
+    White white = 6;
+    SingleColor single_color = 7;
+    Pixel pixel = 8;
+    RGBPixel rgb_pixel = 9;
+    Rainbow rainbow = 10;
+    Sparkle sparkle = 11;
+    FlickerSparkle flicker_sparkle = 12;
+    PingPong ping_pong = 13;
+    StaticShape static_shape =14;
+    Rain rain = 15;
+    Kaleidoscope kaleidoscope = 16;
+    MappedShape mapped_shape = 17;
+    MappedSlope mapped_slople =18;
+    MappedParticles mapped_particles = 19;
+  }
+}
+
+message White {
+  optional int32 color_temperature = 1 [default = 0];
+}
+
+message SingleColor {
+  optional int32 color = 1 [default = 226];
+}
+
+message Pixel {
+  optional int32 color = 1 [default = 0];
+  optional int32 led_index = 2 [default = 0];
+}
+
+message RGBPixel {
+  optional int32 red = 1 [default = 130];
+  optional int32 green = 2 [default = 130];
+  optional int32 blue = 3 [default = 130];
+  optional int32 led_index = 4 [default = 0];
+}
+
+message Rainbow {  
+  optional int32 speed = 1 [default = 30];  
+  optional int32 wave_size = 2 [default = 100];
+  optional int32 rainbow_size = 3 [default = 150];
+}
+
+message Sparkle {
+  optional int32 color = 1 [default = 1];  
+  optional int32 sparkle_width = 2 [default = 15];
+  optional int32 sparle_rate = 3 [default = 10];  
+  optional int32 duration = 4 [default = 100];  
+}
+
+message FlickerSparkle {
+  optional int32 color = 1 [default = 1];  
+  optional int32 sparkle_width = 2 [default = 90];
+  optional int32 sparles_per_second = 3 [default = 215];  
+  optional int32 duration = 4 [default = 8];  
+  optional int32 flicker_delay = 5 [default = 7];  
+  optional int32 flicker_window = 6 [default = 119];  
+  optional int32 max_flickers = 7 [default = 80];  
+}
+
+message PingPong {
+  optional Shape1D shape = 1 [default = BALL];
+  optional MovementType movement = 2 [default = LINEAR];
+  optional int32 color = 3 [default = 65];
+  optional int32 width = 4 [default = 20];
+  optional int32 max_height = 5 [default = 255];
+  optional int32 count = 6 [default = 1];
+  optional int32 period_ms = 7 [default = 6000];
+  optional int32 offset_ms = 8 [default = 0];
+}
+
+message StaticShape {
+  optional Shape1D shape = 1 [default = BALL];
+  optional int32 color = 2 [default = 210];  
+  optional int32 position = 3 [default = 20];
+  optional int32 width = 4 [default = 20];  
+}
+
+message Rain {
+  optional int32 color = 1 [default = 1];  
+  optional int32 width = 2 [default = 15];
+  optional int32 drop_density = 3 [default = 10];  
+  optional int32 drop_speed = 4 [default = 10];  
+}
+
+message Kaleidoscope {
+}
+
+message MappedSlope{
+  optional SlopeType slope_type = 1 [default = FILL];
+  optional int32 x1 = 2 [default = 0];
+  optional int32 y1 = 3 [default = 0];
+  optional int32 x2 = 4 [default = 255];
+  optional int32 y2 = 5 [default = 255];
+  optional int32 fade_distance = 6 [default = 5];
+}
+
+message MappedShape {
+  optional Shape2D shape = 1 [default = SQUARE];
+  optional int32 x = 2 [default = 128];
+  optional int32 y = 3 [default = 128];
+  optional int32 size = 4 [default = 50];
+  optional int32 fade_distance = 5 [default = 50];
+}
+
+message MappedParticles {
+  optional Shape2D shape = 1 [default = CIRCLE];
+  optional int32 x = 2 [default = 128];
+  optional int32 y = 3 [default = 128];
+  optional int32 size = 4 [default = 50];
+  optional int32 fade_distance = 5 [default = 50];
+}
+
+// DancingSlope -> select movement type
+
+

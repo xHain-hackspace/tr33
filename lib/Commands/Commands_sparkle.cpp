@@ -5,7 +5,7 @@
 
 uint8_t sparkle_index = 0;
 
-struct Sparkle
+struct SingleSparkle
 {
   bool enabled;
   CRGB color;
@@ -16,7 +16,7 @@ struct Sparkle
   int start_time;
 };
 
-Sparkle sparkles[MAX_SPARKLES];
+SingleSparkle sparkles[MAX_SPARKLES];
 
 void Commands::sparkle(LedStructure *leds, uint8_t *data)
 {

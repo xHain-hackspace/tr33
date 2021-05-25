@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <FastLED.h>
+#include <command_schemas.pb.h>
 #include <LedStructure.h>
 
 #define HW_STRIP_COUNT 10

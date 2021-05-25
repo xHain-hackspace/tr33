@@ -1,5 +1,5 @@
 #include <Commands.h>
-#include <Palettes.h>
+#include <Command_Palettes.h>
 
 void Commands::update_settings(uint8_t *data)
 {
