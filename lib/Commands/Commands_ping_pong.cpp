@@ -1,36 +1,31 @@
 #include <Commands.h>
 
-void Commands::ping_pong(LedStructure *leds, uint8_t *data)
+void Commands::ping_pong(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t render_type = data[0];
-  uint8_t strip_index = data[1];
-  uint8_t color_index = data[2];
-  float brightness = float(data[3]) / 255;
-  float width = data[4];
-  uint8_t ping_pong_type = data[5];
-  uint8_t period = data[6];
-  uint8_t offset = data[7];
-  float max_height = float(data[8]) / 255;
+  PingPong ping_pong = cmd.type_params.ping_pong;
 
-  CRGB color = ColorFromPalette(currentPalette, color_index, 255);
-  float position = ping_pong_fraction(ping_pong_type, period, offset) * float(leds->strip_length(strip_index) - 1) * max_height;
+  float brightness = float(cmd.brightness) / 255;
+  float max_height = float(ping_pong.max_height) / 255;
 
-  render(leds, render_type, strip_index, fabs(position), width, color, brightness, position > 0);
+  CRGB color = color_from_palette(cmd, ping_pong.color);
+
+  float position = ping_pong_fraction(ping_pong.movement, ping_pong.period_ms, ping_pong.offset_ms) * float(leds->strip_length(cmd.strip_index) - 1) * max_height;
+
+  render(leds, ping_pong.shape, cmd.strip_index, fabs(position), ping_pong.width, color, brightness, position > 0);
 }
 
-float Commands::ping_pong_fraction(uint8_t ping_pong_type, uint8_t period_100ms, uint8_t offset_100ms)
+float Commands::ping_pong_fraction(MovementType movement, uint8_t period_100ms, uint8_t offset_100ms)
 {
   float fraction = 0.0;
-  switch (ping_pong_type)
+  switch (movement)
   {
-  case PING_PONG_LINEAR:
+  case MovementType_LINEAR:
     fraction = ping_pong_linear(period_100ms, offset_100ms);
     break;
-  case PING_PONG_SINE:
-  case PING_PONG_NONE:
+  case MovementType_SINE:
     fraction = ping_pong_sine(period_100ms, offset_100ms);
     break;
-  case PING_PONG_SAWTOOTH:
+  case MovementType_SAWTOOTH:
     fraction = ping_pong_sawtooth(period_100ms, offset_100ms);
     break;
   }
@@ -67,11 +62,6 @@ float Commands::ping_pong_sine(uint8_t period_100ms, uint8_t offset_100ms)
   {
     return res * -1;
   }
-}
-
-float Commands::ping_pong_cosine(uint8_t period_100ms, uint8_t offset_100ms)
-{
-  return (cosf(float(millis() - offset_100ms * 100) * 2.0 * PI / float(period_100ms * 100)) + 1.0) / 2.0;
 }
 
 float Commands::ping_pong_sawtooth(uint8_t period_100ms, uint8_t offset_100ms)

@@ -18,7 +18,7 @@ PB_BIND(SingleColor, SingleColor, AUTO)
 PB_BIND(Pixel, Pixel, AUTO)
 
 
-PB_BIND(RGBPixel, RGBPixel, AUTO)
+PB_BIND(PixelRGB, PixelRGB, AUTO)
 
 
 PB_BIND(Rainbow, Rainbow, AUTO)
@@ -33,10 +33,13 @@ PB_BIND(FlickerSparkle, FlickerSparkle, AUTO)
 PB_BIND(PingPong, PingPong, AUTO)
 
 
-PB_BIND(StaticShape, StaticShape, AUTO)
+PB_BIND(Render, Render, AUTO)
 
 
 PB_BIND(Rain, Rain, AUTO)
+
+
+PB_BIND(Gravity, Gravity, AUTO)
 
 
 PB_BIND(Kaleidoscope, Kaleidoscope, AUTO)
@@ -48,8 +51,16 @@ PB_BIND(MappedSlope, MappedSlope, AUTO)
 PB_BIND(MappedShape, MappedShape, AUTO)
 
 
+PB_BIND(MappedTriangle, MappedTriangle, AUTO)
+
+
 PB_BIND(MappedParticles, MappedParticles, AUTO)
 
+
+PB_BIND(MappedPingPong, MappedPingPong, AUTO)
+
+
+PB_BIND(Twang, Twang, AUTO)
 
 
 

@@ -1,8 +1,7 @@
 #include <Commands.h>
-#include <Modifiers.h>
+// #include <Modifiers.h>
 #include <pb_decode.h>
 
-Command command_buffer[COMMAND_BUFFER_SIZE];
 CommandParams commands[COMMAND_COUNT];
 CRGBPalette256 currentPalette = Rainbow_gp;
 uint8_t currentMode = MODE_COMMANDS;
@@ -20,47 +19,15 @@ void Commands::init(LedStructure *init_leds)
 
 void Commands::process(CommandParams cmd)
 {
-  if (cmd.index < COMMAND_BUFFER_SIZE)
+  if (cmd.index < COMMAND_COUNT)
   {
     commands[cmd.index] = cmd;
   }
 }
 
-void Commands::process(uint8_t *command_bin, int bytes)
+void Commands::process(uint8_t *buffer, int bytes)
 {
-
-  // Command command = *(Command *)command_bin;
-
-  // if (command.type > 100)
-  // {
-  //   switch (command.type)
-  //   {
-  //   case EVENT_GRAVITY_ADD_BALL:
-  //     gravity_event(leds, command.data);
-  //     break;
-  //   case EVENT_UPDATE_SETTINGS:
-  //     update_settings(command.data);
-  //     break;
-  //   case EVENT_PIXEL:
-  //     pixel(leds, command.data);
-  //     FastLED.show();
-  //     break;
-  //   case EVENT_PIXEL_RGB:
-  //     pixel_rgb(leds, command.data);
-  //     FastLED.show();
-  //     break;
-  //   case EVENT_TWANG_JOYSTICK:
-  //     twang_joystick(command.data);
-  //     break;
-  //   case EVENT_MODIFIER_UPDATE:
-  //     Modifiers::update(command_bin + 2);
-  //   default:
-  //     break;
-  //   };
-  // }
-  // else
-  // {
-  pb_istream_t stream = pb_istream_from_buffer(command_bin, bytes);
+  pb_istream_t stream = pb_istream_from_buffer(buffer, bytes);
   CommandParams command = CommandParams_init_default;
   bool status = pb_decode(&stream, CommandParams_fields, &command);
 
@@ -88,8 +55,57 @@ void Commands::render_commands()
       case CommandParams_single_color_tag:
         single_color(leds, commands[i]);
         break;
+      case CommandParams_pixel_tag:
+        pixel(leds, commands[i]);
+        break;
+      case CommandParams_pixel_rgb_tag:
+        pixel_rgb(leds, commands[i]);
+        break;
       case CommandParams_rainbow_tag:
         rainbow(leds, commands[i]);
+        break;
+      case CommandParams_sparkle_tag:
+        sparkle(leds, commands[i]);
+        break;
+      case CommandParams_flicker_sparkle_tag:
+        flicker_sparkle(leds, commands[i]);
+        break;
+      // case CommandParams_show_number_tag:
+      //   show_number(leds, commands[i]);
+      //   break;
+      case CommandParams_rain_tag:
+        rain(leds, commands[i]);
+        break;
+      case CommandParams_render_tag:
+        render(leds, commands[i]);
+        break;
+      case CommandParams_ping_pong_tag:
+        ping_pong(leds, commands[i]);
+        break;
+      case CommandParams_kaleidoscope_tag:
+        kaleidoscope(leds, commands[i]);
+        break;
+      case CommandParams_mapped_slope_tag:
+        mapped_slope(leds, commands[i]);
+        break;
+      case CommandParams_mapped_shape_tag:
+        mapped_shape(leds, commands[i]);
+        break;
+      case CommandParams_mapped_triangle_tag:
+        mapped_triangle(leds, commands[i]);
+        break;
+      case CommandParams_mapped_particles_tag:
+        mapped_particles(leds, commands[i]);
+        break;
+      case CommandParams_mapped_ping_pong_tag:
+        mapped_ping_pong(leds, commands[i]);
+        break;
+      case CommandParams_gravity_tag:
+        gravity(leds, commands[i]);
+        break;
+      case CommandParams_twang_tag:
+        twang(leds);
+        break;
       }
     }
   }

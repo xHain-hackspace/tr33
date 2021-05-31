@@ -9,7 +9,7 @@ void Commands::rainbow(LedStructure *leds, CommandParams cmd)
 
   uint16_t length_pixel = leds->strip_length(cmd.strip_index);
 
-  float width_ratio = float(max(1, rainbow.rainbow_length)) / 150.0;
+  float width_ratio = float(max(1, rainbow.rainbow_size)) / 150.0;
   uint16_t width_pixel = float(length_pixel) * width_ratio;
 
   float wave_size_ratio = float(max(1, rainbow.wave_size)) / 255.0;

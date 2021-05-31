@@ -9,7 +9,6 @@
 
 const uint16_t SERIAL_BUFFER_SIZE = 1024;
 uint8_t serial_buffer[SERIAL_BUFFER_SIZE];
-const uint8_t SERIAL_PACKET_SIZE = 2 + COMMAND_DATA_SIZE;
 const uint8_t SERIAL_TIMEOUT = 100;
 
 #ifdef COMMANDS_VIA_UART_PINS
@@ -35,7 +34,7 @@ void flush_serial()
 void uart_loop(Commands commands)
 {
   int byte;
-  int commandCount;
+  int byte_count;
   int bytes_read;
 
   byte = CommandSerial.read();
@@ -53,21 +52,15 @@ void uart_loop(Commands commands)
 
     if (byte == SERIAL_HEADER)
     {
-      commandCount = CommandSerial.read();
-
-      for (int i = 0; i < commandCount; i++)
+      byte_count = CommandSerial.read();
+      bytes_read = CommandSerial.readBytes(serial_buffer, byte_count);
+      if (bytes_read == byte_count)
       {
-        bytes_read = CommandSerial.readBytes(serial_buffer, SERIAL_PACKET_SIZE);
-        if (bytes_read == SERIAL_PACKET_SIZE)
-        {
-          // todo
-          // commands.process((uint8_t *)serial_buffer);
-        }
-        else
-        {
-          Serial.print("Incomplete message, bytes read: ");
-          Serial.println(bytes_read);
-        }
+        commands.process(serial_buffer, byte_count);
+      }
+      else
+      {
+        Serial.printf("Incomplete message, bytes read: %i. Expecting %i\n", bytes_read, byte_count);
       }
     }
     else

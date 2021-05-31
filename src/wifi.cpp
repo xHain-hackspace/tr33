@@ -41,7 +41,7 @@ void wifi_init()
   WiFi.setHostname(hostname);
   Serial.printf("Connecting to ssid %s, setting hostname to %s\n", ssid, hostname);
   int status = WiFi.begin(ssid, password);
-  Serial.printf("Wlan begin status %i", status);
+  Serial.printf("Wlan begin status %i\n", status);
 }
 
 void upd_init()
@@ -50,7 +50,7 @@ void upd_init()
   udp.begin(LISTEN_PORT);
   Serial.printf("Done. Listening on %s:%d\n", WiFi.localIP().toString().c_str(), LISTEN_PORT);
   // send resync request
-  Serial.printf("Sending resync request to %d.%d.%d.%d:%d\n", resync_host[0], resync_host[1], resync_host[2], resync_host[3], resync_port);
+  Serial.printf("Sending resync request to %s:%d\n", resync_host, resync_port);
   udp.beginPacket(resync_host, resync_port);
   udp.write((uint8_t *)resync_request_content, resync_reqest_length);
   udp.endPacket();
@@ -168,6 +168,7 @@ void wifi_loop(Commands commands)
       print_wifi_status(wifi_status);
       CommandParams disabled = CommandParams_init_zero;
       disabled.index = COMMAND_COUNT - 1;
+      disabled.enabled = false;
       commands.process(disabled);
       commands.run();
       wasdisconnected = false;
@@ -188,26 +189,9 @@ void wifi_loop(Commands commands)
       // wifi and upd is up, check if we received a UDP packet
       while (udp.parsePacket())
       {
-        // Serial.println("debug");
-        // Serial.printf("%d: Received command with size %d from %s, port %d\n", millis(), packet_size, udp.remoteIP().toString().c_str(), udp.remotePort());
         int bytes = udp.read(udp_buffer, UDP_BUFFER_SIZE);
-        // Serial.printf("%d: Received command with size %d sequence %d\n", millis(), packet_size, (uint8_t)udp_buffer[0]);
-        // Serial.printf("%d: Received command\n", millis());
-        // if (len > 0)
-        // {
-        //   udp_buffer[len] = 0;
-        // }
-        // Serial.printf("UDP packet contents: %s\n", udp_buffer);
-
-        // todo: find a way to stream this directly
         commands.process(udp_buffer, bytes);
-
-        // udp.flush();
       }
-      // else
-      // {
-      //   Serial.printf("%d: none\n", millis());
-      // }
       commands.run();
     }
     else
@@ -224,6 +208,7 @@ void wifi_loop(Commands commands)
     ota_up = false;
     wasdisconnected = true;
     commands.process(color_overlay(HUE_GREEN));
+    commands.run();
     delay(500);
   }
   else
@@ -233,6 +218,7 @@ void wifi_loop(Commands commands)
     ota_up = false;
     wasdisconnected = true;
     commands.process(color_overlay(HUE_ORANGE));
+    commands.run();
     wifi_init();
   }
 }

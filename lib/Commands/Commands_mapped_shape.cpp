@@ -56,21 +56,23 @@ void Commands::mapped_render_ball(LedStructure *leds, float x, float y, float si
   }
 }
 
-void Commands::mapped_shape(LedStructure *leds, uint8_t *data)
+void Commands::mapped_shape(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t color_index = data[0];
-  float render_brightness = float(data[1]) / 255.0;
-  uint8_t shape = data[2];
-  float x = (MAPPING_X_MAX - MAPPING_X_MIN) * float(data[3]) / 255.0 + MAPPING_X_MIN;
-  float y = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - data[4]) / 255.0 + MAPPING_Y_MIN;
-  float size = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(data[5]) / 255.0;
-  float fade_distance = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(data[6]) * 0.3 / 255.0;
+  MappedShape mapped_shape = cmd.type_params.mapped_shape;
 
-  CRGB color = ColorFromPalette(currentPalette, color_index);
+  float render_brightness = float(cmd.brightness) / 255.0;
+  float x = (MAPPING_X_MAX - MAPPING_X_MIN) * float(mapped_shape.x) / 255.0 + MAPPING_X_MIN;
+  float y = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - mapped_shape.y) / 255.0 + MAPPING_Y_MIN;
+  float size = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(mapped_shape.size) / 255.0;
+  float fade_distance = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(mapped_shape.fade_distance) * 0.3 / 255.0;
+
+  CRGB color = color_from_palette(cmd, mapped_shape.color);
   float brightness = 0;
   float distance = 0;
 
-  if (shape == SHAPE_BALL)
+  Serial.println(render_brightness);
+
+  if (mapped_shape.shape == Shape2D_CIRCLE)
   {
     mapped_render_ball(leds, x, y, size, color, render_brightness, fade_distance);
   }
@@ -78,15 +80,15 @@ void Commands::mapped_shape(LedStructure *leds, uint8_t *data)
   {
     for (int i = 0; i < MAPPING_SIZE; i++)
     {
-      switch (shape)
+      switch (mapped_shape.shape)
       {
-      case SHAPE_SQUARE:
+      case Shape2D_SQUARE:
         distance = distance_to_square(leds->mapping[i], x, y, size);
         break;
-      case SHAPE_RING:
+      case Shape2D_RING:
         distance = fabs(distance_to_circle(leds->mapping[i], x, y, size));
         break;
-      case SHAPE_BALL:
+      case Shape2D_CIRCLE:
         distance = distance_to_circle(leds->mapping[i], x, y, size);
         break;
       }

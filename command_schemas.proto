@@ -55,21 +55,6 @@ enum ColorPalette {
   BLUE_CYAN_YELLOW = 43;
 }
 
-// todo
-enum StripSelect {
-  ALL = 0;
-  TRUNK = 1;
-  BRANCHES = 2;
-  WOLKE_1 = 3;
-  WOLKE_2 = 4;
-  WOLKE_3 = 5;
-  WOLKE_4 = 6;
-  WOLKE_5 = 7;
-  WOLKE_6 = 8;
-  WOLKE_7 = 9;
-  WOLKE_8 = 10;
-}
-
 enum Shape1D {
   BALL = 0;
   COMET = 1;
@@ -88,8 +73,12 @@ enum Shape2D {
 enum MovementType {
   LINEAR = 0;
   SINE = 1;
-  COSINE = 2;
-  SAWTOOTH = 3;
+  QUADRATIC = 2;
+  CUBIC = 3;
+  SAWTOOTH = 4;
+  SAWTOOTH_REVERSE = 5;
+  RANDOM = 6;
+  RANDOM_TRANSITIONS = 7;
 }
 
 enum SlopeType {
@@ -98,28 +87,43 @@ enum SlopeType {
   COLOR_SHIFT = 2;
 }
 
+
 message CommandParams {
   required int32 index = 1;  
   optional bool enabled = 2 [default = true];
   optional int32 brightness = 3 [default = 255];
   optional int32 strip_index = 4 [default = 0]; 
   optional ColorPalette color_palette = 5 [default = RAINBOW];
+  repeated Modifier modifiers = 6;
   oneof type_params {
-    White white = 6;
-    SingleColor single_color = 7;
-    Pixel pixel = 8;
-    RGBPixel rgb_pixel = 9;
-    Rainbow rainbow = 10;
-    Sparkle sparkle = 11;
-    FlickerSparkle flicker_sparkle = 12;
-    PingPong ping_pong = 13;
-    StaticShape static_shape =14;
-    Rain rain = 15;
-    Kaleidoscope kaleidoscope = 16;
-    MappedShape mapped_shape = 17;
-    MappedSlope mapped_slople =18;
-    MappedParticles mapped_particles = 19;
+    White white = 7;
+    SingleColor single_color = 8;
+    Pixel pixel = 9;
+    PixelRGB pixel_rgb = 10;
+    Rainbow rainbow = 11;
+    Sparkle sparkle = 12;
+    FlickerSparkle flicker_sparkle = 13;
+    PingPong ping_pong = 14;
+    Render render =15;
+    Rain rain = 16;
+    Gravity gravity = 17;
+    Kaleidoscope kaleidoscope = 18;
+    MappedShape mapped_shape = 19;
+    MappedSlope mapped_slope =20;
+    MappedTriangle mapped_triangle = 21;
+    MappedParticles mapped_particles = 22;
+    MappedPingPong mapped_ping_pong = 23;
+    Twang twang = 24;
   }
+}
+
+message Modifier {
+  required int32 field_number = 1;
+  optional MovementType movement_type = 2 [default = LINEAR];
+  optional int32 beats_per_minute = 3 [default = 6];
+  optional int32 offset_ms = 4 [default = 0];
+  optional int32 min = 5 [default = 0];
+  optional int32 max = 6 [default = 255];
 }
 
 message White {
@@ -135,7 +139,7 @@ message Pixel {
   optional int32 led_index = 2 [default = 0];
 }
 
-message RGBPixel {
+message PixelRGB {
   optional int32 red = 1 [default = 130];
   optional int32 green = 2 [default = 130];
   optional int32 blue = 3 [default = 130];
@@ -156,7 +160,7 @@ message Sparkle {
 }
 
 message FlickerSparkle {
-  optional int32 color = 1 [default = 1];  
+  optional int32 color = 1 [default = 255];  
   optional int32 sparkle_width = 2 [default = 90];
   optional int32 sparles_per_second = 3 [default = 215];  
   optional int32 duration = 4 [default = 8];  
@@ -176,7 +180,7 @@ message PingPong {
   optional int32 offset_ms = 8 [default = 0];
 }
 
-message StaticShape {
+message Render {
   optional Shape1D shape = 1 [default = BALL];
   optional int32 color = 2 [default = 210];  
   optional int32 position = 3 [default = 20];
@@ -190,32 +194,62 @@ message Rain {
   optional int32 drop_speed = 4 [default = 10];  
 }
 
+message Gravity {
+  optional int32 color = 1 [default = 13];
+  optional int32 launch_speed = 2 [default  = 0];
+  optional int32 ball_rate = 3 [default = 5];
+  optional int32 width = 4 [default = 70];
+}
+
 message Kaleidoscope {
 }
 
 message MappedSlope{
-  optional SlopeType slope_type = 1 [default = FILL];
-  optional int32 x1 = 2 [default = 0];
-  optional int32 y1 = 3 [default = 0];
-  optional int32 x2 = 4 [default = 255];
-  optional int32 y2 = 5 [default = 255];
-  optional int32 fade_distance = 6 [default = 5];
+  optional int32 color = 1 [default = 1];  
+  optional SlopeType slope_type = 2 [default = FILL];
+  optional int32 x1 = 3 [default = 0];
+  optional int32 y1 = 4 [default = 0];
+  optional int32 x2 = 5 [default = 255];
+  optional int32 y2 = 6 [default = 255];
+  optional int32 fade_distance = 7 [default = 5];
 }
 
 message MappedShape {
-  optional Shape2D shape = 1 [default = SQUARE];
-  optional int32 x = 2 [default = 128];
-  optional int32 y = 3 [default = 128];
-  optional int32 size = 4 [default = 50];
-  optional int32 fade_distance = 5 [default = 50];
+  optional int32 color = 1 [default = 1];  
+  optional Shape2D shape = 2 [default = SQUARE];
+  optional int32 x = 3 [default = 128];
+  optional int32 y = 4 [default = 128];
+  optional int32 size = 5 [default = 50];
+  optional int32 fade_distance = 6 [default = 50];
+}
+
+message MappedTriangle {
+  optional int32 color = 1 [default = 1];  
+  optional int32 x1 = 2 [default = 0];
+  optional int32 y1 = 3 [default = 0];
+  optional int32 x2 = 4 [default = 255];
+  optional int32 y2 = 5 [default = 000];
+  optional int32 x3 = 6 [default = 128];
+  optional int32 y3 = 7 [default = 255];
 }
 
 message MappedParticles {
-  optional Shape2D shape = 1 [default = CIRCLE];
-  optional int32 x = 2 [default = 128];
-  optional int32 y = 3 [default = 128];
-  optional int32 size = 4 [default = 50];
-  optional int32 fade_distance = 5 [default = 50];
+  optional int32 color = 1 [default= 177];
+  optional Shape2D shape = 2 [default = CIRCLE];
+  optional int32 x = 3 [default = 128];
+  optional int32 y = 4 [default = 128];
+  optional int32 size = 5 [default = 50];
+  optional int32 fade_distance = 6 [default = 50];
+}
+
+message MappedPingPong {
+  optional int32 color = 1 [default = 123];
+  optional int32 direction = 2 [default = 0];
+  optional int32 fade_distance = 3 [default = 5];
+}
+
+message Twang {
+
 }
 
 // DancingSlope -> select movement type

@@ -1,21 +1,15 @@
 #include <Commands.h>
 
-void Commands::pixel(LedStructure *leds, uint8_t *data)
+void Commands::pixel(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t strip_index = data[0];
-  uint16_t led_index = data[1] << 8 | data[2];
-  uint8_t color_index = data[3];
+  Pixel pixel = cmd.type_params.pixel;
 
-  leds->set_led(strip_index, led_index, ColorFromPalette(currentPalette, color_index));
+  leds->fade_led(cmd, pixel.led_index, color_from_palette(cmd, pixel.color));
 }
 
-void Commands::pixel_rgb(LedStructure *leds, uint8_t *data)
+void Commands::pixel_rgb(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t strip_index = data[0];
-  uint16_t led_index = data[1] << 8 | data[2];
-  uint8_t red = data[3];
-  uint8_t green = data[4];
-  uint8_t blue = data[5];
+  PixelRGB pixel_rgb = cmd.type_params.pixel_rgb;
 
-  leds->set_led(strip_index, led_index, CRGB(red, green, blue));
+  leds->fade_led(cmd, pixel_rgb.led_index, CRGB(pixel_rgb.red, pixel_rgb.green, pixel_rgb.blue));
 }
