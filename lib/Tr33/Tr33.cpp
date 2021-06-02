@@ -31,8 +31,8 @@ Tr33::Tr33(void)
 //
 
 // strip index:
-// 0 - all
-// 1 - all_trunks
+// 0 = all
+// 1 = all_trunks
 // 2 = all_branches
 // 3-x = trunks
 // x-y = branches
@@ -143,8 +143,8 @@ void Tr33::set_led(uint8_t strip_index, int led, CRGB color)
         branch_leds[i][led] = color;
       }
     }
-    // all trunks and branches
     else if (strip_index == STRIP_INDEX_ALL)
+    // all trunks and branches
     {
       if (led < TRUNK_PIXEL_COUNT)
       {
@@ -189,8 +189,8 @@ CRGB Tr33::get_led(uint8_t strip_index, int led)
     {
       return branch_leds[0][led];
     }
-    // all trunks and branches
     else if (strip_index == STRIP_INDEX_ALL)
+    // all trunks and branches
     {
       if (led < TRUNK_PIXEL_COUNT)
       {

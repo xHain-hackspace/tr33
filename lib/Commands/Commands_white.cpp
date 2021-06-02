@@ -23,7 +23,7 @@ void Commands::white(LedStructure *leds, CommandParams cmd)
     break;
   }
 
-  for (int i = 0; i < leds->strip_length(leds->strip_index_all()); i++)
+  for (int i = 0; i < leds->strip_length(cmd.strip_index); i++)
   {
     leds->fade_led(cmd, i, color);
   }

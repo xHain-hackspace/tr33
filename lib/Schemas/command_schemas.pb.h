@@ -83,7 +83,12 @@ typedef enum _Shape2D {
 typedef enum _MovementType { 
     MovementType_LINEAR = 0, 
     MovementType_SINE = 1, 
-    MovementType_SAWTOOTH = 2 
+    MovementType_QUADRATIC = 2, 
+    MovementType_CUBIC = 3, 
+    MovementType_SAWTOOTH = 4, 
+    MovementType_SAWTOOTH_REVERSE = 5, 
+    MovementType_RANDOM = 6, 
+    MovementType_RANDOM_TRANSITIONS = 7 
 } MovementType;
 
 typedef enum _SlopeType { 
@@ -202,6 +207,20 @@ typedef struct _MappedTriangle {
     int32_t y3; 
 } MappedTriangle;
 
+typedef struct _Modifier { 
+    int32_t field_number; 
+    bool has_movement_type;
+    MovementType movement_type; 
+    bool has_beats_per_minute;
+    int32_t beats_per_minute; 
+    bool has_offset_ms;
+    int32_t offset_ms; 
+    bool has_min;
+    int32_t min; 
+    bool has_max;
+    int32_t max; 
+} Modifier;
+
 typedef struct _PingPong { 
     bool has_shape;
     Shape1D shape; 
@@ -301,6 +320,7 @@ typedef struct _CommandParams {
     int32_t strip_index; 
     bool has_color_palette;
     ColorPalette color_palette; 
+    pb_callback_t modifiers; 
     pb_size_t which_type_params;
     union {
         White white;
@@ -339,8 +359,8 @@ typedef struct _CommandParams {
 #define _Shape2D_ARRAYSIZE ((Shape2D)(Shape2D_RING+1))
 
 #define _MovementType_MIN MovementType_LINEAR
-#define _MovementType_MAX MovementType_SAWTOOTH
-#define _MovementType_ARRAYSIZE ((MovementType)(MovementType_SAWTOOTH+1))
+#define _MovementType_MAX MovementType_RANDOM_TRANSITIONS
+#define _MovementType_ARRAYSIZE ((MovementType)(MovementType_RANDOM_TRANSITIONS+1))
 
 #define _SlopeType_MIN SlopeType_LINE
 #define _SlopeType_MAX SlopeType_COLOR_SHIFT
@@ -352,7 +372,8 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define CommandParams_init_default               {0, false, true, false, 255, false, 0, false, ColorPalette_RAINBOW, 0, {White_init_default}}
+#define CommandParams_init_default               {0, false, true, false, 255, false, 0, false, ColorPalette_RAINBOW, {{NULL}, NULL}, 0, {White_init_default}}
+#define Modifier_init_default                    {0, false, MovementType_LINEAR, false, 6, false, 0, false, 0, false, 255}
 #define White_init_default                       {false, 0}
 #define SingleColor_init_default                 {false, 226}
 #define Pixel_init_default                       {false, 0, false, 0}
@@ -371,7 +392,8 @@ extern "C" {
 #define MappedParticles_init_default             {false, 177, false, Shape2D_CIRCLE, false, 128, false, 128, false, 50, false, 50}
 #define MappedPingPong_init_default              {false, 123, false, 0, false, 5}
 #define Twang_init_default                       {0}
-#define CommandParams_init_zero                  {0, false, 0, false, 0, false, 0, false, _ColorPalette_MIN, 0, {White_init_zero}}
+#define CommandParams_init_zero                  {0, false, 0, false, 0, false, 0, false, _ColorPalette_MIN, {{NULL}, NULL}, 0, {White_init_zero}}
+#define Modifier_init_zero                       {0, false, _MovementType_MIN, false, 0, false, 0, false, 0, false, 0}
 #define White_init_zero                          {false, 0}
 #define SingleColor_init_zero                    {false, 0}
 #define Pixel_init_zero                          {false, 0, false, 0}
@@ -432,6 +454,12 @@ extern "C" {
 #define MappedTriangle_y2_tag                    5
 #define MappedTriangle_x3_tag                    6
 #define MappedTriangle_y3_tag                    7
+#define Modifier_field_number_tag                1
+#define Modifier_movement_type_tag               2
+#define Modifier_beats_per_minute_tag            3
+#define Modifier_offset_ms_tag                   4
+#define Modifier_min_tag                         5
+#define Modifier_max_tag                         6
 #define PingPong_shape_tag                       1
 #define PingPong_movement_tag                    2
 #define PingPong_color_tag                       3
@@ -468,24 +496,25 @@ extern "C" {
 #define CommandParams_brightness_tag             3
 #define CommandParams_strip_index_tag            4
 #define CommandParams_color_palette_tag          5
-#define CommandParams_white_tag                  6
-#define CommandParams_single_color_tag           7
-#define CommandParams_pixel_tag                  8
-#define CommandParams_pixel_rgb_tag              9
-#define CommandParams_rainbow_tag                10
-#define CommandParams_sparkle_tag                11
-#define CommandParams_flicker_sparkle_tag        12
-#define CommandParams_ping_pong_tag              13
-#define CommandParams_render_tag                 14
-#define CommandParams_rain_tag                   15
-#define CommandParams_gravity_tag                16
-#define CommandParams_kaleidoscope_tag           17
-#define CommandParams_mapped_shape_tag           18
-#define CommandParams_mapped_slope_tag           19
-#define CommandParams_mapped_triangle_tag        20
-#define CommandParams_mapped_particles_tag       21
-#define CommandParams_mapped_ping_pong_tag       22
-#define CommandParams_twang_tag                  23
+#define CommandParams_modifiers_tag              6
+#define CommandParams_white_tag                  7
+#define CommandParams_single_color_tag           8
+#define CommandParams_pixel_tag                  9
+#define CommandParams_pixel_rgb_tag              10
+#define CommandParams_rainbow_tag                11
+#define CommandParams_sparkle_tag                12
+#define CommandParams_flicker_sparkle_tag        13
+#define CommandParams_ping_pong_tag              14
+#define CommandParams_render_tag                 15
+#define CommandParams_rain_tag                   16
+#define CommandParams_gravity_tag                17
+#define CommandParams_kaleidoscope_tag           18
+#define CommandParams_mapped_shape_tag           19
+#define CommandParams_mapped_slope_tag           20
+#define CommandParams_mapped_triangle_tag        21
+#define CommandParams_mapped_particles_tag       22
+#define CommandParams_mapped_ping_pong_tag       23
+#define CommandParams_twang_tag                  24
 
 /* Struct field encoding specification for nanopb */
 #define CommandParams_FIELDLIST(X, a) \
@@ -494,26 +523,28 @@ X(a, STATIC,   OPTIONAL, BOOL,     enabled,           2) \
 X(a, STATIC,   OPTIONAL, INT32,    brightness,        3) \
 X(a, STATIC,   OPTIONAL, INT32,    strip_index,       4) \
 X(a, STATIC,   OPTIONAL, UENUM,    color_palette,     5) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,white,type_params.white),   6) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,single_color,type_params.single_color),   7) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel,type_params.pixel),   8) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel_rgb,type_params.pixel_rgb),   9) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,rainbow,type_params.rainbow),  10) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,sparkle,type_params.sparkle),  11) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,flicker_sparkle,type_params.flicker_sparkle),  12) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,ping_pong,type_params.ping_pong),  13) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,render,type_params.render),  14) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,rain,type_params.rain),  15) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,gravity,type_params.gravity),  16) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,kaleidoscope,type_params.kaleidoscope),  17) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_shape,type_params.mapped_shape),  18) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_slope,type_params.mapped_slope),  19) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_triangle,type_params.mapped_triangle),  20) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_particles,type_params.mapped_particles),  21) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_ping_pong,type_params.mapped_ping_pong),  22) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  23)
-#define CommandParams_CALLBACK NULL
+X(a, CALLBACK, REPEATED, MESSAGE,  modifiers,         6) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,white,type_params.white),   7) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,single_color,type_params.single_color),   8) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel,type_params.pixel),   9) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel_rgb,type_params.pixel_rgb),  10) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,rainbow,type_params.rainbow),  11) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,sparkle,type_params.sparkle),  12) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,flicker_sparkle,type_params.flicker_sparkle),  13) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,ping_pong,type_params.ping_pong),  14) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,render,type_params.render),  15) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,rain,type_params.rain),  16) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,gravity,type_params.gravity),  17) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,kaleidoscope,type_params.kaleidoscope),  18) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_shape,type_params.mapped_shape),  19) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_slope,type_params.mapped_slope),  20) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_triangle,type_params.mapped_triangle),  21) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_particles,type_params.mapped_particles),  22) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_ping_pong,type_params.mapped_ping_pong),  23) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24)
+#define CommandParams_CALLBACK pb_default_field_callback
 #define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\x00"
+#define CommandParams_modifiers_MSGTYPE Modifier
 #define CommandParams_type_params_white_MSGTYPE White
 #define CommandParams_type_params_single_color_MSGTYPE SingleColor
 #define CommandParams_type_params_pixel_MSGTYPE Pixel
@@ -532,6 +563,16 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  23)
 #define CommandParams_type_params_mapped_particles_MSGTYPE MappedParticles
 #define CommandParams_type_params_mapped_ping_pong_MSGTYPE MappedPingPong
 #define CommandParams_type_params_twang_MSGTYPE Twang
+
+#define Modifier_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, INT32,    field_number,      1) \
+X(a, STATIC,   OPTIONAL, UENUM,    movement_type,     2) \
+X(a, STATIC,   OPTIONAL, INT32,    beats_per_minute,   3) \
+X(a, STATIC,   OPTIONAL, INT32,    offset_ms,         4) \
+X(a, STATIC,   OPTIONAL, INT32,    min,               5) \
+X(a, STATIC,   OPTIONAL, INT32,    max,               6)
+#define Modifier_CALLBACK NULL
+#define Modifier_DEFAULT (const pb_byte_t*)"\x18\x06\x20\x00\x28\x00\x30\xff\x01\x00"
 
 #define White_FIELDLIST(X, a) \
 X(a, STATIC,   OPTIONAL, INT32,    color_temperature,   1)
@@ -679,6 +720,7 @@ X(a, STATIC,   OPTIONAL, INT32,    fade_distance,     3)
 #define Twang_DEFAULT NULL
 
 extern const pb_msgdesc_t CommandParams_msg;
+extern const pb_msgdesc_t Modifier_msg;
 extern const pb_msgdesc_t White_msg;
 extern const pb_msgdesc_t SingleColor_msg;
 extern const pb_msgdesc_t Pixel_msg;
@@ -700,6 +742,7 @@ extern const pb_msgdesc_t Twang_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define CommandParams_fields &CommandParams_msg
+#define Modifier_fields &Modifier_msg
 #define White_fields &White_msg
 #define SingleColor_fields &SingleColor_msg
 #define Pixel_fields &Pixel_msg
@@ -720,7 +763,7 @@ extern const pb_msgdesc_t Twang_msg;
 #define Twang_fields &Twang_msg
 
 /* Maximum encoded size of messages (where known) */
-#define CommandParams_size                       117
+/* CommandParams_size depends on runtime parameters */
 #define FlickerSparkle_size                      77
 #define Gravity_size                             44
 #define Kaleidoscope_size                        0
@@ -729,6 +772,7 @@ extern const pb_msgdesc_t Twang_msg;
 #define MappedShape_size                         57
 #define MappedSlope_size                         68
 #define MappedTriangle_size                      77
+#define Modifier_size                            57
 #define PingPong_size                            70
 #define PixelRGB_size                            44
 #define Pixel_size                               22
@@ -749,9 +793,16 @@ extern const pb_msgdesc_t Twang_msg;
 namespace nanopb {
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 23;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 24;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
+    }
+};
+template <>
+struct MessageDescriptor<Modifier> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 6;
+    static inline const pb_msgdesc_t* fields() {
+        return &Modifier_msg;
     }
 };
 template <>

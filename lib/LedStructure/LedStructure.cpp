@@ -8,7 +8,7 @@ CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 void LedStructure::init()
 {
   SingleColor single = SingleColor_init_default;
-  single.color = HUE_YELLOW;
+  single.color = HUE_BLUE;
   commands[0] = CommandParams_init_default;
   commands[0].which_type_params = CommandParams_single_color_tag;
   commands[0].type_params.single_color = single;
@@ -71,16 +71,6 @@ void LedStructure::fade_led(CommandParams cmd, int led, CRGB target)
   }
 }
 
-void LedStructure::shift_led(uint8_t strip_index, int led, uint8_t amount)
-{
-  if (led >= 0 && led < strip_length(strip_index))
-  {
-    CRGB current = get_led(strip_index, led);
-    CRGB faded = blend(current, 0, amount * 255.0);
-    set_led(strip_index, led, faded);
-  }
-}
-
 uint16_t LedStructure::strip_length(uint8_t strip_index)
 {
   return STRIP_PIXEL_COUNT;
@@ -108,11 +98,6 @@ uint8_t LedStructure::random_strip(uint8_t strip_index)
   {
     return random8(0, STRIP_COUNT);
   }
-}
-
-uint8_t LedStructure::strip_index_all()
-{
-  return STRIP_INDEX_ALL;
 }
 
 // void Tr33::show_pin_numbers()

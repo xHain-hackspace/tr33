@@ -188,10 +188,10 @@ message Render {
 }
 
 message Rain {
-  optional int32 color = 1 [default = 1];  
+  optional int32 color = 1 [default = 150];  
   optional int32 width = 2 [default = 15];
-  optional int32 drop_density = 3 [default = 10];  
-  optional int32 drop_speed = 4 [default = 10];  
+  optional int32 drop_density = 3 [default = 90];  
+  optional int32 drop_speed = 4 [default = 90];  
 }
 
 message Gravity {

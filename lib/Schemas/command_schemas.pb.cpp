@@ -9,6 +9,9 @@
 PB_BIND(CommandParams, CommandParams, AUTO)
 
 
+PB_BIND(Modifier, Modifier, AUTO)
+
+
 PB_BIND(White, White, AUTO)
 
 

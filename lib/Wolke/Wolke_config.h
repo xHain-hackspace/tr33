@@ -5,8 +5,12 @@
 #define STRIP_PIXEL_COUNT 90
 #define STRIP_COUNT 2
 
-// strip index
-#define STRIP_INDEX_ALL STRIP_COUNT
+#define STRIP_INDEX_ALL 0
+
+#define WOLKEN_COUNT 8
+
+// This is set via build params
+// #define WOLKEN_INDEX 1
 
 // mapping
 #define MAPPING_X_MIN 65.27403259277344

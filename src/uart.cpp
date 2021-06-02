@@ -40,7 +40,6 @@ void uart_loop(Commands commands)
   byte = CommandSerial.read();
 
   if (byte == SERIAL_READY_TO_SEND)
-
   {
     CommandSerial.write(SERIAL_CLEAR_TO_SEND);
     long cts_send_time = millis();
@@ -71,8 +70,7 @@ void uart_loop(Commands commands)
   }
   else if (byte != -1)
   {
-    Serial.print("Expected RTS, got: ");
-    Serial.println(byte);
+    Serial.printf("Expected %i, got: %i \n ", SERIAL_READY_TO_SEND, byte);
     Serial.println("Flushing serial");
     flush_serial();
     // CommandSerial.write(SERIAL_REQUEST_RESYNC);
