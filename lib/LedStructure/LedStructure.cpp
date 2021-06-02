@@ -7,11 +7,17 @@ CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 
 void LedStructure::init()
 {
-  SingleColor single = SingleColor_init_default;
-  single.color = HUE_BLUE;
+  Rainbow rainbow = Rainbow_init_default;
   commands[0] = CommandParams_init_default;
-  commands[0].which_type_params = CommandParams_single_color_tag;
-  commands[0].type_params.single_color = single;
+  commands[0].which_type_params = CommandParams_rainbow_tag;
+  commands[0].type_params.rainbow = rainbow;
+  commands[0].color_palette = ColorPalette_SCOUTY;
+
+  // SingleColor single = SingleColor_init_default;
+  // single.color = HUE_BLUE;
+  // commands[0] = CommandParams_init_default;
+  // commands[0].which_type_params = CommandParams_single_color_tag;
+  // commands[0].type_params.single_color = single;
 
   // PingPong ping_pong = PingPong_init_default;
   // ping_pong.color = HUE_RED;

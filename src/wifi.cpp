@@ -146,6 +146,15 @@ void wifi_setup()
   //End of OTA section
 }
 
+CommandParams disable_overlay()
+{
+  CommandParams command = CommandParams_init_zero;
+  command.index = COMMAND_COUNT - 1;
+  command.enabled = false;
+
+  return command;
+}
+
 CommandParams color_overlay(uint8_t color)
 {
   SingleColor single = SingleColor_init_default;
@@ -154,6 +163,8 @@ CommandParams color_overlay(uint8_t color)
   command.which_type_params = CommandParams_single_color_tag;
   command.type_params.single_color = single;
   command.index = COMMAND_COUNT - 1;
+
+  return command;
 }
 
 void wifi_loop(Commands commands)
@@ -166,10 +177,7 @@ void wifi_loop(Commands commands)
     {
       //if this is a reconnect restore the previous effect
       print_wifi_status(wifi_status);
-      CommandParams disabled = CommandParams_init_zero;
-      disabled.index = COMMAND_COUNT - 1;
-      disabled.enabled = false;
-      commands.process(disabled);
+      commands.process(disable_overlay());
       commands.run();
       wasdisconnected = false;
     }

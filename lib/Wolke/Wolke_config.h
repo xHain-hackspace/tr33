@@ -9,8 +9,10 @@
 
 #define WOLKEN_COUNT 8
 
-// This is set via build params
-// #define WOLKEN_INDEX 1
+// This is intended to be set via build params in platform.ini
+#ifndef WOLKEN_INDEX
+#define WOLKEN_INDEX 1
+#endif
 
 // mapping
 #define MAPPING_X_MIN 65.27403259277344
