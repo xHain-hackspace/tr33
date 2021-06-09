@@ -6,6 +6,6 @@ void Commands::kaleidoscope(LedStructure *leds, CommandParams cmd)
 
   for (int i = 0; i < length / 2; i++)
   {
-    leds->set_led(cmd.strip_index, length - i - 1, leds->get_led(cmd.strip_index, i));
+    leds->fade_led(cmd, length - i - 1, leds->get_led(cmd.strip_index, i));
   }
 }

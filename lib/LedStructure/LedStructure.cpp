@@ -7,6 +7,10 @@ CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 
 void LedStructure::init()
 {
+  // Modifier modifer = Modifier_init_default;
+  // modifer.movement_type = MovementType_RANDOM_TRANSITIONS;
+  // modifer.period_s = 10;
+
   Rainbow rainbow = Rainbow_init_default;
   commands[0] = CommandParams_init_default;
   commands[0].which_type_params = CommandParams_rainbow_tag;
@@ -15,9 +19,16 @@ void LedStructure::init()
 
   // SingleColor single = SingleColor_init_default;
   // single.color = HUE_BLUE;
+  // single.color_modifer = modifer;
+  // single.has_color_modifer = true;
   // commands[0] = CommandParams_init_default;
   // commands[0].which_type_params = CommandParams_single_color_tag;
   // commands[0].type_params.single_color = single;
+
+  // modifer.movement_type = MovementType_LINEAR;
+  // modifer.beats_per_minute =  256;
+  // commands[0].color_palette_modifier = modifer;
+  // commands[0].has_color_palette_modifier = true;
 
   // PingPong ping_pong = PingPong_init_default;
   // ping_pong.color = HUE_RED;
@@ -57,23 +68,18 @@ CRGB LedStructure::get_led(uint8_t strip_index, int led)
   }
 }
 
-void LedStructure::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
+void LedStructure::fade_led(CommandParams cmd, int led, CRGB target)
+{
+  fade_led(cmd.strip_index, led, target, cmd.brightness);
+}
+
+void LedStructure::fade_led(uint8_t strip_index, int led, CRGB target, fract8 amount)
 {
   if (led >= 0 && led < strip_length(strip_index))
   {
     CRGB current = get_led(strip_index, led);
-    CRGB faded = blend(current, target, amount * 255.0);
+    CRGB faded = blend(current, target, amount);
     set_led(strip_index, led, faded);
-  }
-}
-
-void LedStructure::fade_led(CommandParams cmd, int led, CRGB target)
-{
-  if (led >= 0 && led < strip_length(cmd.strip_index))
-  {
-    CRGB current = get_led(cmd.strip_index, led);
-    CRGB faded = blend(current, target, cmd.brightness);
-    set_led(cmd.strip_index, led, faded);
   }
 }
 

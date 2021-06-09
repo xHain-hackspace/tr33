@@ -4,6 +4,8 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <command_schemas.pb.h>
+#include <pb_decode.h>
 
 #if defined(SECRETS_FILE)
 #include SECRETS_FILE
@@ -20,17 +22,21 @@ bool udp_up = false;
 bool ota_up = false;
 bool wasdisconnected = true;
 
+// syncing
+uint32_t sequence_period_ms = 20 * 1000;
+uint32_t last_send = 0;
+uint8_t sequence = 0;
+const int control_port = 1337;
+const int sequence_header_length = 3;
+const char sequence_header[] = "SEQ";
+
 #if defined(WIFI_HOSTNAME)
 char hostname[] = WIFI_HOSTNAME;
 #else
-char hostname[] = "esp32_tr33";
+char hostname[] = "esp32";
 #endif
 
 const char *ota_password_hash = "d3d57181ad9b5b2e5e82a6c0b94ba22e";
-
-const int resync_port = 1337;
-const int resync_reqest_length = 6;
-const char resync_request_content[] = "resync";
 
 void wifi_init()
 {
@@ -49,14 +55,17 @@ void upd_init()
   Serial.printf("Initializing UDP...\n");
   udp.begin(LISTEN_PORT);
   Serial.printf("Done. Listening on %s:%d\n", WiFi.localIP().toString().c_str(), LISTEN_PORT);
-  // send resync request
-  Serial.printf("Sending resync request to %s:%d\n", resync_host, resync_port);
-  udp.beginPacket(resync_host, resync_port);
-  udp.write((uint8_t *)resync_request_content, resync_reqest_length);
-  udp.endPacket();
   Serial.println("... done");
 
   udp_up = true;
+}
+
+void send_sequence()
+{
+  udp.beginPacket(control_host, control_port);
+  udp.write((uint8_t *)sequence_header, sequence_header_length);
+  udp.write(sequence);
+  udp.endPacket();
 }
 
 void print_wifi_status(int wifi_status)
@@ -170,6 +179,7 @@ CommandParams color_overlay(uint8_t color)
 void wifi_loop(Commands commands)
 {
   int wifi_status = WiFi.status();
+  int bytes;
 
   if (wifi_status == WL_CONNECTED)
   {
@@ -177,7 +187,7 @@ void wifi_loop(Commands commands)
     {
       //if this is a reconnect restore the previous effect
       print_wifi_status(wifi_status);
-      commands.process(disable_overlay());
+      commands.handle_command(disable_overlay());
       commands.run();
       wasdisconnected = false;
     }
@@ -197,8 +207,32 @@ void wifi_loop(Commands commands)
       // wifi and upd is up, check if we received a UDP packet
       while (udp.parsePacket())
       {
-        int bytes = udp.read(udp_buffer, UDP_BUFFER_SIZE);
-        commands.process(udp_buffer, bytes);
+        bytes = udp.read(udp_buffer, UDP_BUFFER_SIZE);
+
+        if (bytes > 0)
+        {
+          pb_istream_t stream = pb_istream_from_buffer(udp_buffer, bytes);
+          WireMessage wire_message = WireMessage_init_default;
+          bool status = pb_decode(&stream, WireMessage_fields, &wire_message);
+
+          if (!status)
+          {
+            Serial.printf("Protobuf decoding failed: %s\n", PB_GET_ERROR(&stream));
+          }
+          else
+          {
+            sequence = wire_message.sequence;
+            commands.handle_message(wire_message);
+          }
+          last_send = millis();
+        }
+      }
+
+      // regulary send squence to ensure we are in sync
+      if (millis() - last_send > sequence_period_ms || last_send == 0)
+      {
+        send_sequence();
+        last_send = millis();
       }
       commands.run();
     }
@@ -215,7 +249,7 @@ void wifi_loop(Commands commands)
     udp_up = false;
     ota_up = false;
     wasdisconnected = true;
-    commands.process(color_overlay(HUE_GREEN));
+    commands.handle_command(color_overlay(HUE_ORANGE));
     commands.run();
     delay(500);
   }
@@ -225,7 +259,7 @@ void wifi_loop(Commands commands)
     udp_up = false;
     ota_up = false;
     wasdisconnected = true;
-    commands.process(color_overlay(HUE_ORANGE));
+    commands.handle_command(color_overlay(HUE_RED));
     commands.run();
     wifi_init();
   }

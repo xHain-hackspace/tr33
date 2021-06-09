@@ -23,7 +23,7 @@ void Dode::rotating_plane(uint8_t *data)
     if (distance < width)
     {
       brightness = Commands::ease_in_out_cubic(plane_brightness * 1.0 * ((width - distance) / width));
-      fade_led(coordinates[i].i_edge, coordinates[i].i_led, color, brightness);
+      fade_led(coordinates[i].i_edge, coordinates[i].i_led, color, brightness * 255);
     }
   }
 }

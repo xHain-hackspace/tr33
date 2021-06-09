@@ -94,7 +94,7 @@ uint16_t Tr33::strip_length(uint8_t strip_index)
   else if (strip_index == STRIP_INDEX_ALL)
   {
     return TRUNK_PIXEL_COUNT + BRANCH_PIXEL_COUNT;
-  };
+  }
 }
 
 uint16_t Tr33::pixel_count(uint8_t strip_index)
@@ -127,41 +127,6 @@ void Tr33::set_led(uint8_t strip_index, int led, CRGB color)
     {
       branch_leds[branch_index(strip_index)][led] = color;
     }
-    // all trunks
-    else if (strip_index == STRIP_INDEX_ALL_TRUNKS)
-    {
-      for (int i = 0; i < TRUNK_STRIP_COUNT; i++)
-      {
-        set_trunk_led(i, led, color);
-      }
-    }
-    // all branches
-    else if (strip_index == STRIP_INDEX_ALL_BRANCHES)
-    {
-      for (int i = 0; i < BRANCH_STRIP_COUNT; i++)
-      {
-        branch_leds[i][led] = color;
-      }
-    }
-    else if (strip_index == STRIP_INDEX_ALL)
-    // all trunks and branches
-    {
-      if (led < TRUNK_PIXEL_COUNT)
-      {
-        for (int i = 0; i < TRUNK_STRIP_COUNT; i++)
-        {
-          set_trunk_led(i, led, color);
-        }
-      }
-      else
-      {
-        for (int i = 0; i < BRANCH_STRIP_COUNT; i++)
-        {
-          branch_leds[i][led - TRUNK_PIXEL_COUNT] = color;
-        }
-      }
-      // spiral
-    }
   }
 }
 
@@ -179,28 +144,56 @@ CRGB Tr33::get_led(uint8_t strip_index, int led)
     {
       return branch_leds[branch_index(strip_index)][led];
     }
-    // all trunks
-    else if (strip_index == STRIP_INDEX_ALL_TRUNKS)
+  }
+}
+
+void Tr33::fade_single_led(uint8_t strip_index, int led, CRGB target, fract8 amount)
+{
+  CRGB current = Tr33::get_led(strip_index, led);
+  CRGB faded = blend(current, target, amount);
+  Tr33::set_led(strip_index, led, faded);
+}
+
+void Tr33::fade_all_trunks(int led, CRGB target, fract8 amount)
+{
+  for (int i = 0; i < TRUNK_STRIP_COUNT; i++)
+  {
+    fade_single_led(i + STRIP_INDEX_ALL_BRANCHES, led, target, amount);
+  }
+}
+
+void Tr33::fade_all_branches(int led, CRGB target, fract8 amount)
+{
+  for (int i = 0; i < BRANCH_STRIP_COUNT; i++)
+  {
+    fade_single_led(i + STRIP_INDEX_ALL_BRANCHES + TRUNK_STRIP_COUNT, led, target, amount);
+  }
+}
+
+void Tr33::fade_led(uint8_t strip_index, int led, CRGB target, fract8 amount)
+{
+  if (strip_index == STRIP_INDEX_ALL)
+  {
+    if (led < TRUNK_PIXEL_COUNT)
     {
-      return get_trunk_led(0, led);
+      fade_all_trunks(led, target, amount);
     }
-    // all branches
-    else if (strip_index == STRIP_INDEX_ALL_BRANCHES)
+    else
     {
-      return branch_leds[0][led];
+      fade_all_branches(led - TRUNK_PIXEL_COUNT, target, amount);
     }
-    else if (strip_index == STRIP_INDEX_ALL)
-    // all trunks and branches
-    {
-      if (led < TRUNK_PIXEL_COUNT)
-      {
-        return get_trunk_led(0, led);
-      }
-      else
-      {
-        return branch_leds[0][led - TRUNK_PIXEL_COUNT];
-      }
-    }
+  }
+  else if (strip_index == STRIP_INDEX_ALL_TRUNKS)
+  {
+    fade_all_trunks(led, target, amount);
+  }
+  else if (strip_index == STRIP_INDEX_ALL_BRANCHES)
+  {
+    fade_all_branches(led, target, amount);
+  }
+  else
+  {
+    fade_single_led(strip_index, led, target, amount);
   }
 }
 

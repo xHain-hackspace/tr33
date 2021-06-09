@@ -12,14 +12,24 @@ void Commands::rainbow(LedStructure *leds, CommandParams cmd)
   float width_ratio = float(max(1, rainbow.rainbow_size)) / 150.0;
   uint16_t width_pixel = float(length_pixel) * width_ratio;
 
-  float wave_size_ratio = float(max(1, rainbow.wave_size)) / 255.0;
+  float wave_size_ratio = float(max(1, rainbow.wave_size)) / 255;
   uint16_t wave_size_pixel = float(length_pixel) * wave_size_ratio;
+
+  if (wave_size_pixel < 1)
+  {
+    wave_size_pixel = 1;
+  }
+
+  if (width_pixel < 1)
+  {
+    width_pixel = 1;
+  }
 
   for (int i = 0; i < length_pixel; i++)
   {
-    offset = float(i % wave_size_pixel) / float(wave_size_pixel) * 255.0;
+    offset = float(i % wave_size_pixel) / float(wave_size_pixel) * 255;
     beat_brightness = beatsin8(cmd.type_params.rainbow.speed, 60, 255, 0, offset);
-    color_index = float(i % width_pixel) / float(width_pixel) * 255.00;
+    color_index = float(i % width_pixel) / float(width_pixel) * 255;
     leds->fade_led(cmd, i, color_from_palette(cmd, color_index, beat_brightness));
   }
 }

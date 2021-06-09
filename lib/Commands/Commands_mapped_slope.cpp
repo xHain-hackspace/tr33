@@ -76,7 +76,7 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
     if (render_full)
     {
       // full brightness
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness);
+      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness * 255);
     }
     else if (render_fade)
     {
@@ -89,7 +89,7 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
       {
         brightness = Commands::ease_in_out_cubic(render_brightness * (1 - fabsf(distance / fade_distance)));
       }
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness);
+      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness * 255);
     }
   }
 }

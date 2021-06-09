@@ -6,7 +6,13 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
+PB_BIND(WireMessage, WireMessage, AUTO)
+
+
 PB_BIND(CommandParams, CommandParams, AUTO)
+
+
+PB_BIND(TimeSync, TimeSync, AUTO)
 
 
 PB_BIND(Modifier, Modifier, AUTO)

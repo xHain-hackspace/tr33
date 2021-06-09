@@ -1,10 +1,9 @@
 #include <Commands.h>
-// #include <Modifiers.h>
+#include <Modifiers.h>
 #include <pb_decode.h>
 
 CommandParams commands[COMMAND_COUNT];
-CRGBPalette256 currentPalette = Rainbow_gp;
-uint8_t currentMode = MODE_COMMANDS;
+int64_t Commands::millis_offset = 0;
 
 void Commands::init(LedStructure *init_leds)
 {
@@ -17,7 +16,20 @@ void Commands::init(LedStructure *init_leds)
   leds->init();
 };
 
-void Commands::process(CommandParams cmd)
+void Commands::handle_message(WireMessage msg)
+{
+  switch (msg.which_message)
+  {
+  case WireMessage_command_params_tag:
+    handle_command(msg.message.command_params);
+    break;
+  case WireMessage_time_sync_tag:
+    millis_offset = msg.message.time_sync.millis - millis();
+    break;
+  }
+}
+
+void Commands::handle_command(CommandParams cmd)
 {
   if (cmd.index < COMMAND_COUNT)
   {
@@ -37,7 +49,7 @@ void Commands::process(uint8_t *buffer, int bytes)
   }
   else
   {
-    process(command);
+    // process(command);
   }
 }
 
@@ -47,6 +59,8 @@ void Commands::render_commands()
   {
     if (commands[i].enabled)
     {
+      Modifiers::apply_all(&commands[i]);
+
       switch (commands[i].which_type_params)
       {
       case CommandParams_white_tag:
@@ -192,21 +206,21 @@ uint16_t fps;
 
 void Commands::run()
 {
-  switch (currentMode)
-  {
+  // switch (currentMode)
+  // {
   // case MODE_ARTNET:
   //   artnet.read();
   //   break;
-  case MODE_STREAM:
-    // FastLED.show();
-    break;
-  default:
-    // Serial.println("RUN");
-    FastLED.clearData();
-    render_commands();
-    FastLED.show();
-    break;
-  }
+  // case MODE_STREAM:
+  //   // FastLED.show();
+  //   break;
+  // default:
+  // Serial.println("RUN");
+  FastLED.clearData();
+  render_commands();
+  FastLED.show();
+  // break;
+  // }
 
 #ifdef SEND_FPS
   if (FastLED.getFPS() != fps)
@@ -215,6 +229,11 @@ void Commands::run()
     Serial.printf("FPS: %i\n", fps);
   }
 #endif
+}
+
+uint64_t Commands::synced_millis()
+{
+  return millis() + millis_offset;
 }
 
 void Commands::artnet_sync_callback()

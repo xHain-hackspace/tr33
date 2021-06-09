@@ -40,7 +40,7 @@ void Commands::mapped_triangle(LedStructure *leds, CommandParams cmd)
     if (point_in_triange(leds->mapping[i][2], leds->mapping[i][3], x1, y1, x2, y2, x3, y3))
     {
       // full brightness
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness);
+      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness * 255);
     }
   }
 }

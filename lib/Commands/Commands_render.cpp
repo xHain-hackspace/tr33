@@ -49,7 +49,7 @@ void Commands::render_ball(LedStructure *leds, uint8_t strip_index, float positi
   {
     brightness = 1.0 - fabs(float(i) - position) / (width / 2.0);
     brightness = Commands::ease_in_out_cubic(brightness * ball_brightness);
-    leds->fade_led(strip_index, i, color, brightness);
+    leds->fade_led(strip_index, i, color, brightness * 255);
   }
 }
 
@@ -98,7 +98,7 @@ void Commands::render_comet(LedStructure *leds, uint8_t strip_index, float posit
           color = ColorFromPalette(RainbowColors_p, led * 3, 255);
         }
 
-        leds->fade_led(strip_index, led, color, tail_brightness);
+        leds->fade_led(strip_index, led, color, tail_brightness * 255);
       }
     }
   }
@@ -125,6 +125,6 @@ void Commands::render_fill(LedStructure *leds, uint8_t strip_index, float positi
 
   for (int i = first_led; i < last_led; i++)
   {
-    leds->fade_led(strip_index, i, color, brightness);
+    leds->fade_led(strip_index, i, color, brightness * 255);
   }
 }

@@ -11,58 +11,65 @@
 
 /* Enum definitions */
 typedef enum _ColorPalette { 
+    /* FastLED */
     ColorPalette_RAINBOW = 0, 
     ColorPalette_FOREST = 1, 
     ColorPalette_OCEAN = 2, 
     ColorPalette_PARTY = 3, 
     ColorPalette_HEAT = 4, 
-    ColorPalette_SPRING_ANGEL = 5, 
-    ColorPalette_SCOUTY = 6, 
-    ColorPalette_PURPLE_HEAT = 7, 
-    ColorPalette_LAVA = 8, 
-    ColorPalette_CLOUD = 9, 
-    /* parrot = 8; */
+    ColorPalette_LAVA = 5, 
+    ColorPalette_CLOUD = 6, 
+    /* Custom */
+    ColorPalette_SCOUTY = 7, 
+    ColorPalette_PURPLE_HEAT = 8, 
+    ColorPalette_SPRING_ANGEL = 9, 
     ColorPalette_SAGA = 10, 
     ColorPalette_SAGA2 = 11, 
-    /* sunset */
-    ColorPalette_SUNSET = 12, 
-    /* rivendell */
-    ColorPalette_RIVENDELL = 13, 
-    /* ocean breeze */
-    ColorPalette_OCEAN_BREEZE = 14, 
-    /* 50_shades_of_pink
- shades_of_pink = 14;
- sun */
-    ColorPalette_SUN = 15, 
-    /* Analogous_1 = 16;
- pinksplash
- pinksplash = 17;
- Coral_reef = 18;
- es_ocean_breeze_068 = 19; */
-    ColorPalette_SHADES_OF_PINK = 20, 
-    /* es_vintage_01 = 21;
- departure = 22; */
-    ColorPalette_LANDSCAPE = 23, 
-    /* es_landscape_33 = 24; */
-    ColorPalette_RAINBOWSHERBET = 25, 
-    ColorPalette_BLUE_PINK = 26, 
-    ColorPalette_HULT = 27, 
-    /* GMT_drywet = 28; */
-    ColorPalette_JUL01 = 29, 
-    /* es_vintage_57 = 30;
- ib15 = 31; */
-    ColorPalette_FUSCHIA = 32, 
-    /* es_emerald_dragon_08 = 33;
- lava = 34;
- fire = 35; */
-    ColorPalette_COLORFULL = 36, 
-    /* Magenta_Evening = 37;
- Pink_Purple = 38;
- autumn = 39;
- BlacK_Blue_Magenta_White = 40;
- BlacK_Magenta_Red = 41;
- BlacK_Red_Magenta_Yellow = 42; */
-    ColorPalette_BLUE_CYAN_YELLOW = 43 
+    ColorPalette_PARROT = 12, 
+    /* WLED */
+    ColorPalette_SUNSET_REAL = 13, 
+    ColorPalette_RIVENDELL = 14, 
+    ColorPalette_OCEAN_BREEZE = 15, 
+    ColorPalette_RGI = 16, 
+    ColorPalette_RETRO2 = 17, 
+    ColorPalette_ANALOGOUS = 18, 
+    ColorPalette_PINKSPLASH = 19, 
+    ColorPalette_SUNSET_YELLOW = 20, 
+    ColorPalette_ANOTHER_SUNSET = 21, 
+    ColorPalette_BEECH = 22, 
+    ColorPalette_VINTAGE = 23, 
+    ColorPalette_DEPARTURE = 24, 
+    ColorPalette_LANDSCAPE = 25, 
+    ColorPalette_LANDSCAPE2 = 26, 
+    ColorPalette_RAINBOWSHERBET = 27, 
+    ColorPalette_HULT = 28, 
+    ColorPalette_HULT2 = 29, 
+    ColorPalette_DRYWET = 30, 
+    ColorPalette_JUL = 31, 
+    ColorPalette_VINTAGE2 = 32, 
+    ColorPalette_IB15 = 33, 
+    ColorPalette_TERTIARY = 34, 
+    ColorPalette_LAVA2 = 35, 
+    ColorPalette_FIERCE_ICE = 36, 
+    ColorPalette_COLORFULL = 37, 
+    ColorPalette_PINK_PURPLE = 38, 
+    ColorPalette_AUTUMN = 39, 
+    ColorPalette_BLACK_BLUE_MAGENTA_WHITE = 40, 
+    ColorPalette_BLACK_MAGENTA_RED = 41, 
+    ColorPalette_BLACK_RED_MAGENTA_YELLOW = 42, 
+    ColorPalette_BLUE_CYAN_YELLOW = 43, 
+    ColorPalette_ORANGE_TEAL = 44, 
+    ColorPalette_TIAMAT = 45, 
+    ColorPalette_APRIL_NIGHT = 46, 
+    ColorPalette_ORANGERY = 47, 
+    ColorPalette_C9 = 48, 
+    ColorPalette_SAKURA = 49, 
+    ColorPalette_AURORA = 50, 
+    ColorPalette_ATLANTICA = 51, 
+    ColorPalette_C92 = 52, 
+    ColorPalette_C93 = 53, 
+    ColorPalette_TEMPERATURE = 54, 
+    ColorPalette_AURORA2 = 55 
 } ColorPalette;
 
 typedef enum _Shape1D { 
@@ -84,7 +91,7 @@ typedef enum _MovementType {
     MovementType_LINEAR = 0, 
     MovementType_SINE = 1, 
     MovementType_QUADRATIC = 2, 
-    MovementType_CUBIC = 3, 
+    /* CUBIC = 3; */
     MovementType_SAWTOOTH = 4, 
     MovementType_SAWTOOTH_REVERSE = 5, 
     MovementType_RANDOM = 6, 
@@ -107,220 +114,145 @@ typedef struct _Twang {
 } Twang;
 
 typedef struct _FlickerSparkle { 
-    bool has_color;
     int32_t color; 
-    bool has_sparkle_width;
     int32_t sparkle_width; 
-    bool has_sparles_per_second;
     int32_t sparles_per_second; 
-    bool has_duration;
     int32_t duration; 
-    bool has_flicker_delay;
     int32_t flicker_delay; 
-    bool has_flicker_window;
     int32_t flicker_window; 
-    bool has_max_flickers;
     int32_t max_flickers; 
 } FlickerSparkle;
 
 typedef struct _Gravity { 
-    bool has_color;
     int32_t color; 
-    bool has_launch_speed;
     int32_t launch_speed; 
-    bool has_ball_rate;
     int32_t ball_rate; 
-    bool has_width;
     int32_t width; 
 } Gravity;
 
 typedef struct _MappedParticles { 
-    bool has_color;
     int32_t color; 
-    bool has_shape;
     Shape2D shape; 
-    bool has_x;
     int32_t x; 
-    bool has_y;
     int32_t y; 
-    bool has_size;
     int32_t size; 
-    bool has_fade_distance;
     int32_t fade_distance; 
 } MappedParticles;
 
 typedef struct _MappedPingPong { 
-    bool has_color;
     int32_t color; 
-    bool has_direction;
     int32_t direction; 
-    bool has_fade_distance;
     int32_t fade_distance; 
 } MappedPingPong;
 
 typedef struct _MappedShape { 
-    bool has_color;
     int32_t color; 
-    bool has_shape;
     Shape2D shape; 
-    bool has_x;
     int32_t x; 
-    bool has_y;
     int32_t y; 
-    bool has_size;
     int32_t size; 
-    bool has_fade_distance;
     int32_t fade_distance; 
 } MappedShape;
 
 typedef struct _MappedSlope { 
-    bool has_color;
     int32_t color; 
-    bool has_slope_type;
     SlopeType slope_type; 
-    bool has_x1;
     int32_t x1; 
-    bool has_y1;
     int32_t y1; 
-    bool has_x2;
     int32_t x2; 
-    bool has_y2;
     int32_t y2; 
-    bool has_fade_distance;
     int32_t fade_distance; 
 } MappedSlope;
 
 typedef struct _MappedTriangle { 
-    bool has_color;
     int32_t color; 
-    bool has_x1;
     int32_t x1; 
-    bool has_y1;
     int32_t y1; 
-    bool has_x2;
     int32_t x2; 
-    bool has_y2;
     int32_t y2; 
-    bool has_x3;
     int32_t x3; 
-    bool has_y3;
     int32_t y3; 
 } MappedTriangle;
 
 typedef struct _Modifier { 
-    int32_t field_number; 
-    bool has_movement_type;
     MovementType movement_type; 
-    bool has_beats_per_minute;
-    int32_t beats_per_minute; 
-    bool has_offset_ms;
-    int32_t offset_ms; 
-    bool has_min;
+    int32_t field_index; 
+    int32_t period_100ms; 
+    int32_t offset_100ms; 
     int32_t min; 
-    bool has_max;
     int32_t max; 
 } Modifier;
 
 typedef struct _PingPong { 
-    bool has_shape;
     Shape1D shape; 
-    bool has_movement;
     MovementType movement; 
-    bool has_color;
     int32_t color; 
-    bool has_width;
     int32_t width; 
-    bool has_max_height;
     int32_t max_height; 
-    bool has_count;
     int32_t count; 
-    bool has_period_ms;
     int32_t period_ms; 
-    bool has_offset_ms;
     int32_t offset_ms; 
 } PingPong;
 
 typedef struct _Pixel { 
-    bool has_color;
     int32_t color; 
-    bool has_led_index;
     int32_t led_index; 
 } Pixel;
 
 typedef struct _PixelRGB { 
-    bool has_red;
     int32_t red; 
-    bool has_green;
     int32_t green; 
-    bool has_blue;
     int32_t blue; 
-    bool has_led_index;
     int32_t led_index; 
 } PixelRGB;
 
 typedef struct _Rain { 
-    bool has_color;
     int32_t color; 
-    bool has_width;
     int32_t width; 
-    bool has_drop_density;
     int32_t drop_density; 
-    bool has_drop_speed;
     int32_t drop_speed; 
 } Rain;
 
 typedef struct _Rainbow { 
-    bool has_speed;
     int32_t speed; 
-    bool has_wave_size;
     int32_t wave_size; 
-    bool has_rainbow_size;
     int32_t rainbow_size; 
 } Rainbow;
 
 typedef struct _Render { 
-    bool has_shape;
     Shape1D shape; 
-    bool has_color;
     int32_t color; 
-    bool has_position;
     int32_t position; 
-    bool has_width;
     int32_t width; 
 } Render;
 
 typedef struct _SingleColor { 
-    bool has_color;
     int32_t color; 
 } SingleColor;
 
 typedef struct _Sparkle { 
-    bool has_color;
     int32_t color; 
-    bool has_sparkle_width;
     int32_t sparkle_width; 
-    bool has_sparle_rate;
     int32_t sparle_rate; 
-    bool has_duration;
     int32_t duration; 
 } Sparkle;
 
+typedef struct _TimeSync { 
+    uint64_t millis; 
+} TimeSync;
+
 typedef struct _White { 
-    bool has_color_temperature;
     int32_t color_temperature; 
 } White;
 
 typedef struct _CommandParams { 
     int32_t index; 
-    bool has_enabled;
     bool enabled; 
-    bool has_brightness;
     int32_t brightness; 
-    bool has_strip_index;
     int32_t strip_index; 
-    bool has_color_palette;
     ColorPalette color_palette; 
-    pb_callback_t modifiers; 
+    pb_size_t modifiers_count;
+    Modifier modifiers[5]; 
     pb_size_t which_type_params;
     union {
         White white;
@@ -344,11 +276,20 @@ typedef struct _CommandParams {
     } type_params; 
 } CommandParams;
 
+typedef struct _WireMessage { 
+    int32_t sequence; 
+    pb_size_t which_message;
+    union {
+        CommandParams command_params;
+        TimeSync time_sync;
+    } message; 
+} WireMessage;
+
 
 /* Helper constants for enums */
 #define _ColorPalette_MIN ColorPalette_RAINBOW
-#define _ColorPalette_MAX ColorPalette_BLUE_CYAN_YELLOW
-#define _ColorPalette_ARRAYSIZE ((ColorPalette)(ColorPalette_BLUE_CYAN_YELLOW+1))
+#define _ColorPalette_MAX ColorPalette_AURORA2
+#define _ColorPalette_ARRAYSIZE ((ColorPalette)(ColorPalette_AURORA2+1))
 
 #define _Shape1D_MIN Shape1D_BALL
 #define _Shape1D_MAX Shape1D_SOLID
@@ -372,45 +313,49 @@ extern "C" {
 #endif
 
 /* Initializer values for message structs */
-#define CommandParams_init_default               {0, false, true, false, 255, false, 0, false, ColorPalette_RAINBOW, {{NULL}, NULL}, 0, {White_init_default}}
-#define Modifier_init_default                    {0, false, MovementType_LINEAR, false, 6, false, 0, false, 0, false, 255}
-#define White_init_default                       {false, 0}
-#define SingleColor_init_default                 {false, 226}
-#define Pixel_init_default                       {false, 0, false, 0}
-#define PixelRGB_init_default                    {false, 130, false, 130, false, 130, false, 0}
-#define Rainbow_init_default                     {false, 30, false, 100, false, 150}
-#define Sparkle_init_default                     {false, 1, false, 15, false, 10, false, 100}
-#define FlickerSparkle_init_default              {false, 255, false, 90, false, 215, false, 8, false, 7, false, 119, false, 80}
-#define PingPong_init_default                    {false, Shape1D_BALL, false, MovementType_LINEAR, false, 65, false, 20, false, 255, false, 1, false, 6000, false, 0}
-#define Render_init_default                      {false, Shape1D_BALL, false, 210, false, 20, false, 20}
-#define Rain_init_default                        {false, 1, false, 15, false, 10, false, 10}
-#define Gravity_init_default                     {false, 13, false, 0, false, 5, false, 70}
+#define WireMessage_init_default                 {0, 0, {CommandParams_init_default}}
+#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}}
+#define TimeSync_init_default                    {0}
+#define Modifier_init_default                    {MovementType_SINE, 0, 50, 0, 0, 255}
+#define White_init_default                       {0}
+#define SingleColor_init_default                 {226}
+#define Pixel_init_default                       {0, 0}
+#define PixelRGB_init_default                    {130, 130, 130, 0}
+#define Rainbow_init_default                     {30, 100, 150}
+#define Sparkle_init_default                     {1, 15, 10, 100}
+#define FlickerSparkle_init_default              {255, 90, 215, 8, 7, 119, 80}
+#define PingPong_init_default                    {Shape1D_BALL, MovementType_LINEAR, 65, 20, 255, 1, 6000, 0}
+#define Render_init_default                      {Shape1D_BALL, 210, 20, 20}
+#define Rain_init_default                        {150, 15, 90, 90}
+#define Gravity_init_default                     {13, 0, 5, 70}
 #define Kaleidoscope_init_default                {0}
-#define MappedSlope_init_default                 {false, 1, false, SlopeType_FILL, false, 0, false, 0, false, 255, false, 255, false, 5}
-#define MappedShape_init_default                 {false, 1, false, Shape2D_SQUARE, false, 128, false, 128, false, 50, false, 50}
-#define MappedTriangle_init_default              {false, 1, false, 0, false, 0, false, 255, false, 0, false, 128, false, 255}
-#define MappedParticles_init_default             {false, 177, false, Shape2D_CIRCLE, false, 128, false, 128, false, 50, false, 50}
-#define MappedPingPong_init_default              {false, 123, false, 0, false, 5}
+#define MappedSlope_init_default                 {1, SlopeType_FILL, 0, 0, 255, 255, 5}
+#define MappedShape_init_default                 {1, Shape2D_SQUARE, 128, 128, 50, 50}
+#define MappedTriangle_init_default              {1, 0, 0, 255, 0, 128, 255}
+#define MappedParticles_init_default             {177, Shape2D_CIRCLE, 128, 128, 50, 50}
+#define MappedPingPong_init_default              {123, 0, 5}
 #define Twang_init_default                       {0}
-#define CommandParams_init_zero                  {0, false, 0, false, 0, false, 0, false, _ColorPalette_MIN, {{NULL}, NULL}, 0, {White_init_zero}}
-#define Modifier_init_zero                       {0, false, _MovementType_MIN, false, 0, false, 0, false, 0, false, 0}
-#define White_init_zero                          {false, 0}
-#define SingleColor_init_zero                    {false, 0}
-#define Pixel_init_zero                          {false, 0, false, 0}
-#define PixelRGB_init_zero                       {false, 0, false, 0, false, 0, false, 0}
-#define Rainbow_init_zero                        {false, 0, false, 0, false, 0}
-#define Sparkle_init_zero                        {false, 0, false, 0, false, 0, false, 0}
-#define FlickerSparkle_init_zero                 {false, 0, false, 0, false, 0, false, 0, false, 0, false, 0, false, 0}
-#define PingPong_init_zero                       {false, _Shape1D_MIN, false, _MovementType_MIN, false, 0, false, 0, false, 0, false, 0, false, 0, false, 0}
-#define Render_init_zero                         {false, _Shape1D_MIN, false, 0, false, 0, false, 0}
-#define Rain_init_zero                           {false, 0, false, 0, false, 0, false, 0}
-#define Gravity_init_zero                        {false, 0, false, 0, false, 0, false, 0}
+#define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
+#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}}
+#define TimeSync_init_zero                       {0}
+#define Modifier_init_zero                       {_MovementType_MIN, 0, 0, 0, 0, 0}
+#define White_init_zero                          {0}
+#define SingleColor_init_zero                    {0}
+#define Pixel_init_zero                          {0, 0}
+#define PixelRGB_init_zero                       {0, 0, 0, 0}
+#define Rainbow_init_zero                        {0, 0, 0}
+#define Sparkle_init_zero                        {0, 0, 0, 0}
+#define FlickerSparkle_init_zero                 {0, 0, 0, 0, 0, 0, 0}
+#define PingPong_init_zero                       {_Shape1D_MIN, _MovementType_MIN, 0, 0, 0, 0, 0, 0}
+#define Render_init_zero                         {_Shape1D_MIN, 0, 0, 0}
+#define Rain_init_zero                           {0, 0, 0, 0}
+#define Gravity_init_zero                        {0, 0, 0, 0}
 #define Kaleidoscope_init_zero                   {0}
-#define MappedSlope_init_zero                    {false, 0, false, _SlopeType_MIN, false, 0, false, 0, false, 0, false, 0, false, 0}
-#define MappedShape_init_zero                    {false, 0, false, _Shape2D_MIN, false, 0, false, 0, false, 0, false, 0}
-#define MappedTriangle_init_zero                 {false, 0, false, 0, false, 0, false, 0, false, 0, false, 0, false, 0}
-#define MappedParticles_init_zero                {false, 0, false, _Shape2D_MIN, false, 0, false, 0, false, 0, false, 0}
-#define MappedPingPong_init_zero                 {false, 0, false, 0, false, 0}
+#define MappedSlope_init_zero                    {0, _SlopeType_MIN, 0, 0, 0, 0, 0}
+#define MappedShape_init_zero                    {0, _Shape2D_MIN, 0, 0, 0, 0}
+#define MappedTriangle_init_zero                 {0, 0, 0, 0, 0, 0, 0}
+#define MappedParticles_init_zero                {0, _Shape2D_MIN, 0, 0, 0, 0}
+#define MappedPingPong_init_zero                 {0, 0, 0}
 #define Twang_init_zero                          {0}
 
 /* Field tags (for use in manual encoding/decoding) */
@@ -454,10 +399,10 @@ extern "C" {
 #define MappedTriangle_y2_tag                    5
 #define MappedTriangle_x3_tag                    6
 #define MappedTriangle_y3_tag                    7
-#define Modifier_field_number_tag                1
-#define Modifier_movement_type_tag               2
-#define Modifier_beats_per_minute_tag            3
-#define Modifier_offset_ms_tag                   4
+#define Modifier_movement_type_tag               1
+#define Modifier_field_index_tag                 2
+#define Modifier_period_100ms_tag                3
+#define Modifier_offset_100ms_tag                4
 #define Modifier_min_tag                         5
 #define Modifier_max_tag                         6
 #define PingPong_shape_tag                       1
@@ -490,6 +435,7 @@ extern "C" {
 #define Sparkle_sparkle_width_tag                2
 #define Sparkle_sparle_rate_tag                  3
 #define Sparkle_duration_tag                     4
+#define TimeSync_millis_tag                      1
 #define White_color_temperature_tag              1
 #define CommandParams_index_tag                  1
 #define CommandParams_enabled_tag                2
@@ -515,15 +461,27 @@ extern "C" {
 #define CommandParams_mapped_particles_tag       22
 #define CommandParams_mapped_ping_pong_tag       23
 #define CommandParams_twang_tag                  24
+#define WireMessage_sequence_tag                 1
+#define WireMessage_command_params_tag           2
+#define WireMessage_time_sync_tag                3
 
 /* Struct field encoding specification for nanopb */
+#define WireMessage_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, INT32,    sequence,          1) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,command_params,message.command_params),   2) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,time_sync,message.time_sync),   3)
+#define WireMessage_CALLBACK NULL
+#define WireMessage_DEFAULT NULL
+#define WireMessage_message_command_params_MSGTYPE CommandParams
+#define WireMessage_message_time_sync_MSGTYPE TimeSync
+
 #define CommandParams_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    index,             1) \
-X(a, STATIC,   OPTIONAL, BOOL,     enabled,           2) \
-X(a, STATIC,   OPTIONAL, INT32,    brightness,        3) \
-X(a, STATIC,   OPTIONAL, INT32,    strip_index,       4) \
-X(a, STATIC,   OPTIONAL, UENUM,    color_palette,     5) \
-X(a, CALLBACK, REPEATED, MESSAGE,  modifiers,         6) \
+X(a, STATIC,   REQUIRED, BOOL,     enabled,           2) \
+X(a, STATIC,   REQUIRED, INT32,    brightness,        3) \
+X(a, STATIC,   REQUIRED, INT32,    strip_index,       4) \
+X(a, STATIC,   REQUIRED, UENUM,    color_palette,     5) \
+X(a, STATIC,   REPEATED, MESSAGE,  modifiers,         6) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,white,type_params.white),   7) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,single_color,type_params.single_color),   8) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel,type_params.pixel),   9) \
@@ -542,7 +500,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_triangle,type_params.mapp
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_particles,type_params.mapped_particles),  22) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_ping_pong,type_params.mapped_ping_pong),  23) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24)
-#define CommandParams_CALLBACK pb_default_field_callback
+#define CommandParams_CALLBACK NULL
 #define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\x00"
 #define CommandParams_modifiers_MSGTYPE Modifier
 #define CommandParams_type_params_white_MSGTYPE White
@@ -564,99 +522,104 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24)
 #define CommandParams_type_params_mapped_ping_pong_MSGTYPE MappedPingPong
 #define CommandParams_type_params_twang_MSGTYPE Twang
 
+#define TimeSync_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, UINT64,   millis,            1)
+#define TimeSync_CALLBACK NULL
+#define TimeSync_DEFAULT NULL
+
 #define Modifier_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, INT32,    field_number,      1) \
-X(a, STATIC,   OPTIONAL, UENUM,    movement_type,     2) \
-X(a, STATIC,   OPTIONAL, INT32,    beats_per_minute,   3) \
-X(a, STATIC,   OPTIONAL, INT32,    offset_ms,         4) \
-X(a, STATIC,   OPTIONAL, INT32,    min,               5) \
-X(a, STATIC,   OPTIONAL, INT32,    max,               6)
+X(a, STATIC,   REQUIRED, UENUM,    movement_type,     1) \
+X(a, STATIC,   REQUIRED, INT32,    field_index,       2) \
+X(a, STATIC,   REQUIRED, INT32,    period_100ms,      3) \
+X(a, STATIC,   REQUIRED, INT32,    offset_100ms,      4) \
+X(a, STATIC,   REQUIRED, INT32,    min,               5) \
+X(a, STATIC,   REQUIRED, INT32,    max,               6)
 #define Modifier_CALLBACK NULL
-#define Modifier_DEFAULT (const pb_byte_t*)"\x18\x06\x20\x00\x28\x00\x30\xff\x01\x00"
+#define Modifier_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x00\x18\x32\x20\x00\x28\x00\x30\xff\x01\x00"
 
 #define White_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color_temperature,   1)
+X(a, STATIC,   REQUIRED, INT32,    color_temperature,   1)
 #define White_CALLBACK NULL
 #define White_DEFAULT (const pb_byte_t*)"\x08\x00\x00"
 
 #define SingleColor_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1)
+X(a, STATIC,   REQUIRED, INT32,    color,             1)
 #define SingleColor_CALLBACK NULL
 #define SingleColor_DEFAULT (const pb_byte_t*)"\x08\xe2\x01\x00"
 
 #define Pixel_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    led_index,         2)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, INT32,    led_index,         2)
 #define Pixel_CALLBACK NULL
 #define Pixel_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x00\x00"
 
 #define PixelRGB_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    red,               1) \
-X(a, STATIC,   OPTIONAL, INT32,    green,             2) \
-X(a, STATIC,   OPTIONAL, INT32,    blue,              3) \
-X(a, STATIC,   OPTIONAL, INT32,    led_index,         4)
+X(a, STATIC,   REQUIRED, INT32,    red,               1) \
+X(a, STATIC,   REQUIRED, INT32,    green,             2) \
+X(a, STATIC,   REQUIRED, INT32,    blue,              3) \
+X(a, STATIC,   REQUIRED, INT32,    led_index,         4)
 #define PixelRGB_CALLBACK NULL
 #define PixelRGB_DEFAULT (const pb_byte_t*)"\x08\x82\x01\x10\x82\x01\x18\x82\x01\x20\x00\x00"
 
 #define Rainbow_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    speed,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    wave_size,         2) \
-X(a, STATIC,   OPTIONAL, INT32,    rainbow_size,      3)
+X(a, STATIC,   REQUIRED, INT32,    speed,             1) \
+X(a, STATIC,   REQUIRED, INT32,    wave_size,         2) \
+X(a, STATIC,   REQUIRED, INT32,    rainbow_size,      3)
 #define Rainbow_CALLBACK NULL
 #define Rainbow_DEFAULT (const pb_byte_t*)"\x08\x1e\x10\x64\x18\x96\x01\x00"
 
 #define Sparkle_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    sparkle_width,     2) \
-X(a, STATIC,   OPTIONAL, INT32,    sparle_rate,       3) \
-X(a, STATIC,   OPTIONAL, INT32,    duration,          4)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, INT32,    sparkle_width,     2) \
+X(a, STATIC,   REQUIRED, INT32,    sparle_rate,       3) \
+X(a, STATIC,   REQUIRED, INT32,    duration,          4)
 #define Sparkle_CALLBACK NULL
 #define Sparkle_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x0f\x18\x0a\x20\x64\x00"
 
 #define FlickerSparkle_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    sparkle_width,     2) \
-X(a, STATIC,   OPTIONAL, INT32,    sparles_per_second,   3) \
-X(a, STATIC,   OPTIONAL, INT32,    duration,          4) \
-X(a, STATIC,   OPTIONAL, INT32,    flicker_delay,     5) \
-X(a, STATIC,   OPTIONAL, INT32,    flicker_window,    6) \
-X(a, STATIC,   OPTIONAL, INT32,    max_flickers,      7)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, INT32,    sparkle_width,     2) \
+X(a, STATIC,   REQUIRED, INT32,    sparles_per_second,   3) \
+X(a, STATIC,   REQUIRED, INT32,    duration,          4) \
+X(a, STATIC,   REQUIRED, INT32,    flicker_delay,     5) \
+X(a, STATIC,   REQUIRED, INT32,    flicker_window,    6) \
+X(a, STATIC,   REQUIRED, INT32,    max_flickers,      7)
 #define FlickerSparkle_CALLBACK NULL
 #define FlickerSparkle_DEFAULT (const pb_byte_t*)"\x08\xff\x01\x10\x5a\x18\xd7\x01\x20\x08\x28\x07\x30\x77\x38\x50\x00"
 
 #define PingPong_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, UENUM,    shape,             1) \
-X(a, STATIC,   OPTIONAL, UENUM,    movement,          2) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             3) \
-X(a, STATIC,   OPTIONAL, INT32,    width,             4) \
-X(a, STATIC,   OPTIONAL, INT32,    max_height,        5) \
-X(a, STATIC,   OPTIONAL, INT32,    count,             6) \
-X(a, STATIC,   OPTIONAL, INT32,    period_ms,         7) \
-X(a, STATIC,   OPTIONAL, INT32,    offset_ms,         8)
+X(a, STATIC,   REQUIRED, UENUM,    shape,             1) \
+X(a, STATIC,   REQUIRED, UENUM,    movement,          2) \
+X(a, STATIC,   REQUIRED, INT32,    color,             3) \
+X(a, STATIC,   REQUIRED, INT32,    width,             4) \
+X(a, STATIC,   REQUIRED, INT32,    max_height,        5) \
+X(a, STATIC,   REQUIRED, INT32,    count,             6) \
+X(a, STATIC,   REQUIRED, INT32,    period_ms,         7) \
+X(a, STATIC,   REQUIRED, INT32,    offset_ms,         8)
 #define PingPong_CALLBACK NULL
 #define PingPong_DEFAULT (const pb_byte_t*)"\x18\x41\x20\x14\x28\xff\x01\x30\x01\x38\xf0\x2e\x40\x00\x00"
 
 #define Render_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, UENUM,    shape,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             2) \
-X(a, STATIC,   OPTIONAL, INT32,    position,          3) \
-X(a, STATIC,   OPTIONAL, INT32,    width,             4)
+X(a, STATIC,   REQUIRED, UENUM,    shape,             1) \
+X(a, STATIC,   REQUIRED, INT32,    color,             2) \
+X(a, STATIC,   REQUIRED, INT32,    position,          3) \
+X(a, STATIC,   REQUIRED, INT32,    width,             4)
 #define Render_CALLBACK NULL
 #define Render_DEFAULT (const pb_byte_t*)"\x10\xd2\x01\x18\x14\x20\x14\x00"
 
 #define Rain_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    width,             2) \
-X(a, STATIC,   OPTIONAL, INT32,    drop_density,      3) \
-X(a, STATIC,   OPTIONAL, INT32,    drop_speed,        4)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, INT32,    width,             2) \
+X(a, STATIC,   REQUIRED, INT32,    drop_density,      3) \
+X(a, STATIC,   REQUIRED, INT32,    drop_speed,        4)
 #define Rain_CALLBACK NULL
-#define Rain_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x0f\x18\x0a\x20\x0a\x00"
+#define Rain_DEFAULT (const pb_byte_t*)"\x08\x96\x01\x10\x0f\x18\x5a\x20\x5a\x00"
 
 #define Gravity_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    launch_speed,      2) \
-X(a, STATIC,   OPTIONAL, INT32,    ball_rate,         3) \
-X(a, STATIC,   OPTIONAL, INT32,    width,             4)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, INT32,    launch_speed,      2) \
+X(a, STATIC,   REQUIRED, INT32,    ball_rate,         3) \
+X(a, STATIC,   REQUIRED, INT32,    width,             4)
 #define Gravity_CALLBACK NULL
 #define Gravity_DEFAULT (const pb_byte_t*)"\x08\x0d\x10\x00\x18\x05\x20\x46\x00"
 
@@ -666,51 +629,51 @@ X(a, STATIC,   OPTIONAL, INT32,    width,             4)
 #define Kaleidoscope_DEFAULT NULL
 
 #define MappedSlope_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, UENUM,    slope_type,        2) \
-X(a, STATIC,   OPTIONAL, INT32,    x1,                3) \
-X(a, STATIC,   OPTIONAL, INT32,    y1,                4) \
-X(a, STATIC,   OPTIONAL, INT32,    x2,                5) \
-X(a, STATIC,   OPTIONAL, INT32,    y2,                6) \
-X(a, STATIC,   OPTIONAL, INT32,    fade_distance,     7)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, UENUM,    slope_type,        2) \
+X(a, STATIC,   REQUIRED, INT32,    x1,                3) \
+X(a, STATIC,   REQUIRED, INT32,    y1,                4) \
+X(a, STATIC,   REQUIRED, INT32,    x2,                5) \
+X(a, STATIC,   REQUIRED, INT32,    y2,                6) \
+X(a, STATIC,   REQUIRED, INT32,    fade_distance,     7)
 #define MappedSlope_CALLBACK NULL
 #define MappedSlope_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x01\x18\x00\x20\x00\x28\xff\x01\x30\xff\x01\x38\x05\x00"
 
 #define MappedShape_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, UENUM,    shape,             2) \
-X(a, STATIC,   OPTIONAL, INT32,    x,                 3) \
-X(a, STATIC,   OPTIONAL, INT32,    y,                 4) \
-X(a, STATIC,   OPTIONAL, INT32,    size,              5) \
-X(a, STATIC,   OPTIONAL, INT32,    fade_distance,     6)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, UENUM,    shape,             2) \
+X(a, STATIC,   REQUIRED, INT32,    x,                 3) \
+X(a, STATIC,   REQUIRED, INT32,    y,                 4) \
+X(a, STATIC,   REQUIRED, INT32,    size,              5) \
+X(a, STATIC,   REQUIRED, INT32,    fade_distance,     6)
 #define MappedShape_CALLBACK NULL
 #define MappedShape_DEFAULT (const pb_byte_t*)"\x08\x01\x18\x80\x01\x20\x80\x01\x28\x32\x30\x32\x00"
 
 #define MappedTriangle_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    x1,                2) \
-X(a, STATIC,   OPTIONAL, INT32,    y1,                3) \
-X(a, STATIC,   OPTIONAL, INT32,    x2,                4) \
-X(a, STATIC,   OPTIONAL, INT32,    y2,                5) \
-X(a, STATIC,   OPTIONAL, INT32,    x3,                6) \
-X(a, STATIC,   OPTIONAL, INT32,    y3,                7)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, INT32,    x1,                2) \
+X(a, STATIC,   REQUIRED, INT32,    y1,                3) \
+X(a, STATIC,   REQUIRED, INT32,    x2,                4) \
+X(a, STATIC,   REQUIRED, INT32,    y2,                5) \
+X(a, STATIC,   REQUIRED, INT32,    x3,                6) \
+X(a, STATIC,   REQUIRED, INT32,    y3,                7)
 #define MappedTriangle_CALLBACK NULL
 #define MappedTriangle_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x00\x18\x00\x20\xff\x01\x28\x00\x30\x80\x01\x38\xff\x01\x00"
 
 #define MappedParticles_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, UENUM,    shape,             2) \
-X(a, STATIC,   OPTIONAL, INT32,    x,                 3) \
-X(a, STATIC,   OPTIONAL, INT32,    y,                 4) \
-X(a, STATIC,   OPTIONAL, INT32,    size,              5) \
-X(a, STATIC,   OPTIONAL, INT32,    fade_distance,     6)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, UENUM,    shape,             2) \
+X(a, STATIC,   REQUIRED, INT32,    x,                 3) \
+X(a, STATIC,   REQUIRED, INT32,    y,                 4) \
+X(a, STATIC,   REQUIRED, INT32,    size,              5) \
+X(a, STATIC,   REQUIRED, INT32,    fade_distance,     6)
 #define MappedParticles_CALLBACK NULL
 #define MappedParticles_DEFAULT (const pb_byte_t*)"\x08\xb1\x01\x10\x01\x18\x80\x01\x20\x80\x01\x28\x32\x30\x32\x00"
 
 #define MappedPingPong_FIELDLIST(X, a) \
-X(a, STATIC,   OPTIONAL, INT32,    color,             1) \
-X(a, STATIC,   OPTIONAL, INT32,    direction,         2) \
-X(a, STATIC,   OPTIONAL, INT32,    fade_distance,     3)
+X(a, STATIC,   REQUIRED, INT32,    color,             1) \
+X(a, STATIC,   REQUIRED, INT32,    direction,         2) \
+X(a, STATIC,   REQUIRED, INT32,    fade_distance,     3)
 #define MappedPingPong_CALLBACK NULL
 #define MappedPingPong_DEFAULT (const pb_byte_t*)"\x08\x7b\x10\x00\x18\x05\x00"
 
@@ -719,7 +682,9 @@ X(a, STATIC,   OPTIONAL, INT32,    fade_distance,     3)
 #define Twang_CALLBACK NULL
 #define Twang_DEFAULT NULL
 
+extern const pb_msgdesc_t WireMessage_msg;
 extern const pb_msgdesc_t CommandParams_msg;
+extern const pb_msgdesc_t TimeSync_msg;
 extern const pb_msgdesc_t Modifier_msg;
 extern const pb_msgdesc_t White_msg;
 extern const pb_msgdesc_t SingleColor_msg;
@@ -741,7 +706,9 @@ extern const pb_msgdesc_t MappedPingPong_msg;
 extern const pb_msgdesc_t Twang_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
+#define WireMessage_fields &WireMessage_msg
 #define CommandParams_fields &CommandParams_msg
+#define TimeSync_fields &TimeSync_msg
 #define Modifier_fields &Modifier_msg
 #define White_fields &White_msg
 #define SingleColor_fields &SingleColor_msg
@@ -763,7 +730,7 @@ extern const pb_msgdesc_t Twang_msg;
 #define Twang_fields &Twang_msg
 
 /* Maximum encoded size of messages (where known) */
-/* CommandParams_size depends on runtime parameters */
+#define CommandParams_size                       412
 #define FlickerSparkle_size                      77
 #define Gravity_size                             44
 #define Kaleidoscope_size                        0
@@ -781,8 +748,10 @@ extern const pb_msgdesc_t Twang_msg;
 #define Render_size                              35
 #define SingleColor_size                         11
 #define Sparkle_size                             44
+#define TimeSync_size                            11
 #define Twang_size                               0
 #define White_size                               11
+#define WireMessage_size                         426
 
 #ifdef __cplusplus
 } /* extern "C" */
@@ -792,10 +761,24 @@ extern const pb_msgdesc_t Twang_msg;
 /* Message descriptors for nanopb */
 namespace nanopb {
 template <>
+struct MessageDescriptor<WireMessage> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
+    static inline const pb_msgdesc_t* fields() {
+        return &WireMessage_msg;
+    }
+};
+template <>
 struct MessageDescriptor<CommandParams> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 24;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
+    }
+};
+template <>
+struct MessageDescriptor<TimeSync> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 1;
+    static inline const pb_msgdesc_t* fields() {
+        return &TimeSync_msg;
     }
 };
 template <>

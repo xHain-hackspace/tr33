@@ -1,58 +1,68 @@
 syntax = "proto2";
+import "nanopb.proto";
 
 enum ColorPalette {    
+  // FastLED
   RAINBOW = 0;
   FOREST = 1;
   OCEAN = 2;
   PARTY = 3;
   HEAT = 4;
-  SPRING_ANGEL = 5;
-  SCOUTY = 6;
-  PURPLE_HEAT = 7;
-  LAVA = 8;
-  CLOUD = 9;
-  // parrot = 8;
+  LAVA = 5;
+  CLOUD = 6;
+  
+  // Custom
+  SCOUTY = 7;
+  PURPLE_HEAT = 8;
+  SPRING_ANGEL = 9;
   SAGA = 10;
   SAGA2 = 11;
-  // sunset
-  SUNSET = 12;
-  // rivendell
-  RIVENDELL = 13;
-  // ocean breeze
-  OCEAN_BREEZE = 14;
-  // 50_shades_of_pink
-  // shades_of_pink = 14;
-  // sun
-  SUN = 15;
-  // Analogous_1 = 16;
-  // pinksplash
-  // pinksplash = 17;
-  // Coral_reef = 18;
-  // es_ocean_breeze_068 = 19;
-  SHADES_OF_PINK = 20;
-  // es_vintage_01 = 21;
-  // departure = 22;
-  LANDSCAPE = 23;
-  // es_landscape_33 = 24;
-  RAINBOWSHERBET = 25;
-  BLUE_PINK = 26;
-  HULT = 27;
-  // GMT_drywet = 28;
-  JUL01 = 29;
-  // es_vintage_57 = 30;
-  // ib15 = 31;
-  FUSCHIA = 32;
-  // es_emerald_dragon_08 = 33;
-  // lava = 34;
-  // fire = 35;
-  COLORFULL = 36;
-  // Magenta_Evening = 37;
-  // Pink_Purple = 38;
-  // autumn = 39;
-  // BlacK_Blue_Magenta_White = 40;
-  // BlacK_Magenta_Red = 41;
-  // BlacK_Red_Magenta_Yellow = 42;
+  PARROT = 12;
+
+  // WLED
+  SUNSET_REAL = 13;
+  RIVENDELL = 14;
+  OCEAN_BREEZE = 15;
+  RGI = 16;
+  RETRO2 = 17;
+  ANALOGOUS = 18;
+  PINKSPLASH = 19;
+  SUNSET_YELLOW = 20;
+  ANOTHER_SUNSET = 21;
+  BEECH = 22;
+  VINTAGE = 23;
+  DEPARTURE = 24;
+  LANDSCAPE = 25;
+  LANDSCAPE2 = 26;
+  RAINBOWSHERBET = 27;
+  HULT = 28;
+  HULT2 = 29;
+  DRYWET = 30;
+  JUL = 31;
+  VINTAGE2 = 32;
+  IB15 = 33;
+  TERTIARY = 34;
+  LAVA2 = 35;
+  FIERCE_ICE = 36;
+  COLORFULL = 37;
+  PINK_PURPLE = 38;
+  AUTUMN = 39;
+  BLACK_BLUE_MAGENTA_WHITE = 40;
+  BLACK_MAGENTA_RED = 41;
+  BLACK_RED_MAGENTA_YELLOW = 42;
   BLUE_CYAN_YELLOW = 43;
+  ORANGE_TEAL = 44;
+  TIAMAT = 45;
+  APRIL_NIGHT = 46;
+  ORANGERY = 47;
+  C9 = 48;
+  SAKURA = 49;
+  AURORA = 50;
+  ATLANTICA = 51;
+  C92 = 52;
+  C93 = 53;
+  TEMPERATURE = 54;
+  AURORA2 = 55;
 }
 
 enum Shape1D {
@@ -74,7 +84,7 @@ enum MovementType {
   LINEAR = 0;
   SINE = 1;
   QUADRATIC = 2;
-  CUBIC = 3;
+  // CUBIC = 3;
   SAWTOOTH = 4;
   SAWTOOTH_REVERSE = 5;
   RANDOM = 6;
@@ -87,14 +97,22 @@ enum SlopeType {
   COLOR_SHIFT = 2;
 }
 
+message WireMessage {
+  required int32 sequence = 1;
+  oneof message {
+    CommandParams command_params = 2;
+    TimeSync time_sync = 3;
+  }
+}
+
 
 message CommandParams {
   required int32 index = 1;  
-  optional bool enabled = 2 [default = true];
-  optional int32 brightness = 3 [default = 255];
-  optional int32 strip_index = 4 [default = 0]; 
-  optional ColorPalette color_palette = 5 [default = RAINBOW];
-  repeated Modifier modifiers = 6;
+  required bool enabled = 2 [default = true];
+  required int32 brightness = 3 [default = 255];
+  required int32 strip_index = 4 [default = 0]; 
+  required ColorPalette color_palette = 5 [default = RAINBOW];
+  repeated Modifier modifiers = 6 [(nanopb).max_count = 5];
   oneof type_params {
     White white = 7;
     SingleColor single_color = 8;
@@ -109,7 +127,7 @@ message CommandParams {
     Gravity gravity = 17;
     Kaleidoscope kaleidoscope = 18;
     MappedShape mapped_shape = 19;
-    MappedSlope mapped_slope =20;
+    MappedSlope mapped_slope = 20;
     MappedTriangle mapped_triangle = 21;
     MappedParticles mapped_particles = 22;
     MappedPingPong mapped_ping_pong = 23;
@@ -117,135 +135,139 @@ message CommandParams {
   }
 }
 
+message TimeSync {  
+  required uint64 millis = 1;
+}
+
 message Modifier {
-  required int32 field_number = 1;
-  optional MovementType movement_type = 2 [default = LINEAR];
-  optional int32 beats_per_minute = 3 [default = 6];
-  optional int32 offset_ms = 4 [default = 0];
-  optional int32 min = 5 [default = 0];
-  optional int32 max = 6 [default = 255];
+  required MovementType movement_type = 1 [default = SINE];
+  required int32 field_index = 2 [default = 0];
+  required int32 period_100ms = 3 [default = 50];
+  required int32 offset_100ms = 4 [default = 0];
+  required int32 min = 5 [default = 0];
+  required int32 max = 6 [default = 255];
 }
 
 message White {
-  optional int32 color_temperature = 1 [default = 0];
+  required int32 color_temperature = 1 [default = 0];
 }
 
 message SingleColor {
-  optional int32 color = 1 [default = 226];
+  required int32 color = 1 [default = 226];
 }
 
 message Pixel {
-  optional int32 color = 1 [default = 0];
-  optional int32 led_index = 2 [default = 0];
+  required int32 color = 1 [default = 0];
+  required int32 led_index = 2 [default = 0];
 }
 
 message PixelRGB {
-  optional int32 red = 1 [default = 130];
-  optional int32 green = 2 [default = 130];
-  optional int32 blue = 3 [default = 130];
-  optional int32 led_index = 4 [default = 0];
+  required int32 red = 1 [default = 130];
+  required int32 green = 2 [default = 130];
+  required int32 blue = 3 [default = 130];
+  required int32 led_index = 4 [default = 0];
 }
 
 message Rainbow {  
-  optional int32 speed = 1 [default = 30];  
-  optional int32 wave_size = 2 [default = 100];
-  optional int32 rainbow_size = 3 [default = 150];
+  required int32 speed = 1 [default = 30];  
+  required int32 wave_size = 2 [default = 100];
+  required int32 rainbow_size = 3 [default = 150];
 }
 
 message Sparkle {
-  optional int32 color = 1 [default = 1];  
-  optional int32 sparkle_width = 2 [default = 15];
-  optional int32 sparle_rate = 3 [default = 10];  
-  optional int32 duration = 4 [default = 100];  
+  required int32 color = 1 [default = 1];  
+  required int32 sparkle_width = 2 [default = 15];
+  required int32 sparle_rate = 3 [default = 10];  
+  required int32 duration = 4 [default = 100];  
 }
 
 message FlickerSparkle {
-  optional int32 color = 1 [default = 255];  
-  optional int32 sparkle_width = 2 [default = 90];
-  optional int32 sparles_per_second = 3 [default = 215];  
-  optional int32 duration = 4 [default = 8];  
-  optional int32 flicker_delay = 5 [default = 7];  
-  optional int32 flicker_window = 6 [default = 119];  
-  optional int32 max_flickers = 7 [default = 80];  
+  required int32 color = 1 [default = 255];  
+  required int32 sparkle_width = 2 [default = 90];
+  required int32 sparles_per_second = 3 [default = 215];  
+  required int32 duration = 4 [default = 8];  
+  required int32 flicker_delay = 5 [default = 7];  
+  required int32 flicker_window = 6 [default = 119];  
+  required int32 max_flickers = 7 [default = 80];  
 }
 
 message PingPong {
-  optional Shape1D shape = 1 [default = BALL];
-  optional MovementType movement = 2 [default = LINEAR];
-  optional int32 color = 3 [default = 65];
-  optional int32 width = 4 [default = 20];
-  optional int32 max_height = 5 [default = 255];
-  optional int32 count = 6 [default = 1];
-  optional int32 period_ms = 7 [default = 6000];
-  optional int32 offset_ms = 8 [default = 0];
+  required Shape1D shape = 1 [default = BALL];
+  required MovementType movement = 2 [default = LINEAR];
+  required int32 color = 3 [default = 65];
+  required int32 width = 4 [default = 20];
+  required int32 max_height = 5 [default = 255];
+  required int32 count = 6 [default = 1];
+  required int32 period_ms = 7 [default = 6000];
+  required int32 offset_ms = 8 [default = 0];
 }
 
 message Render {
-  optional Shape1D shape = 1 [default = BALL];
-  optional int32 color = 2 [default = 210];  
-  optional int32 position = 3 [default = 20];
-  optional int32 width = 4 [default = 20];  
+  required Shape1D shape = 1 [default = BALL];
+  required int32 color = 2 [default = 210];  
+  required int32 position = 3 [default = 20];
+  required int32 width = 4 [default = 20];  
 }
 
 message Rain {
-  optional int32 color = 1 [default = 150];  
-  optional int32 width = 2 [default = 15];
-  optional int32 drop_density = 3 [default = 90];  
-  optional int32 drop_speed = 4 [default = 90];  
+  required int32 color = 1 [default = 150];  
+  required int32 width = 2 [default = 15];
+  required int32 drop_density = 3 [default = 90];  
+  required int32 drop_speed = 4 [default = 90];  
 }
 
 message Gravity {
-  optional int32 color = 1 [default = 13];
-  optional int32 launch_speed = 2 [default  = 0];
-  optional int32 ball_rate = 3 [default = 5];
-  optional int32 width = 4 [default = 70];
+  required int32 color = 1 [default = 13];
+  required int32 launch_speed = 2 [default  = 0];
+  required int32 ball_rate = 3 [default = 5];
+  required int32 width = 4 [default = 70];
 }
 
 message Kaleidoscope {
 }
 
 message MappedSlope{
-  optional int32 color = 1 [default = 1];  
-  optional SlopeType slope_type = 2 [default = FILL];
-  optional int32 x1 = 3 [default = 0];
-  optional int32 y1 = 4 [default = 0];
-  optional int32 x2 = 5 [default = 255];
-  optional int32 y2 = 6 [default = 255];
-  optional int32 fade_distance = 7 [default = 5];
+  required int32 color = 1 [default = 1];  
+  required SlopeType slope_type = 2 [default = FILL];
+  required int32 x1 = 3 [default = 0];
+  required int32 y1 = 4 [default = 0];
+  required int32 x2 = 5 [default = 255];
+  required int32 y2 = 6 [default = 255];
+  required int32 fade_distance = 7 [default = 5];
 }
 
 message MappedShape {
-  optional int32 color = 1 [default = 1];  
-  optional Shape2D shape = 2 [default = SQUARE];
-  optional int32 x = 3 [default = 128];
-  optional int32 y = 4 [default = 128];
-  optional int32 size = 5 [default = 50];
-  optional int32 fade_distance = 6 [default = 50];
+  required int32 color = 1 [default = 1];  
+  required Shape2D shape = 2 [default = SQUARE];
+  required int32 x = 3 [default = 128];
+  required int32 y = 4 [default = 128];
+  required int32 size = 5 [default = 50];
+  required int32 fade_distance = 6 [default = 50];
 }
 
 message MappedTriangle {
-  optional int32 color = 1 [default = 1];  
-  optional int32 x1 = 2 [default = 0];
-  optional int32 y1 = 3 [default = 0];
-  optional int32 x2 = 4 [default = 255];
-  optional int32 y2 = 5 [default = 000];
-  optional int32 x3 = 6 [default = 128];
-  optional int32 y3 = 7 [default = 255];
+  required int32 color = 1 [default = 1];  
+  required int32 x1 = 2 [default = 0];
+  required int32 y1 = 3 [default = 0];
+  required int32 x2 = 4 [default = 255];
+  required int32 y2 = 5 [default = 000];
+  required int32 x3 = 6 [default = 128];
+  required int32 y3 = 7 [default = 255];
 }
 
 message MappedParticles {
-  optional int32 color = 1 [default= 177];
-  optional Shape2D shape = 2 [default = CIRCLE];
-  optional int32 x = 3 [default = 128];
-  optional int32 y = 4 [default = 128];
-  optional int32 size = 5 [default = 50];
-  optional int32 fade_distance = 6 [default = 50];
+  required int32 color = 1 [default= 177];
+  required Shape2D shape = 2 [default = CIRCLE];
+  required int32 x = 3 [default = 128];
+  required int32 y = 4 [default = 128];
+  required int32 size = 5 [default = 50];
+  required int32 fade_distance = 6 [default = 50];
 }
 
 message MappedPingPong {
-  optional int32 color = 1 [default = 123];
-  optional int32 direction = 2 [default = 0];
-  optional int32 fade_distance = 3 [default = 5];
+  required int32 color = 1 [default = 123];
+  required int32 direction = 2 [default = 0];
+  required int32 fade_distance = 3 [default = 5];
 }
 
 message Twang {

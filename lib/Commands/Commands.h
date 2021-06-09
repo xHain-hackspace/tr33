@@ -46,17 +46,20 @@ class Commands
 {
 private:
   LedStructure *leds;
+  static int64_t millis_offset;
 
 public:
   void init(LedStructure *leds);
   void process(uint8_t *command, int bytes);
-  void process(CommandParams cmd);
+  void handle_message(WireMessage msg);
+  void handle_command(CommandParams cmd);
   void run();
 
   // Misc
   void update_settings(uint8_t *data);
   static CRGB color_from_palette(CommandParams cmd, uint8_t color);
   static CRGB color_from_palette(CommandParams cmd, uint8_t color, uint8_t brightness);
+  static uint64_t synced_millis();
 
   // Commands
   void white(LedStructure *leds, CommandParams cmd);

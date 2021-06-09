@@ -45,13 +45,13 @@ void Commands::mapped_render_ball(LedStructure *leds, float x, float y, float si
     if (distance < 0)
     {
       // full brightness
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness);
+      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness * 255);
     }
     else if (distance < fade_distance)
     {
       // fade
       brightness = Commands::ease_in_out_cubic(render_brightness * (1 - distance / fade_distance));
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness);
+      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness * 255);
     }
   }
 }
@@ -96,13 +96,13 @@ void Commands::mapped_shape(LedStructure *leds, CommandParams cmd)
       if (distance < 0)
       {
         // full brightness
-        leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness);
+        leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness * 255);
       }
       else if (distance < fade_distance)
       {
         // fade
         brightness = Commands::ease_in_out_cubic(render_brightness * (1 - distance / fade_distance));
-        leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness);
+        leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness * 255);
       }
     }
   }

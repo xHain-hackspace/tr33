@@ -15,6 +15,10 @@ public:
 
   void set_led(uint8_t strip_index, int led, CRGB color);
   CRGB get_led(uint8_t strip_index, int led);
+  void fade_led(uint8_t strip_index, int led, CRGB target, fract8 amount);
+  void fade_single_led(uint8_t strip_index, int led, CRGB target, fract8 amount);
+  void fade_all_trunks(int led, CRGB target, fract8 amount);
+  void fade_all_branches(int led, CRGB target, fract8 amount);
   uint8_t random_strip(uint8_t strip_index);
   uint16_t strip_length(uint8_t strip_index);
   uint16_t pixel_count(uint8_t strip_index);
