@@ -53,6 +53,8 @@ void Commands::load_palettes()
       palettes[i] = parrot_gp;
       break;
       // wled
+    default:
+      palettes[i] = wled_palettes[i - (ColorPalette_PARROT + 1)];
     }
   }
 }
