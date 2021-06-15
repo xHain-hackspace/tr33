@@ -1,82 +1,44 @@
 #include <Commands.h>
+#include <Modifiers.h>
 
-void Commands::ping_pong(LedStructure *leds, uint8_t *data)
+int last_value[COMMAND_COUNT];
+
+void Commands::ping_pong(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t render_type = data[0];
-  uint8_t strip_index = data[1];
-  uint8_t color_index = data[2];
-  float brightness = float(data[3]) / 255;
-  float width = data[4];
-  uint8_t ping_pong_type = data[5];
-  uint8_t period = data[6];
-  uint8_t offset = data[7];
-  float max_height = float(data[8]) / 255;
+  PingPong ping_pong = cmd.type_params.ping_pong;
 
-  CRGB color = ColorFromPalette(currentPalette, color_index, 255);
-  float position = ping_pong_fraction(ping_pong_type, period, offset) * float(leds->strip_length(strip_index) - 1) * max_height;
+  float brightness = float(cmd.brightness) / 255;
+  // float max_height = float(ping_pong.max_height) / 255;
 
-  render(leds, render_type, strip_index, fabs(position), width, color, brightness, position > 0);
-}
+  CRGB color = color_from_palette(cmd, ping_pong.color);
 
-float Commands::ping_pong_fraction(uint8_t ping_pong_type, uint8_t period_100ms, uint8_t offset_100ms)
-{
-  float fraction = 0.0;
-  switch (ping_pong_type)
+  int value = 0;
+  Modifier modifier = Modifier_init_default;
+  modifier.field_index = MAX_MODIFIERS;
+  modifier.movement_type = ping_pong.movement;
+  modifier.max = 65535;
+  modifier.period_100ms = max(1, ping_pong.period_100ms);
+
+  Modifiers::apply(modifier, &value, cmd.index);
+
+  bool direction;
+
+  switch (ping_pong.movement)
   {
-  case PING_PONG_LINEAR:
-    fraction = ping_pong_linear(period_100ms, offset_100ms);
+  case MovementType_SAWTOOTH:
+    direction = false;
     break;
-  case PING_PONG_SINE:
-  case PING_PONG_NONE:
-    fraction = ping_pong_sine(period_100ms, offset_100ms);
+  case MovementType_SAWTOOTH_REVERSE:
+    direction = true;
     break;
-  case PING_PONG_SAWTOOTH:
-    fraction = ping_pong_sawtooth(period_100ms, offset_100ms);
-    break;
+  default:
+    direction = value > last_value[cmd.index];
   }
+  last_value[cmd.index] = value;
 
-  return fraction;
-}
-
-float Commands::ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms)
-{
-  int period_millis = period_100ms * 100;
-  int rem = (millis() + offset_100ms * 100) % period_millis;
-
-  if (rem <= period_millis / 2)
+  for (int i = 0; i < max(1, ping_pong.count); i++)
   {
-    return float(rem) / (float(period_millis) / 2.0);
+    float position = float((value + (i * 65535) / max(1, ping_pong.count)) % 65535) / 65535 * float(leds->strip_length(cmd.strip_index)); //* max_height;
+    render(leds, ping_pong.shape, cmd.strip_index, position, ping_pong.width, color, brightness, direction);
   }
-  else
-  {
-    return (1.0 - (float(rem) - float(period_millis) / 2.0) / (float(period_millis) / 2.0)) * -1.0;
-  }
-}
-
-float Commands::ping_pong_sine(uint8_t period_100ms, uint8_t offset_100ms)
-{
-  int rem = (millis() + offset_100ms * 100) % (period_100ms * 100);
-
-  float res = (sinf(float(rem) * 2.0 * PI / float(period_100ms * 100) - PI / 2) + 1.0) / 2.0;
-
-  if (rem <= period_100ms * 100 / 2)
-  {
-    return res;
-  }
-  else
-  {
-    return res * -1;
-  }
-}
-
-float Commands::ping_pong_cosine(uint8_t period_100ms, uint8_t offset_100ms)
-{
-  return (cosf(float(millis() - offset_100ms * 100) * 2.0 * PI / float(period_100ms * 100)) + 1.0) / 2.0;
-}
-
-float Commands::ping_pong_sawtooth(uint8_t period_100ms, uint8_t offset_100ms)
-{
-  int period_millis = period_100ms * 100;
-  int rem = (millis() + offset_100ms * 100) % period_millis;
-  return float(rem) / float(period_millis);
 }

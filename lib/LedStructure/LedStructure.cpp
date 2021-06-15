@@ -1,35 +1,40 @@
-#include <LedStructure.h>
 #include <Commands.h>
-#include <Modifiers.h>
+#include <LedStructure.h>
+#include <command_schemas.pb.h>
+// #include <Modifiers.h>
 
 CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 
 void LedStructure::init()
 {
-  // command_buffer[0].type = COMMAND_RAINBOW_SINE;
-  // command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  // command_buffer[0].data[1] = 50;  // rate
-  // command_buffer[0].data[2] = 14;  // wavelength
-  // command_buffer[0].data[3] = 100; // percent
-  // command_buffer[0].data[4] = 255; // brightness
+  // Modifier modifer = Modifier_init_default;
+  // modifer.movement_type = MovementType_RANDOM_TRANSITIONS;
+  // modifer.period_s = 10;
 
-  command_buffer[0].type = COMMAND_SINGLE_COLOR;
-  command_buffer[0].data[0] = STRIP_INDEX_ALL;
-  command_buffer[0].data[1] = HUE_BLUE; // hue
-  command_buffer[0].data[2] = 128;      // brightness
+  Rainbow rainbow = Rainbow_init_default;
+  commands[0] = CommandParams_init_default;
+  commands[0].which_type_params = CommandParams_rainbow_tag;
+  commands[0].type_params.rainbow = rainbow;
+  commands[0].color_palette = ColorPalette_SCOUTY;
 
-  command_buffer[1].type = COMMAND_RENDER;
-  command_buffer[1].data[0] = RENDER_BALL;
-  command_buffer[1].data[1] = STRIP_INDEX_ALL;
-  command_buffer[1].data[2] = HUE_RED;
-  command_buffer[1].data[3] = 180; // brightness
-  command_buffer[1].data[4] = 128; // position1
-  command_buffer[1].data[5] = 0;   // position2
-  command_buffer[1].data[6] = 80;  // width
+  // SingleColor single = SingleColor_init_default;
+  // single.color = HUE_BLUE;
+  // single.color_modifer = modifer;
+  // single.has_color_modifer = true;
+  // commands[0] = CommandParams_init_default;
+  // commands[0].which_type_params = CommandParams_single_color_tag;
+  // commands[0].type_params.single_color = single;
 
-#ifdef COMMANDS_VIA_WIFI
-  Modifiers::test();
-#endif
+  // modifer.movement_type = MovementType_LINEAR;
+  // modifer.beats_per_minute =  256;
+  // commands[0].color_palette_modifier = modifer;
+  // commands[0].has_color_palette_modifier = true;
+
+  // PingPong ping_pong = PingPong_init_default;
+  // ping_pong.color = HUE_RED;
+  // commands[1] = CommandParams_init_default;
+  // commands[1].which_type_params = CommandParams_ping_pong_tag;
+  // commands[1].type_params.ping_pong = ping_pong;
 }
 
 //
@@ -53,7 +58,6 @@ void LedStructure::set_led(uint8_t strip_index, int led, CRGB color)
 
 CRGB LedStructure::get_led(uint8_t strip_index, int led)
 {
-
   if (strip_index < STRIP_COUNT)
   {
     return leds[strip_index][led];
@@ -64,22 +68,17 @@ CRGB LedStructure::get_led(uint8_t strip_index, int led)
   }
 }
 
-void LedStructure::fade_led(uint8_t strip_index, int led, CRGB target, float amount)
+void LedStructure::fade_led(CommandParams cmd, int led, CRGB target)
 {
-  if (led >= 0 && led < strip_length(strip_index))
-  {
-    CRGB current = get_led(strip_index, led);
-    CRGB faded = blend(current, target, amount * 255.0);
-    set_led(strip_index, led, faded);
-  }
+  fade_led(cmd.strip_index, led, target, cmd.brightness);
 }
 
-void LedStructure::shift_led(uint8_t strip_index, int led, uint8_t amount)
+void LedStructure::fade_led(uint8_t strip_index, int led, CRGB target, fract8 amount)
 {
   if (led >= 0 && led < strip_length(strip_index))
   {
     CRGB current = get_led(strip_index, led);
-    CRGB faded = blend(current, 0, amount * 255.0);
+    CRGB faded = blend(current, target, amount);
     set_led(strip_index, led, faded);
   }
 }
@@ -111,11 +110,6 @@ uint8_t LedStructure::random_strip(uint8_t strip_index)
   {
     return random8(0, STRIP_COUNT);
   }
-}
-
-uint8_t LedStructure::strip_index_all()
-{
-  return STRIP_INDEX_ALL;
 }
 
 // void Tr33::show_pin_numbers()

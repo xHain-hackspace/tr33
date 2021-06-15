@@ -45,7 +45,7 @@ void Dode::mapped_swipe(uint8_t *data)
     if (brightness > 0)
     {
       brightness = Commands::ease_in_out_cubic(brightness * 1.0);
-      fade_led(coordinates[i].i_edge, coordinates[i].i_led, color, brightness * brightness_factor);
+      fade_led(coordinates[i].i_edge, coordinates[i].i_led, color, brightness * brightness_factor * 255);
     }
   }
 }

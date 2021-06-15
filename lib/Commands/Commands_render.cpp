@@ -1,40 +1,37 @@
 #include <Commands.h>
 
-void Commands::render(LedStructure *leds, uint8_t *data)
+void Commands::render(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t render_type = data[0];
-  uint8_t strip_index = data[1];
-  uint8_t color_index = data[2];
-  float brightness = float(data[3]) / 255;
-  uint16_t position_int = data[4] << 8 | data[5];
-  float position = float(position_int) / 65535.0 * float(leds->strip_length(strip_index));
-  float width = data[6];
+  Render render_p = cmd.type_params.render;
 
-  CRGB color = ColorFromPalette(currentPalette, color_index, 255);
+  float brightness = float(cmd.brightness) / 255;
+  float position = float(render_p.position) / 65535.0 * float(leds->strip_length(cmd.strip_index));
 
-  render(leds, render_type, strip_index, position, width, color, brightness, false);
+  CRGB color = color_from_palette(cmd, render_p.color);
+
+  render(leds, render_p.shape, cmd.strip_index, position, render_p.width, color, brightness, false);
 }
 
-void Commands::render(LedStructure *leds, uint8_t render_type, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction)
+void Commands::render(LedStructure *leds, Shape1D shape, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction)
 {
-  switch (render_type)
+  switch (shape)
   {
-  case RENDER_BALL:
+  case Shape1D_BALL:
     render_ball(leds, strip_index, position, width, color, brightness);
     break;
-  case RENDER_COMET:
+  case Shape1D_COMET:
     render_comet(leds, strip_index, position, width, color, brightness, direction, false, false);
     break;
-  case RENDER_COMET_BOUNCE:
+  case Shape1D_COMET_BOUNCE:
     render_comet(leds, strip_index, position, width, color, brightness, direction, false, true);
     break;
-  case RENDER_NYAN:
+  case Shape1D_NYAN:
     render_comet(leds, strip_index, position, width, color, brightness, direction, true, false);
     break;
-  case RENDER_NYAN_BOUNCE:
+  case Shape1D_NYAN_BOUNCE:
     render_comet(leds, strip_index, position, width, color, brightness, direction, true, true);
     break;
-  case RENDER_FILL:
+  case Shape1D_SOLID:
     render_fill(leds, strip_index, position, color, brightness, direction);
     break;
   }
@@ -42,7 +39,6 @@ void Commands::render(LedStructure *leds, uint8_t render_type, uint8_t strip_ind
 
 void Commands::render_ball(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float ball_brightness)
 {
-  position = position;
   int start_led = max(0, int(ceilf(position - width / 2.0)));
   int end_led = min((int)leds->strip_length(strip_index), int(floorf(position + width / 2.0)));
   float brightness = 0.0;
@@ -51,7 +47,7 @@ void Commands::render_ball(LedStructure *leds, uint8_t strip_index, float positi
   {
     brightness = 1.0 - fabs(float(i) - position) / (width / 2.0);
     brightness = Commands::ease_in_out_cubic(brightness * ball_brightness);
-    leds->fade_led(strip_index, i, color, brightness);
+    leds->fade_led(strip_index, i, color, brightness * 255);
   }
 }
 
@@ -97,10 +93,10 @@ void Commands::render_comet(LedStructure *leds, uint8_t strip_index, float posit
 
         if (nyan)
         {
-          color = ColorFromPalette(currentPalette, led * 3);
+          color = ColorFromPalette(RainbowColors_p, led * 3, 255);
         }
 
-        leds->fade_led(strip_index, led, color, tail_brightness);
+        leds->fade_led(strip_index, led, color, tail_brightness * 255);
       }
     }
   }
@@ -127,6 +123,6 @@ void Commands::render_fill(LedStructure *leds, uint8_t strip_index, float positi
 
   for (int i = first_led; i < last_led; i++)
   {
-    leds->fade_led(strip_index, i, color, brightness);
+    leds->fade_led(strip_index, i, color, brightness * 255);
   }
 }

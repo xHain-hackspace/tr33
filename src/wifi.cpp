@@ -4,6 +4,8 @@
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <command_schemas.pb.h>
+#include <pb_decode.h>
 
 #if defined(SECRETS_FILE)
 #include SECRETS_FILE
@@ -20,17 +22,22 @@ bool udp_up = false;
 bool ota_up = false;
 bool wasdisconnected = true;
 
+// syncing
+uint32_t sequence_period_ms = 20 * 1000;
+uint32_t last_send = 0;
+uint8_t sequence = 0;
+bool sequence_error = false;
+const int control_port = 1337;
+const int sequence_header_length = 3;
+const char sequence_header[] = "SEQ";
+
 #if defined(WIFI_HOSTNAME)
 char hostname[] = WIFI_HOSTNAME;
 #else
-char hostname[] = "esp32_tr33";
+char hostname[] = "esp32";
 #endif
 
 const char *ota_password_hash = "d3d57181ad9b5b2e5e82a6c0b94ba22e";
-
-const int resync_port = 1337;
-const int resync_reqest_length = 6;
-const char resync_request_content[] = "resync";
 
 void wifi_init()
 {
@@ -40,7 +47,8 @@ void wifi_init()
   WiFi.mode(WIFI_STA);
   WiFi.setHostname(hostname);
   Serial.printf("Connecting to ssid %s, setting hostname to %s\n", ssid, hostname);
-  WiFi.begin(ssid, password);
+  int status = WiFi.begin(ssid, password);
+  Serial.printf("Wlan begin status %i\n", status);
 }
 
 void upd_init()
@@ -48,14 +56,25 @@ void upd_init()
   Serial.printf("Initializing UDP...\n");
   udp.begin(LISTEN_PORT);
   Serial.printf("Done. Listening on %s:%d\n", WiFi.localIP().toString().c_str(), LISTEN_PORT);
-  // send resync request
-  Serial.printf("Sending resync request to %d.%d.%d.%d:%d\n", resync_host[0], resync_host[1], resync_host[2], resync_host[3], resync_port);
-  udp.beginPacket(resync_host, resync_port);
-  udp.write((uint8_t *)resync_request_content, resync_reqest_length);
-  udp.endPacket();
   Serial.println("... done");
 
   udp_up = true;
+}
+
+void send_sequence()
+{
+  udp.beginPacket(control_host, control_port);
+  udp.write((uint8_t *)sequence_header, sequence_header_length);
+  if (sequence_error)
+  {
+    udp.write(0);
+  }
+  else
+  {
+    udp.write(sequence);
+  }
+  sequence_error = false;
+  udp.endPacket();
 }
 
 void print_wifi_status(int wifi_status)
@@ -113,49 +132,71 @@ void wifi_setup()
   // Password can be set with it's md5 value as well
   ArduinoOTA.setPasswordHash(ota_password_hash);
   ArduinoOTA
-      .onStart([]() {
-        String type;
-        if (ArduinoOTA.getCommand() == U_FLASH)
-          type = "sketch";
-        else // U_SPIFFS
-          type = "filesystem";
+      .onStart([]()
+               {
+                 String type;
+                 if (ArduinoOTA.getCommand() == U_FLASH)
+                   type = "sketch";
+                 else // U_SPIFFS
+                   type = "filesystem";
 
-        // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-        Serial.println("Start updating " + type);
-      })
-      .onEnd([]() {
-        Serial.println("\nEnd");
-      })
-      .onProgress([](unsigned int progress, unsigned int total) {
-        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
-      })
-      .onError([](ota_error_t error) {
-        Serial.printf("Error[%u]: ", error);
-        if (error == OTA_AUTH_ERROR)
-          Serial.println("Auth Failed");
-        else if (error == OTA_BEGIN_ERROR)
-          Serial.println("Begin Failed");
-        else if (error == OTA_CONNECT_ERROR)
-          Serial.println("Connect Failed");
-        else if (error == OTA_RECEIVE_ERROR)
-          Serial.println("Receive Failed");
-        else if (error == OTA_END_ERROR)
-          Serial.println("End Failed");
-      });
+                 // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+                 Serial.println("Start updating " + type);
+               })
+      .onEnd([]()
+             { Serial.println("\nEnd"); })
+      .onProgress([](unsigned int progress, unsigned int total)
+                  { Serial.printf("Progress: %u%%\r", (progress / (total / 100))); })
+      .onError([](ota_error_t error)
+               {
+                 Serial.printf("Error[%u]: ", error);
+                 if (error == OTA_AUTH_ERROR)
+                   Serial.println("Auth Failed");
+                 else if (error == OTA_BEGIN_ERROR)
+                   Serial.println("Begin Failed");
+                 else if (error == OTA_CONNECT_ERROR)
+                   Serial.println("Connect Failed");
+                 else if (error == OTA_RECEIVE_ERROR)
+                   Serial.println("Receive Failed");
+                 else if (error == OTA_END_ERROR)
+                   Serial.println("End Failed");
+               });
   //End of OTA section
+}
+
+CommandParams disable_overlay()
+{
+  CommandParams command = CommandParams_init_zero;
+  command.index = COMMAND_COUNT - 1;
+  command.enabled = false;
+
+  return command;
+}
+
+CommandParams color_overlay(uint8_t color)
+{
+  SingleColor single = SingleColor_init_default;
+  single.color = color;
+  CommandParams command = CommandParams_init_default;
+  command.which_type_params = CommandParams_single_color_tag;
+  command.type_params.single_color = single;
+  command.index = COMMAND_COUNT - 1;
+
+  return command;
 }
 
 void wifi_loop(Commands commands)
 {
   int wifi_status = WiFi.status();
+  int bytes;
 
   if (wifi_status == WL_CONNECTED)
   {
     if (wasdisconnected)
-    { //if this is a reconnect restore the previous effect
+    {
+      //if this is a reconnect restore the previous effect
       print_wifi_status(wifi_status);
-      uint8_t command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_DISABLE};
-      commands.process(command_buffer);
+      commands.handle_command(disable_overlay());
       commands.run();
       wasdisconnected = false;
     }
@@ -175,23 +216,38 @@ void wifi_loop(Commands commands)
       // wifi and upd is up, check if we received a UDP packet
       while (udp.parsePacket())
       {
-        // Serial.println("debug");
-        // Serial.printf("%d: Received command with size %d from %s, port %d\n", millis(), packet_size, udp.remoteIP().toString().c_str(), udp.remotePort());
-        udp.read(udp_buffer, UDP_BUFFER_SIZE);
-        // Serial.printf("%d: Received command with size %d sequence %d\n", millis(), packet_size, (uint8_t)udp_buffer[0]);
-        // Serial.printf("%d: Received command\n", millis());
-        // if (len > 0)
-        // {
-        //   udp_buffer[len] = 0;
-        // }
-        // Serial.printf("UDP packet contents: %s\n", udp_buffer);
-        commands.process(udp_buffer);
-        // udp.flush();
+        bytes = udp.read(udp_buffer, UDP_BUFFER_SIZE);
+
+        if (bytes > 0)
+        {
+          pb_istream_t stream = pb_istream_from_buffer(udp_buffer, bytes);
+          WireMessage wire_message = WireMessage_init_default;
+          bool status = pb_decode(&stream, WireMessage_fields, &wire_message);
+
+          if (!status)
+          {
+            Serial.printf("Protobuf decoding failed: %s\n", PB_GET_ERROR(&stream));
+          }
+          else
+          {
+            if ((sequence + 1) % 256 != wire_message.sequence)
+            {
+              sequence_error = true;
+            }
+
+            sequence = wire_message.sequence;
+            commands.handle_message(wire_message);
+          }
+          last_send = millis();
+        }
       }
-      // else
-      // {
-      //   Serial.printf("%d: none\n", millis());
-      // }
+
+      // regulary send squence to ensure we are in sync
+      if (millis() - last_send > sequence_period_ms || last_send == 0)
+      {
+        send_sequence();
+        last_send = millis();
+      }
       commands.run();
     }
     else
@@ -207,8 +263,8 @@ void wifi_loop(Commands commands)
     udp_up = false;
     ota_up = false;
     wasdisconnected = true;
-    uint8_t command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_SINGLE_COLOR, STRIP_INDEX_ALL, HUE_GREEN, 255};
-    commands.process(command_buffer);
+    commands.handle_command(color_overlay(HUE_ORANGE));
+    commands.run();
     delay(500);
   }
   else
@@ -217,8 +273,8 @@ void wifi_loop(Commands commands)
     udp_up = false;
     ota_up = false;
     wasdisconnected = true;
-    uint8_t command_buffer[] = {COMMAND_BUFFER_SIZE - 1, COMMAND_SINGLE_COLOR, STRIP_INDEX_ALL, HUE_ORANGE, 255};
-    commands.process(command_buffer);
+    commands.handle_command(color_overlay(HUE_RED));
+    commands.run();
     wifi_init();
   }
 }

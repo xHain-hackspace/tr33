@@ -21,17 +21,18 @@ bool point_in_triange(float xp, float yp, float x1, float y1, float x2, float y2
   return !(has_neg && has_pos);
 }
 
-void Commands::mapped_triangle(LedStructure *leds, uint8_t *data)
+void Commands::mapped_triangle(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t color_index = data[0];
-  float render_brightness = float(data[1]) / 255.0;
-  float x1 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(data[2]) / 255.0 + MAPPING_X_MIN;
-  float y1 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - data[3]) / 255.0 + MAPPING_Y_MIN;
-  float x2 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(data[4]) / 255.0 + MAPPING_X_MIN;
-  float y2 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - data[5]) / 255.0 + MAPPING_Y_MIN;
-  float x3 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(data[6]) / 255.0 + MAPPING_X_MIN;
-  float y3 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - data[7]) / 255.0 + MAPPING_Y_MIN;
-  CRGB color = ColorFromPalette(currentPalette, color_index);
+  MappedTriangle mapped_triangle = cmd.type_params.mapped_triangle;
+
+  float x1 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(mapped_triangle.x1) / 255.0 + MAPPING_X_MIN;
+  float y1 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - mapped_triangle.y1) / 255.0 + MAPPING_Y_MIN;
+  float x2 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(mapped_triangle.x2) / 255.0 + MAPPING_X_MIN;
+  float y2 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - mapped_triangle.y2) / 255.0 + MAPPING_Y_MIN;
+  float x3 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(mapped_triangle.x3) / 255.0 + MAPPING_X_MIN;
+  float y3 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - mapped_triangle.y3) / 255.0 + MAPPING_Y_MIN;
+  float brightness = float(cmd.brightness) / 255.0;
+  CRGB color = color_from_palette(cmd, mapped_triangle.color);
 
   for (int i = 0; i < MAPPING_SIZE; i++)
   {
@@ -39,7 +40,7 @@ void Commands::mapped_triangle(LedStructure *leds, uint8_t *data)
     if (point_in_triange(leds->mapping[i][2], leds->mapping[i][3], x1, y1, x2, y2, x3, y3))
     {
       // full brightness
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness);
+      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness * 255);
     }
   }
 }

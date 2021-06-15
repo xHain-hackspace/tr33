@@ -1,0 +1,283 @@
+syntax = "proto2";
+import "nanopb.proto";
+
+enum ColorPalette {    
+  // FastLED
+  RAINBOW = 0;
+  FOREST = 1;
+  OCEAN = 2;
+  PARTY = 3;
+  HEAT = 4;
+  LAVA = 5;
+  CLOUD = 6;
+  
+  // Custom
+  SCOUTY = 7;
+  PURPLE_HEAT = 8;
+  SPRING_ANGEL = 9;
+  SAGA = 10;
+  SAGA2 = 11;
+  PARROT = 12;
+
+  // WLED
+  SUNSET_REAL = 13;
+  RIVENDELL = 14;
+  OCEAN_BREEZE = 15;
+  RGI = 16;
+  RETRO2 = 17;
+  ANALOGOUS = 18;
+  PINKSPLASH = 19;
+  SUNSET_YELLOW = 20;
+  ANOTHER_SUNSET = 21;
+  BEECH = 22;
+  VINTAGE = 23;
+  DEPARTURE = 24;
+  LANDSCAPE = 25;
+  LANDSCAPE2 = 26;
+  RAINBOWSHERBET = 27;
+  HULT = 28;
+  HULT2 = 29;
+  DRYWET = 30;
+  JUL = 31;
+  VINTAGE2 = 32;
+  IB15 = 33;
+  TERTIARY = 34;
+  LAVA2 = 35;
+  FIERCE_ICE = 36;
+  COLORFULL = 37;
+  PINK_PURPLE = 38;
+  AUTUMN = 39;
+  BLACK_BLUE_MAGENTA_WHITE = 40;
+  BLACK_MAGENTA_RED = 41;
+  BLACK_RED_MAGENTA_YELLOW = 42;
+  BLUE_CYAN_YELLOW = 43;
+  ORANGE_TEAL = 44;
+  TIAMAT = 45;
+  APRIL_NIGHT = 46;
+  ORANGERY = 47;
+  C9 = 48;
+  SAKURA = 49;
+  AURORA = 50;
+  ATLANTICA = 51;
+  C92 = 52;
+  C93 = 53;
+  TEMPERATURE = 54;
+  AURORA2 = 55;
+}
+
+enum Shape1D {
+  BALL = 0;
+  COMET = 1;
+  COMET_BOUNCE = 2;
+  NYAN = 3;
+  NYAN_BOUNCE = 4;
+  SOLID = 5;
+}
+
+enum Shape2D {
+  SQUARE = 0;
+  CIRCLE = 1;
+  RING = 2;
+  // LINE_VERTICAL = 3;
+  // LINE_HORIZONTAL = 4;
+  // COMET_VERTICAL = 5;
+  // COMET_HORIZONTAL = 6;
+  // FILL_VERTICAL = 7;
+  // FILL_HORIZONTAL = 8;
+}
+
+enum MovementType {
+  LINEAR = 0;
+  SINE = 1;
+  QUADRATIC = 2;
+  // CUBIC = 3;
+  SAWTOOTH = 4;
+  SAWTOOTH_REVERSE = 5;
+  RANDOM = 6;
+  RANDOM_TRANSITIONS = 7;
+  // STEPS = 8;
+}
+
+enum SlopeType {
+  LINE = 0;
+  FILL = 1;
+  COLOR_SHIFT = 2;
+}
+
+message WireMessage {
+  required int32 sequence = 1;
+  oneof message {
+    CommandParams command_params = 2;
+    TimeSync time_sync = 3;
+  }
+}
+
+message CommandParams {
+  required int32 index = 1;  
+  required bool enabled = 2 [default = true];
+  required int32 brightness = 3 [default = 255];
+  required int32 strip_index = 4 [default = 0]; 
+  required ColorPalette color_palette = 5 [default = RAINBOW];
+  repeated Modifier modifiers = 6 [(nanopb).max_count = 5];
+  oneof type_params {
+    White white = 7;
+    SingleColor single_color = 8;
+    Pixel pixel = 9;
+    PixelRGB pixel_rgb = 10;
+    Rainbow rainbow = 11;
+    Sparkle sparkle = 12;
+    FlickerSparkle flicker_sparkle = 13;
+    PingPong ping_pong = 14;
+    Render render =15;
+    Rain rain = 16;
+    Gravity gravity = 17;
+    Kaleidoscope kaleidoscope = 18;
+    MappedShape mapped_shape = 19;
+    MappedSlope mapped_slope = 20;
+    MappedTriangle mapped_triangle = 21;
+    MappedParticles mapped_particles = 22;
+    MappedPingPong mapped_ping_pong = 23;
+    Twang twang = 24;
+  }
+}
+
+message TimeSync {  
+  required uint64 millis = 1;
+}
+
+message Modifier {
+  required MovementType movement_type = 1 [default = SINE];
+  required int32 field_index = 2 [default = 0];
+  required int32 period_100ms = 3 [default = 0];
+  required int32 offset_100ms = 4 [default = 0];
+  required int32 min = 5 [default = 0];
+  required int32 max = 6 [default = 255];
+}
+
+message White {
+  required int32 color_temperature = 1 [default = 0];
+}
+
+message SingleColor {
+  required int32 color = 1 [default = 226];
+}
+
+message Pixel {
+  required int32 color = 1 [default = 0];
+  required int32 led_index = 2 [default = 0];
+}
+
+message PixelRGB {
+  required int32 red = 1 [default = 130];
+  required int32 green = 2 [default = 130];
+  required int32 blue = 3 [default = 130];
+  required int32 led_index = 4 [default = 0];
+}
+
+message Rainbow {  
+  required int32 speed = 1 [default = 30];  
+  required int32 wave_size = 2 [default = 100];
+  required int32 rainbow_size = 3 [default = 150];
+}
+
+message Sparkle {
+  required int32 color = 1 [default = 1];  
+  required int32 sparkle_width = 2 [default = 15];
+  required int32 sparle_rate = 3 [default = 10];  
+  required int32 duration = 4 [default = 100];  
+}
+
+message FlickerSparkle {
+  required int32 color = 1 [default = 255];  
+  required int32 sparkle_width = 2 [default = 90];
+  required int32 sparles_per_second = 3 [default = 215];  
+  required int32 duration = 4 [default = 8];  
+  required int32 flicker_delay = 5 [default = 7];  
+  required int32 flicker_window = 6 [default = 119];  
+  required int32 max_flickers = 7 [default = 80];  
+}
+
+message PingPong {
+  required Shape1D shape = 1 [default = BALL];
+  required MovementType movement = 2 [default = SINE];
+  required int32 color = 3 [default = 65];
+  required int32 width = 4 [default = 20];  
+  required int32 count = 5 [default = 1, (nanopb).max_size=20];
+  required int32 period_100ms = 6 [default = 100];
+}
+
+message Render {
+  required Shape1D shape = 1 [default = BALL];
+  required int32 color = 2 [default = 210];  
+  required int32 position = 3 [default = 20, (nanopb).max_size=65535];
+  required int32 width = 4 [default = 20];  
+}
+
+message Rain {
+  required int32 color = 1 [default = 150];  
+  required int32 width = 2 [default = 15];
+  required int32 drop_density = 3 [default = 90];  
+  required int32 drop_speed = 4 [default = 90];  
+}
+
+message Gravity {
+  required int32 color = 1 [default = 13];
+  required int32 launch_speed = 2 [default  = 0];
+  required int32 ball_rate = 3 [default = 5];
+  required int32 width = 4 [default = 70];
+}
+
+message Kaleidoscope {
+}
+
+message MappedSlope{
+  required int32 color = 1 [default = 1];  
+  required SlopeType slope_type = 2 [default = FILL];
+  required int32 x1 = 3 [default = 0];
+  required int32 y1 = 4 [default = 0];
+  required int32 x2 = 5 [default = 255];
+  required int32 y2 = 6 [default = 255];
+  required int32 fade_distance = 7 [default = 5];
+}
+
+message MappedShape {
+  required int32 color = 1 [default = 1];  
+  required Shape2D shape = 2 [default = SQUARE];
+  required int32 x = 3 [default = 128];
+  required int32 y = 4 [default = 128];
+  required int32 size = 5 [default = 50];
+  required int32 fade_distance = 6 [default = 50];
+}
+
+message MappedTriangle {
+  required int32 color = 1 [default = 1];  
+  required int32 x1 = 2 [default = 0];
+  required int32 y1 = 3 [default = 0];
+  required int32 x2 = 4 [default = 255];
+  required int32 y2 = 5 [default = 000];
+  required int32 x3 = 6 [default = 128];
+  required int32 y3 = 7 [default = 255];
+}
+
+message MappedParticles {
+  required int32 color = 1 [default= 177];
+  required Shape2D shape = 2 [default = CIRCLE];
+  required int32 x = 3 [default = 128];
+  required int32 y = 4 [default = 128];
+  required int32 size = 5 [default = 50];
+  required int32 fade_distance = 6 [default = 50];
+}
+
+message MappedPingPong {
+  required int32 color = 1 [default = 123];
+  required int32 direction = 2 [default = 0];
+  required int32 fade_distance = 3 [default = 5];
+}
+
+message Twang {
+
+}
+
+// DancingSlope -> select movement type
+
+

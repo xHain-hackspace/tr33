@@ -4,11 +4,7 @@
 #define GRAVITY_VALUE 50
 #define GRAVITY_DAMPING 70
 
-uint8_t gravity_color_index = 0;
-uint8_t gravity_width = 0;
-uint8_t gravity_rate = 0;
-uint8_t gravity_strip_index = 0;
-int gravity_last_ball = 0;
+int gravity_last_ball[COMMAND_COUNT];
 
 struct Ball
 {
@@ -20,8 +16,9 @@ struct Ball
   float width;
   bool bounce = true;
 
-  uint8_t color_index;
+  CRGB color;
   uint8_t strip_index;
+  uint8_t command_index;
 };
 
 Ball balls[GRAVITY_MAX_BALLS];
@@ -51,19 +48,21 @@ void update_ball(int i)
   }
 }
 
-void Commands::gravity_event(LedStructure *leds, uint8_t *data)
+void new_ball(LedStructure *leds, CommandParams cmd)
 {
+  Gravity gravity = cmd.type_params.gravity;
+
   Ball ball;
   ball.enabled = true;
   ball.last_update = millis();
   ball.start = millis();
   ball.position = 0;
 
-  ball.strip_index = gravity_strip_index;
-  ball.rate = Commands::random_or_value(gravity_rate, 30, 120);
-  ball.color_index = Commands::random_or_value(gravity_color_index, 0, 255);
+  ball.strip_index = cmd.strip_index;
+  ball.rate = Commands::random_or_value(gravity.launch_speed, 30, 120);
+  ball.color = Commands::color_from_palette(cmd, Commands::random_or_value(gravity.color, 0, 255));
 
-  gravity_last_ball = millis();
+  gravity_last_ball[cmd.index] = millis();
 
   balls[next_ball] = ball;
   next_ball++;
@@ -73,27 +72,23 @@ void Commands::gravity_event(LedStructure *leds, uint8_t *data)
   }
 }
 
-void Commands::gravity(LedStructure *leds, uint8_t *data)
+void Commands::gravity(LedStructure *leds, CommandParams cmd)
 {
-  gravity_strip_index = data[0];
-  gravity_color_index = data[1];
-  gravity_rate = data[2];
-  int frequency = data[3];
-  gravity_width = data[4];
+  Gravity gravity = cmd.type_params.gravity;
+  uint8_t frequency = gravity.ball_rate;
 
-  if (frequency > 0 && gravity_last_ball < millis() && 10000 / (millis() - gravity_last_ball) < frequency)
+  if (frequency > 0 && gravity_last_ball[cmd.index] < millis() && 10000 / (millis() - gravity_last_ball[cmd.index]) < frequency)
   {
-    gravity_event(leds, data);
+    new_ball(leds, cmd);
   }
 
   for (int i = 0; i < GRAVITY_MAX_BALLS; i++)
   {
-    if (balls[i].enabled)
+    if (balls[i].enabled && balls[i].command_index == cmd.index)
     {
       update_ball(i);
-      CRGB color = ColorFromPalette(currentPalette, balls[i].color_index);
-      float width = balls[i].rate * float(gravity_width) / 1500.0;
-      render_comet(leds, balls[i].strip_index, balls[i].position, width, color, 1.0, true, false, false);
+      float width = balls[i].rate * float(gravity.width) / 1500.0;
+      render_comet(leds, balls[i].strip_index, balls[i].position, width, balls[i].color, 1.0, true, false, false);
     }
   }
 }

@@ -1,62 +1,57 @@
 #include <Commands.h>
 
 #define MAX_SPARKLES 500
-#define SPARKLES_DIM_RATE 40
 
 uint8_t sparkle_index = 0;
 
-struct Sparkle
+struct SingleSparkle
 {
   bool enabled;
+  uint8_t strip_index;
+  uint8_t command_index;
   CRGB color;
+  int start_time;
   float width;
   float brightness;
-  uint8_t strip_index;
   int center;
-  int start_time;
 };
 
-Sparkle sparkles[MAX_SPARKLES];
+SingleSparkle sparkles[MAX_SPARKLES];
 
-void Commands::sparkle(LedStructure *leds, uint8_t *data)
+int last_sparkle[COMMAND_COUNT];
+
+void Commands::sparkle(LedStructure *leds, CommandParams cmd)
 {
-  uint8_t strip_index = data[0];
-  uint8_t color_index = random_or_value(data[1], 0, 255);
-  float width = float(random_or_value(data[2], 0, 255)) / 10.0;
-  float frequency = float(data[3]) * float(leds->pixel_count(strip_index)) / 1500.0; // sparkles per seconds
-  uint8_t duration = data[4];                                                        // should never be 0
-  float brightness_factor = float(data[5]) / 100.0;
+  Sparkle sparkle = cmd.type_params.sparkle;
+
+  float width = float(sparkle.sparkle_width) / 10.0;
+  float frequency = float(sparkle.sparle_rate) * float(leds->pixel_count(cmd.strip_index)) / 1500.0; // sparkles per seconds
+  uint8_t duration = max(1, sparkle.duration);
+
   int now = millis();
 
-  if (duration == 0)
-  {
-    duration = 200;
-  }
-  if (brightness_factor == 0)
-  {
-    brightness_factor = 1; // for downgrade compatiblity
-  }
-
-  if (frequency > 0 && (1000.0 / float(now - sparkles[sparkle_index].start_time)) < frequency)
+  if (frequency > 0 && (1000.0 / float(now - last_sparkle[cmd.index]) < frequency))
   {
     if (sparkle_index++ >= MAX_SPARKLES)
     {
       sparkle_index = 0;
     }
     sparkles[sparkle_index].enabled = true;
-    sparkles[sparkle_index].color = color_index == 255 ? COLOR_WHITE : ColorFromPalette(currentPalette, color_index);
+    sparkles[sparkle_index].color = sparkle.color == 255 ? COLOR_WHITE : color_from_palette(cmd, random_or_value(sparkle.color, 1, 255));
     sparkles[sparkle_index].width = width;
-    sparkles[sparkle_index].brightness = (float(random(10)) / 20.0 + 0.5) * brightness_factor;
-    sparkles[sparkle_index].strip_index = leds->random_strip(strip_index);
+    sparkles[sparkle_index].brightness = (float(random(10)) / 20.0 + 0.5);
+    sparkles[sparkle_index].strip_index = leds->random_strip(cmd.strip_index);
     sparkles[sparkle_index].center = random(0, leds->strip_length(sparkles[sparkle_index].strip_index) - 1);
     sparkles[sparkle_index].start_time = now;
+    sparkles[sparkle_index].command_index = cmd.index;
+    last_sparkle[cmd.index] = now;
   }
 
   for (int i = 0; i < MAX_SPARKLES; i++)
   {
-    if (sparkles[i].enabled)
+    if (sparkles[i].enabled && sparkles[i].command_index == cmd.index)
     {
-      float brightness = Commands::ease_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (20.0 * float(duration)));
+      float brightness = Commands::ease_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (20.0 * float(duration))) * float(cmd.brightness) / 255.0;
       if (brightness > 0)
       {
         render_ball(leds, sparkles[i].strip_index, sparkles[i].center, sparkles[i].width, sparkles[i].color, brightness);
