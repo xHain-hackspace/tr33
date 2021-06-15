@@ -5,8 +5,7 @@ void Commands::render(LedStructure *leds, CommandParams cmd)
   Render render_p = cmd.type_params.render;
 
   float brightness = float(cmd.brightness) / 255;
-  uint16_t position_int = render_p.position;
-  float position = float(position_int) / 65535.0 * float(leds->strip_length(cmd.strip_index));
+  float position = float(render_p.position) / 65535.0 * float(leds->strip_length(cmd.strip_index));
 
   CRGB color = color_from_palette(cmd, render_p.color);
 
@@ -40,7 +39,6 @@ void Commands::render(LedStructure *leds, Shape1D shape, uint8_t strip_index, fl
 
 void Commands::render_ball(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float ball_brightness)
 {
-  position = position;
   int start_led = max(0, int(ceilf(position - width / 2.0)));
   int end_led = min((int)leds->strip_length(strip_index), int(floorf(position + width / 2.0)));
   float brightness = 0.0;

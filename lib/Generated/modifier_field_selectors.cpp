@@ -126,16 +126,10 @@ int *Modifiers::value_from_type_param(CommandParams *cmd, uint8_t field_index)
       return &cmd->type_params.ping_pong.width;
     
     case MIN_INDEX + 2:
-      return &cmd->type_params.ping_pong.max_height;
-    
-    case MIN_INDEX + 3:
       return &cmd->type_params.ping_pong.count;
     
-    case MIN_INDEX + 4:
-      return &cmd->type_params.ping_pong.period_ms;
-    
-    case MIN_INDEX + 5:
-      return &cmd->type_params.ping_pong.offset_ms;
+    case MIN_INDEX + 3:
+      return &cmd->type_params.ping_pong.period_100ms;
     
     }
   

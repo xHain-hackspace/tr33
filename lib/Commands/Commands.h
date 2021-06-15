@@ -6,7 +6,7 @@
 #include <command_schemas.pb.h>
 #include <LedStructure.h>
 
-#define COMMAND_COUNT 16
+#define COMMAND_COUNT 8
 
 #define MODE_COMMANDS 0
 #define MODE_STREAM 1
@@ -57,6 +57,7 @@ public:
 
   // Misc
   void update_settings(uint8_t *data);
+  static void load_palettes();
   static CRGB color_from_palette(CommandParams cmd, uint8_t color);
   static CRGB color_from_palette(CommandParams cmd, uint8_t color, uint8_t brightness);
   static uint64_t synced_millis();
@@ -85,13 +86,6 @@ public:
   // Events
   void gravity_event(LedStructure *leds, uint8_t *data);
   void twang_joystick(uint8_t *data);
-
-  // Ping Pong todo merge this with modifiers
-  static float ping_pong_fraction(MovementType movement, uint8_t period_100ms, uint8_t offset_100ms);
-  static float ping_pong_linear(uint8_t period_100ms, uint8_t offset_100ms);
-  static float ping_pong_sine(uint8_t period_100ms, uint8_t offset_100ms);
-  static float ping_pong_cosine(uint8_t period_100ms, uint8_t offset_100ms);
-  static float ping_pong_sawtooth(uint8_t period_100ms, uint8_t offset_100ms);
 
   // float easing functions
   static float ease_in_cubic(float t);

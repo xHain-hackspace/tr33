@@ -3,7 +3,7 @@
 
 #include <command_schemas.pb.h>
 
-#define MAX_MODIFIERS 8
+#define MAX_MODIFIERS 10
 
 class Modifiers
 {

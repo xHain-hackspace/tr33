@@ -26,6 +26,7 @@ bool wasdisconnected = true;
 uint32_t sequence_period_ms = 20 * 1000;
 uint32_t last_send = 0;
 uint8_t sequence = 0;
+bool sequence_error = false;
 const int control_port = 1337;
 const int sequence_header_length = 3;
 const char sequence_header[] = "SEQ";
@@ -64,7 +65,15 @@ void send_sequence()
 {
   udp.beginPacket(control_host, control_port);
   udp.write((uint8_t *)sequence_header, sequence_header_length);
-  udp.write(sequence);
+  if (sequence_error)
+  {
+    udp.write(0);
+  }
+  else
+  {
+    udp.write(sequence);
+  }
+  sequence_error = false;
   udp.endPacket();
 }
 
@@ -221,6 +230,11 @@ void wifi_loop(Commands commands)
           }
           else
           {
+            if ((sequence + 1) % 256 != wire_message.sequence)
+            {
+              sequence_error = true;
+            }
+
             sequence = wire_message.sequence;
             commands.handle_message(wire_message);
           }

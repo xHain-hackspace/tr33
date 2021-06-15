@@ -84,7 +84,12 @@ typedef enum _Shape1D {
 typedef enum _Shape2D { 
     Shape2D_SQUARE = 0, 
     Shape2D_CIRCLE = 1, 
-    Shape2D_RING = 2 
+    Shape2D_RING = 2 /* LINE_VERTICAL = 3;
+ LINE_HORIZONTAL = 4;
+ COMET_VERTICAL = 5;
+ COMET_HORIZONTAL = 6;
+ FILL_VERTICAL = 7;
+ FILL_HORIZONTAL = 8; */
 } Shape2D;
 
 typedef enum _MovementType { 
@@ -95,7 +100,7 @@ typedef enum _MovementType {
     MovementType_SAWTOOTH = 4, 
     MovementType_SAWTOOTH_REVERSE = 5, 
     MovementType_RANDOM = 6, 
-    MovementType_RANDOM_TRANSITIONS = 7 
+    MovementType_RANDOM_TRANSITIONS = 7 /* STEPS = 8; */
 } MovementType;
 
 typedef enum _SlopeType { 
@@ -188,10 +193,8 @@ typedef struct _PingPong {
     MovementType movement; 
     int32_t color; 
     int32_t width; 
-    int32_t max_height; 
     int32_t count; 
-    int32_t period_ms; 
-    int32_t offset_ms; 
+    int32_t period_100ms; 
 } PingPong;
 
 typedef struct _Pixel { 
@@ -316,7 +319,7 @@ extern "C" {
 #define WireMessage_init_default                 {0, 0, {CommandParams_init_default}}
 #define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}}
 #define TimeSync_init_default                    {0}
-#define Modifier_init_default                    {MovementType_SINE, 0, 50, 0, 0, 255}
+#define Modifier_init_default                    {MovementType_SINE, 0, 0, 0, 0, 255}
 #define White_init_default                       {0}
 #define SingleColor_init_default                 {226}
 #define Pixel_init_default                       {0, 0}
@@ -324,7 +327,7 @@ extern "C" {
 #define Rainbow_init_default                     {30, 100, 150}
 #define Sparkle_init_default                     {1, 15, 10, 100}
 #define FlickerSparkle_init_default              {255, 90, 215, 8, 7, 119, 80}
-#define PingPong_init_default                    {Shape1D_BALL, MovementType_LINEAR, 65, 20, 255, 1, 6000, 0}
+#define PingPong_init_default                    {Shape1D_BALL, MovementType_SINE, 65, 20, 1, 100}
 #define Render_init_default                      {Shape1D_BALL, 210, 20, 20}
 #define Rain_init_default                        {150, 15, 90, 90}
 #define Gravity_init_default                     {13, 0, 5, 70}
@@ -346,7 +349,7 @@ extern "C" {
 #define Rainbow_init_zero                        {0, 0, 0}
 #define Sparkle_init_zero                        {0, 0, 0, 0}
 #define FlickerSparkle_init_zero                 {0, 0, 0, 0, 0, 0, 0}
-#define PingPong_init_zero                       {_Shape1D_MIN, _MovementType_MIN, 0, 0, 0, 0, 0, 0}
+#define PingPong_init_zero                       {_Shape1D_MIN, _MovementType_MIN, 0, 0, 0, 0}
 #define Render_init_zero                         {_Shape1D_MIN, 0, 0, 0}
 #define Rain_init_zero                           {0, 0, 0, 0}
 #define Gravity_init_zero                        {0, 0, 0, 0}
@@ -409,10 +412,8 @@ extern "C" {
 #define PingPong_movement_tag                    2
 #define PingPong_color_tag                       3
 #define PingPong_width_tag                       4
-#define PingPong_max_height_tag                  5
-#define PingPong_count_tag                       6
-#define PingPong_period_ms_tag                   7
-#define PingPong_offset_ms_tag                   8
+#define PingPong_count_tag                       5
+#define PingPong_period_100ms_tag                6
 #define Pixel_color_tag                          1
 #define Pixel_led_index_tag                      2
 #define PixelRGB_red_tag                         1
@@ -535,7 +536,7 @@ X(a, STATIC,   REQUIRED, INT32,    offset_100ms,      4) \
 X(a, STATIC,   REQUIRED, INT32,    min,               5) \
 X(a, STATIC,   REQUIRED, INT32,    max,               6)
 #define Modifier_CALLBACK NULL
-#define Modifier_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x00\x18\x32\x20\x00\x28\x00\x30\xff\x01\x00"
+#define Modifier_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x00\x18\x00\x20\x00\x28\x00\x30\xff\x01\x00"
 
 #define White_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color_temperature,   1)
@@ -592,12 +593,10 @@ X(a, STATIC,   REQUIRED, UENUM,    shape,             1) \
 X(a, STATIC,   REQUIRED, UENUM,    movement,          2) \
 X(a, STATIC,   REQUIRED, INT32,    color,             3) \
 X(a, STATIC,   REQUIRED, INT32,    width,             4) \
-X(a, STATIC,   REQUIRED, INT32,    max_height,        5) \
-X(a, STATIC,   REQUIRED, INT32,    count,             6) \
-X(a, STATIC,   REQUIRED, INT32,    period_ms,         7) \
-X(a, STATIC,   REQUIRED, INT32,    offset_ms,         8)
+X(a, STATIC,   REQUIRED, INT32,    count,             5) \
+X(a, STATIC,   REQUIRED, INT32,    period_100ms,      6)
 #define PingPong_CALLBACK NULL
-#define PingPong_DEFAULT (const pb_byte_t*)"\x18\x41\x20\x14\x28\xff\x01\x30\x01\x38\xf0\x2e\x40\x00\x00"
+#define PingPong_DEFAULT (const pb_byte_t*)"\x10\x01\x18\x41\x20\x14\x28\x01\x30\x64\x00"
 
 #define Render_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UENUM,    shape,             1) \
@@ -740,7 +739,7 @@ extern const pb_msgdesc_t Twang_msg;
 #define MappedSlope_size                         68
 #define MappedTriangle_size                      77
 #define Modifier_size                            57
-#define PingPong_size                            70
+#define PingPong_size                            48
 #define PixelRGB_size                            44
 #define Pixel_size                               22
 #define Rain_size                                44
@@ -839,7 +838,7 @@ struct MessageDescriptor<FlickerSparkle> {
 };
 template <>
 struct MessageDescriptor<PingPong> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 8;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 6;
     static inline const pb_msgdesc_t* fields() {
         return &PingPong_msg;
     }

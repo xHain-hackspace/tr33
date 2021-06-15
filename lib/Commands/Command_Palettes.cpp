@@ -2,64 +2,67 @@
 #include <Command_Palettes.h>
 #include <Command_Palettes_Wled.h>
 
-CRGB Commands::color_from_palette(CommandParams cmd, uint8_t color)
+CRGBPalette32 palettes[_ColorPalette_MAX];
+
+void Commands::load_palettes()
 {
-  return color_from_palette(cmd, color, 255);
+  for (int i = 0; i < _ColorPalette_MAX; i++)
+  // for (int i = 0; i < ColorPalette_PARROT; i++)
+  {
+    switch (i)
+    {
+      // fastled
+    case ColorPalette_RAINBOW:
+      palettes[i] = RainbowColors_p;
+      break;
+    case ColorPalette_FOREST:
+      palettes[i] = ForestColors_p;
+      break;
+    case ColorPalette_OCEAN:
+      palettes[i] = OceanColors_p;
+      break;
+    case ColorPalette_PARTY:
+      palettes[i] = PartyColors_p;
+      break;
+    case ColorPalette_HEAT:
+      palettes[i] = HeatColors_p;
+      break;
+    case ColorPalette_LAVA:
+      palettes[i] = LavaColors_p;
+      break;
+    case ColorPalette_CLOUD:
+      palettes[i] = CloudColors_p;
+      break;
+      // custom
+    case ColorPalette_SCOUTY:
+      palettes[i] = scoutie_gp;
+      break;
+    case ColorPalette_PURPLE_HEAT:
+      palettes[i] = purple_heat;
+      break;
+    case ColorPalette_SPRING_ANGEL:
+      palettes[i] = springangel_gp;
+      break;
+    case ColorPalette_SAGA:
+      palettes[i] = saga_02_gp;
+      break;
+    case ColorPalette_SAGA2:
+      palettes[i] = saga_14_gp;
+      break;
+    case ColorPalette_PARROT:
+      palettes[i] = parrot_gp;
+      break;
+      // wled
+    }
+  }
 }
 
-CRGB Commands::color_from_palette(CommandParams cmd, uint8_t color, uint8_t brightness)
+CRGB Commands::color_from_palette(CommandParams cmd, uint8_t color_index)
 {
-  CRGBPalette256 palette = Rainbow_gp;
+  return color_from_palette(cmd, color_index, 255);
+}
 
-  switch (cmd.color_palette)
-  {
-    // FastLED
-  case ColorPalette_RAINBOW:
-    palette = Rainbow_gp;
-    break;
-  case ColorPalette_FOREST:
-    palette = ForestColors_p;
-    break;
-  case ColorPalette_OCEAN:
-    palette = OceanColors_p;
-    break;
-  case ColorPalette_PARTY:
-    palette = PartyColors_p;
-    break;
-  case ColorPalette_HEAT:
-    palette = HeatColors_p;
-    break;
-  case ColorPalette_LAVA:
-    palette = LavaColors_p;
-    break;
-  case ColorPalette_CLOUD:
-    palette = CloudColors_p;
-    break;
-  // custom
-  case ColorPalette_SCOUTY:
-    palette = scoutie_gp;
-    break;
-  case ColorPalette_PURPLE_HEAT:
-    palette = purple_heat;
-    break;
-  case ColorPalette_SPRING_ANGEL:
-    palette = springangel_gp;
-    break;
-  case ColorPalette_SAGA:
-    palette = saga_02_gp;
-    break;
-  case ColorPalette_SAGA2:
-    palette = saga_14_gp;
-    break;
-  case ColorPalette_PARROT:
-    palette = parrot_gp;
-    break;
-  }
-
-  if (cmd.color_palette >= ColorPalette_SUNSET_REAL && cmd.color_palette < ColorPalette_SUNSET_REAL + WLED_PALETTE_COUNT)
-  {
-    palette = wled_palettes[cmd.color_palette - ColorPalette_SUNSET_REAL];
-  }
-
-  return ColorFromPalette(palette, color, brightness);
+CRGB Commands::color_from_palette(CommandParams cmd, uint8_t color_index, uint8_t brightness)
+{
+  return ColorFromPalette(palettes[cmd.color_palette], color_index, brightness);
 }

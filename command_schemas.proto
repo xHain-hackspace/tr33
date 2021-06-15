@@ -78,6 +78,12 @@ enum Shape2D {
   SQUARE = 0;
   CIRCLE = 1;
   RING = 2;
+  // LINE_VERTICAL = 3;
+  // LINE_HORIZONTAL = 4;
+  // COMET_VERTICAL = 5;
+  // COMET_HORIZONTAL = 6;
+  // FILL_VERTICAL = 7;
+  // FILL_HORIZONTAL = 8;
 }
 
 enum MovementType {
@@ -89,6 +95,7 @@ enum MovementType {
   SAWTOOTH_REVERSE = 5;
   RANDOM = 6;
   RANDOM_TRANSITIONS = 7;
+  // STEPS = 8;
 }
 
 enum SlopeType {
@@ -104,7 +111,6 @@ message WireMessage {
     TimeSync time_sync = 3;
   }
 }
-
 
 message CommandParams {
   required int32 index = 1;  
@@ -142,7 +148,7 @@ message TimeSync {
 message Modifier {
   required MovementType movement_type = 1 [default = SINE];
   required int32 field_index = 2 [default = 0];
-  required int32 period_100ms = 3 [default = 50];
+  required int32 period_100ms = 3 [default = 0];
   required int32 offset_100ms = 4 [default = 0];
   required int32 min = 5 [default = 0];
   required int32 max = 6 [default = 255];
@@ -193,19 +199,17 @@ message FlickerSparkle {
 
 message PingPong {
   required Shape1D shape = 1 [default = BALL];
-  required MovementType movement = 2 [default = LINEAR];
+  required MovementType movement = 2 [default = SINE];
   required int32 color = 3 [default = 65];
-  required int32 width = 4 [default = 20];
-  required int32 max_height = 5 [default = 255];
-  required int32 count = 6 [default = 1];
-  required int32 period_ms = 7 [default = 6000];
-  required int32 offset_ms = 8 [default = 0];
+  required int32 width = 4 [default = 20];  
+  required int32 count = 5 [default = 1, (nanopb).max_size=20];
+  required int32 period_100ms = 6 [default = 100];
 }
 
 message Render {
   required Shape1D shape = 1 [default = BALL];
   required int32 color = 2 [default = 210];  
-  required int32 position = 3 [default = 20];
+  required int32 position = 3 [default = 20, (nanopb).max_size=65535];
   required int32 width = 4 [default = 20];  
 }
 
