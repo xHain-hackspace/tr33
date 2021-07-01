@@ -11,19 +11,17 @@ void LedStructure::init()
   // modifer.movement_type = MovementType_RANDOM_TRANSITIONS;
   // modifer.period_s = 10;
 
-  Rainbow rainbow = Rainbow_init_default;
-  commands[0] = CommandParams_init_default;
-  commands[0].which_type_params = CommandParams_rainbow_tag;
-  commands[0].type_params.rainbow = rainbow;
-  commands[0].color_palette = ColorPalette_SCOUTY;
-
-  // SingleColor single = SingleColor_init_default;
-  // single.color = HUE_BLUE;
-  // single.color_modifer = modifer;
-  // single.has_color_modifer = true;
+  // Rainbow rainbow = Rainbow_init_default;
   // commands[0] = CommandParams_init_default;
-  // commands[0].which_type_params = CommandParams_single_color_tag;
-  // commands[0].type_params.single_color = single;
+  // commands[0].which_type_params = CommandParams_rainbow_tag;
+  // commands[0].type_params.rainbow = rainbow;
+  // commands[0].color_palette = ColorPalette_SCOUTY;
+
+  SingleColor single = SingleColor_init_default;
+  single.color = HUE_BLUE;
+  commands[0] = CommandParams_init_default;
+  commands[0].which_type_params = CommandParams_single_color_tag;
+  commands[0].type_params.single_color = single;
 
   // modifer.movement_type = MovementType_LINEAR;
   // modifer.beats_per_minute =  256;
