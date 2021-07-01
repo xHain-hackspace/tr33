@@ -20,6 +20,9 @@
 #ifdef LED_STRUCTURE_WOLKE
 #include <Wolke_config.h>
 #endif
+#ifdef LED_STRUCTURE_DISCOTESTRIG
+#include <Discotestrig_config.h>
+#endif
 
 class LedStructure
 {
