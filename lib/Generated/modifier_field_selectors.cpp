@@ -304,5 +304,17 @@ int *Modifiers::value_from_type_param(CommandParams *cmd, uint8_t field_index)
     
     }
   
+  case CommandParams_beat_equalizer_tag:
+    switch (field_index)
+    {
+    
+    case MIN_INDEX + 0:
+      return &cmd->type_params.beat_equalizer.color;
+    
+    case MIN_INDEX + 1:
+      return &cmd->type_params.beat_equalizer.band;
+    
+    }
+  
   }
 }

@@ -80,6 +80,7 @@ public:
   void mapped_triangle(LedStructure *leds, CommandParams cmd);
   void mapped_particles(LedStructure *leds, CommandParams cmd);
   void mapped_ping_pong(LedStructure *leds, CommandParams cmd);
+  void beat_equalizer(LedStructure *leds, CommandParams cmd);
   void gravity(LedStructure *leds, CommandParams cmd);
   void twang(LedStructure *leds);
 

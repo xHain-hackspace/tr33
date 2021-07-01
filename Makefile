@@ -1,4 +1,5 @@
 install:
+	sudo apt install protobuf-compiler
 	git clone git@github.com:nanopb/nanopb.git protobuf/
 
 generate:

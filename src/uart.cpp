@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include <Commands.h>
 #include <uart.h>
+#include <command_schemas.pb.h>
+#include <pb_decode.h>
 
 #define SERIAL_HEADER 42
 #define SERIAL_READY_TO_SEND 0xAA
@@ -55,7 +57,19 @@ void uart_loop(Commands commands)
       bytes_read = CommandSerial.readBytes(serial_buffer, byte_count);
       if (bytes_read == byte_count)
       {
-        commands.process(serial_buffer, byte_count);
+
+        pb_istream_t stream = pb_istream_from_buffer(serial_buffer, bytes_read);
+        WireMessage wire_message = WireMessage_init_default;
+        bool status = pb_decode(&stream, WireMessage_fields, &wire_message);
+
+        if (!status)
+        {
+          Serial.printf("Protobuf decoding failed: %s\n", PB_GET_ERROR(&stream));
+        }
+        else
+        {
+          commands.handle_message(wire_message);
+        }
       }
       else
       {

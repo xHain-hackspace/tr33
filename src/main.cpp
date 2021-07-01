@@ -18,6 +18,10 @@ Dode leds = Dode();
 #include <Keller.h>
 Keller leds = Keller();
 #endif
+#ifdef LED_STRUCTURE_RANKEN
+#include <Ranken.h>
+Ranken leds = Ranken();
+#endif
 #ifdef LED_STRUCTURE_WAND
 #include <Wand.h>
 Wand leds = Wand();
