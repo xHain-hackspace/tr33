@@ -11,11 +11,11 @@ void LedStructure::init()
   // modifer.movement_type = MovementType_RANDOM_TRANSITIONS;
   // modifer.period_s = 10;
 
-  Rainbow rainbow = Rainbow_init_default;
-  commands[0] = CommandParams_init_default;
-  commands[0].which_type_params = CommandParams_rainbow_tag;
-  commands[0].type_params.rainbow = rainbow;
-  commands[0].color_palette = ColorPalette_SCOUTY;
+  // Rainbow rainbow = Rainbow_init_default;
+  // commands[0] = CommandParams_init_default;
+  // commands[0].which_type_params = CommandParams_rainbow_tag;
+  // commands[0].type_params.rainbow = rainbow;
+  // commands[0].color_palette = ColorPalette_RAINBOW;
 
   // SingleColor single = SingleColor_init_default;
   // single.color = HUE_BLUE;
@@ -30,11 +30,24 @@ void LedStructure::init()
   // commands[0].color_palette_modifier = modifer;
   // commands[0].has_color_palette_modifier = true;
 
-  // PingPong ping_pong = PingPong_init_default;
-  // ping_pong.color = HUE_RED;
-  // commands[1] = CommandParams_init_default;
-  // commands[1].which_type_params = CommandParams_ping_pong_tag;
-  // commands[1].type_params.ping_pong = ping_pong;
+  Rain rain = Rain_init_default;
+  rain.drop_density = 10;
+  rain.width = 50;
+  rain.drop_speed = 50;
+  rain.color = HUE_PURPLE;
+  commands[0] = CommandParams_init_default;
+  commands[0].which_type_params = CommandParams_rain_tag;
+  commands[0].type_params.rain = rain;
+  commands[0].brightness = 130;
+
+  PingPong ping_pong = PingPong_init_default;
+  ping_pong.color = HUE_GREEN;
+  ping_pong.shape = Shape1D_NYAN_BOUNCE;
+  ping_pong.width = 80;
+  ping_pong.period_100ms = 200;
+  commands[1] = CommandParams_init_default;
+  commands[1].which_type_params = CommandParams_ping_pong_tag;
+  commands[1].type_params.ping_pong = ping_pong;
 }
 
 //

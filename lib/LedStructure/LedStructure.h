@@ -14,6 +14,9 @@
 #ifdef LED_STRUCTURE_KELLER
 #include <Keller_config.h>
 #endif
+#ifdef LED_STRUCTURE_RANKEN
+#include <Ranken_config.h>
+#endif
 #ifdef LED_STRUCTURE_TROMMEL
 #include <Trommel_config.h>
 #endif
