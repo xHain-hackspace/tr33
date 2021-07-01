@@ -138,6 +138,7 @@ message CommandParams {
     MappedParticles mapped_particles = 22;
     MappedPingPong mapped_ping_pong = 23;
     Twang twang = 24;
+    BeatEqualizer beat_equalizer = 25;
   }
 }
 
@@ -272,6 +273,11 @@ message MappedPingPong {
   required int32 color = 1 [default = 123];
   required int32 direction = 2 [default = 0];
   required int32 fade_distance = 3 [default = 5];
+}
+
+message BeatEqualizer {
+  required int32 color = 1 [default = 23];
+  required int32 band = 2 [default = 0];
 }
 
 message Twang {
