@@ -44,9 +44,9 @@ void Commands::single_color(LedStructure *leds, CommandParams cmd)
   }
 
   //calculate color value from selected band
-  uint16_t value = msgeq7_bands[1];
+  uint16_t value = msgeq7_bands[3];
   uint8_t scaled_value = value < 130 ? 0 : map(value, 100, 1023, 0, 255);
-  for (int i = 0; i < leds->strip_length(cmd.strip_index); i++)
+  for (int i = 0; i < leds->strip_length(cmd.strip_index)*scaled_value/255; i++)
   {
     leds->fade_led(cmd, i, color_from_palette(cmd, scaled_value));
   }
