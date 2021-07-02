@@ -181,6 +181,8 @@ CommandParams color_overlay(uint8_t color)
   command.which_type_params = CommandParams_single_color_tag;
   command.type_params.single_color = single;
   command.index = COMMAND_COUNT - 1;
+  command.strip_index = 1;
+  command.brightness = 100;
 
   return command;
 }

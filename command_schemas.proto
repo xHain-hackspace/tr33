@@ -277,7 +277,7 @@ message MappedPingPong {
 
 message BeatEqualizer {
   required int32 color = 1 [default = 23];
-  required int32 band = 2 [default = 0];
+  required int32 band = 2 [default = 0, (nanopb).max_size=6];
 }
 
 message Twang {

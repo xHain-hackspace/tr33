@@ -1,14 +1,14 @@
 // strip config
 #define STRIP_PIN_1 33
-#define STRIP_PIN_2 25
-#define STRIP_PIN_3 14
-#define STRIP_PIN_4 15
-#define STRIP_PIN_5 12
-#define STRIP_PIN_6 4
+#define STRIP_PIN_2 26
+#define STRIP_PIN_3 25
+#define STRIP_PIN_4 27
+#define STRIP_PIN_5 14
+#define STRIP_PIN_6 23
 #define STRIP_PIN_7 22
-#define STRIP_PIN_8 13
-#define STRIP_PIN_9 27
-#define STRIP_PIN_10 32
+#define STRIP_PIN_8 21
+#define STRIP_PIN_9 19
+#define STRIP_PIN_10 5
 
 #define STRIP_PIXEL_COUNT 247
 #define STRIP_COUNT 10
