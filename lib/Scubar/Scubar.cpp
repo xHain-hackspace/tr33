@@ -11,6 +11,14 @@ Scubar::Scubar() :
     })
 {
     FastLED.addLeds<WS2812B, 5>(leds[0], 8*8);
+
+    // Turn on all the "battery" powered LED strips
+    pinMode(LED_1, OUTPUT);
+    pinMode(LED_2, OUTPUT);
+    pinMode(LED_3, OUTPUT);
+    digitalWrite(LED_1, HIGH);
+    digitalWrite(LED_2, HIGH);
+    digitalWrite(LED_3, HIGH);
 }
 
 void Scubar::init() {
