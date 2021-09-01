@@ -10,7 +10,7 @@
 #define STRIP_PIN_9 27
 #define STRIP_PIN_10 32
 
-#define STRIP_PIXEL_COUNT 64
+#define STRIP_PIXEL_COUNT 6
 #define STRIP_COUNT 1
 
 // strip index

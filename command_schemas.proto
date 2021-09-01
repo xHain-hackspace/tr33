@@ -104,6 +104,11 @@ enum SlopeType {
   COLOR_SHIFT = 2;
 }
 
+enum FairyPattern {
+  ODD_EVEN = 0;
+  ODD_EVEN_ALL = 1;
+}
+
 message WireMessage {
   required int32 sequence = 1;
   oneof message {
@@ -280,9 +285,9 @@ message Twang {
 }
 
 message FairyLight {
-  required int32 pattern = 1 [default = 100];
-  required int32 frequency = 2 [default = 100];
-  required int32 brightness = 3 [default = 100];
+  required FairyPattern fairy_pattern = 1 [default = ODD_EVEN];
+  required int32 frequency = 2 [default = 20];
+  required int32 fairy_index = 3 [default = 0];
 }
 
 

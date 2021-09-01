@@ -109,6 +109,11 @@ typedef enum _SlopeType {
     SlopeType_COLOR_SHIFT = 2 
 } SlopeType;
 
+typedef enum _FairyPattern { 
+    FairyPattern_ODD_EVEN = 0, 
+    FairyPattern_ODD_EVEN_ALL = 1 
+} FairyPattern;
+
 /* Struct definitions */
 typedef struct _Kaleidoscope { 
     char dummy_field;
@@ -119,9 +124,9 @@ typedef struct _Twang {
 } Twang;
 
 typedef struct _FairyLight { 
-    int32_t pattern; 
+    FairyPattern fairy_pattern; 
     int32_t frequency; 
-    int32_t brightness; 
+    int32_t fairy_index; 
 } FairyLight;
 
 typedef struct _FlickerSparkle { 
@@ -317,6 +322,10 @@ typedef struct _WireMessage {
 #define _SlopeType_MAX SlopeType_COLOR_SHIFT
 #define _SlopeType_ARRAYSIZE ((SlopeType)(SlopeType_COLOR_SHIFT+1))
 
+#define _FairyPattern_MIN FairyPattern_ODD_EVEN
+#define _FairyPattern_MAX FairyPattern_ODD_EVEN_ALL
+#define _FairyPattern_ARRAYSIZE ((FairyPattern)(FairyPattern_ODD_EVEN_ALL+1))
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -345,7 +354,7 @@ extern "C" {
 #define MappedParticles_init_default             {177, Shape2D_CIRCLE, 128, 128, 50, 50}
 #define MappedPingPong_init_default              {123, 0, 5}
 #define Twang_init_default                       {0}
-#define FairyLight_init_default                  {100, 100, 100}
+#define FairyLight_init_default                  {FairyPattern_ODD_EVEN, 100, 0}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
 #define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}}
 #define TimeSync_init_zero                       {0}
@@ -368,12 +377,12 @@ extern "C" {
 #define MappedParticles_init_zero                {0, _Shape2D_MIN, 0, 0, 0, 0}
 #define MappedPingPong_init_zero                 {0, 0, 0}
 #define Twang_init_zero                          {0}
-#define FairyLight_init_zero                     {0, 0, 0}
+#define FairyLight_init_zero                     {_FairyPattern_MIN, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define FairyLight_pattern_tag                   1
+#define FairyLight_fairy_pattern_tag             1
 #define FairyLight_frequency_tag                 2
-#define FairyLight_brightness_tag                3
+#define FairyLight_fairy_index_tag               3
 #define FlickerSparkle_color_tag                 1
 #define FlickerSparkle_sparkle_width_tag         2
 #define FlickerSparkle_sparles_per_second_tag    3
@@ -697,11 +706,11 @@ X(a, STATIC,   REQUIRED, INT32,    fade_distance,     3)
 #define Twang_DEFAULT NULL
 
 #define FairyLight_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, INT32,    pattern,           1) \
+X(a, STATIC,   REQUIRED, UENUM,    fairy_pattern,     1) \
 X(a, STATIC,   REQUIRED, INT32,    frequency,         2) \
-X(a, STATIC,   REQUIRED, INT32,    brightness,        3)
+X(a, STATIC,   REQUIRED, INT32,    fairy_index,       3)
 #define FairyLight_CALLBACK NULL
-#define FairyLight_DEFAULT (const pb_byte_t*)"\x08\x64\x10\x64\x18\x64\x00"
+#define FairyLight_DEFAULT (const pb_byte_t*)"\x10\x64\x18\x00\x00"
 
 extern const pb_msgdesc_t WireMessage_msg;
 extern const pb_msgdesc_t CommandParams_msg;
@@ -754,7 +763,7 @@ extern const pb_msgdesc_t FairyLight_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define CommandParams_size                       412
-#define FairyLight_size                          33
+#define FairyLight_size                          24
 #define FlickerSparkle_size                      77
 #define Gravity_size                             44
 #define Kaleidoscope_size                        0

@@ -8,7 +8,7 @@ Scubar::Scubar() : fairy_lights_({FairyLightsControl{0, FAIRY_S1_PWM, 4, FAIRY_S
                                   FairyLightsControl{2, FAIRY_S3_PWM, 6, FAIRY_S3_SEL},
                                   FairyLightsControl{3, FAIRY_S4_PWM, 7, FAIRY_S4_SEL}})
 {
-    FastLED.addLeds<WS2812B, 5>(leds[0], 8 * 8);
+    FastLED.addLeds<WS2812B, 5>(leds[0], STRIP_PIXEL_COUNT);
 
     // Turn on all the "battery" powered LED strips
     pinMode(LED_1, OUTPUT);

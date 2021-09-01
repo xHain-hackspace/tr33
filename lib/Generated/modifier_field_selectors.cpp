@@ -309,13 +309,10 @@ int *Modifiers::value_from_type_param(CommandParams *cmd, uint8_t field_index)
     {
     
     case MIN_INDEX + 0:
-      return &cmd->type_params.fairy_light.pattern;
-    
-    case MIN_INDEX + 1:
       return &cmd->type_params.fairy_light.frequency;
     
-    case MIN_INDEX + 2:
-      return &cmd->type_params.fairy_light.brightness;
+    case MIN_INDEX + 1:
+      return &cmd->type_params.fairy_light.fairy_index;
     
     }
   
