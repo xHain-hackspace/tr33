@@ -72,6 +72,9 @@ PB_BIND(MappedPingPong, MappedPingPong, AUTO)
 PB_BIND(Twang, Twang, AUTO)
 
 
+PB_BIND(FairyLight, FairyLight, AUTO)
+
+
 
 
 

@@ -44,7 +44,7 @@ public:
   virtual uint16_t pixel_count(uint8_t strip_index);
 
   // fairy lights
-  virtual FairyLightsControl* get_fairy_light(uint8_t index);
+  virtual FairyLightsControl *get_fairy_light(uint8_t index);
 
   // commands
   void beats(uint8_t *data);

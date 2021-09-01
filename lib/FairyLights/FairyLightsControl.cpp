@@ -1,6 +1,5 @@
 #include "FairyLightsControl.h"
 
-
 FairyLightsControl::FairyLightsControl(uint8_t pwm_channel, uint8_t pwm_pin, uint8_t select_channel, uint8_t select_pin)
     : pwm_channel_(pwm_channel)
     , select_channel_(select_channel)

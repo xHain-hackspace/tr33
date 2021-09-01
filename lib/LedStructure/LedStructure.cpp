@@ -122,14 +122,9 @@ uint8_t LedStructure::random_strip(uint8_t strip_index)
   }
 }
 
-uint8_t LedStructure::strip_index_all()
+FairyLightsControl *LedStructure::get_fairy_light(uint8_t index)
 {
-  return STRIP_INDEX_ALL;
-}
-
-FairyLightsControl* LedStructure::get_fairy_light(uint8_t index)
-{
-    return nullptr;
+  return nullptr;
 }
 
 // void Tr33::show_pin_numbers()

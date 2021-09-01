@@ -138,6 +138,7 @@ message CommandParams {
     MappedParticles mapped_particles = 22;
     MappedPingPong mapped_ping_pong = 23;
     Twang twang = 24;
+    FairyLight fairy_light = 25;
   }
 }
 
@@ -277,6 +278,13 @@ message MappedPingPong {
 message Twang {
 
 }
+
+message FairyLight {
+  required int32 pattern = 1 [default = 100];
+  required int32 frequency = 2 [default = 100];
+  required int32 brightness = 3 [default = 100];
+}
+
 
 // DancingSlope -> select movement type
 

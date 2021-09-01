@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Commands.h>
 #include <FairyLightsControl.h>
-#include "Scubar_config.h"
+// #include "Scubar_config.h"
 
 /*
 static FairyLightsControl control1(0, FAIRY_S1_PWM, 2, FAIRY_S1_SEL);
@@ -52,41 +52,49 @@ void Commands::fairy_light(LedStructure *leds, uint8_t *data) {
 }
 */
 
-void Commands::fairy_light(LedStructure* leds, uint8_t *data) {
+void Commands::fairy_light(LedStructure *leds, CommandParams cmd)
+{
+    FairyLight fairy_light = cmd.type_params.fairy_light;
+
     static unsigned long next_event{};
-    uint8_t index = data[0];
-    uint8_t pattern = data[1];
-    uint8_t frequency = data[2];
-    uint8_t brightness = data[3];
+    uint8_t index = cmd.strip_index;
+    uint8_t brightness = cmd.brightness;
+    uint8_t pattern = fairy_light.pattern;
+    uint8_t frequency = fairy_light.frequency;
 
     auto now = millis();
 
-    auto fairy_light = leds->get_fairy_light(index);
-    if (fairy_light == nullptr) {
+    auto fairy_light_control = leds->get_fairy_light(index);
+    if (fairy_light_control == nullptr)
+    {
         return;
     }
 
-    if (pattern == 0) {
+    if (pattern == 0)
+    {
         static int old_state = 0;
         // Blink odd/even
         auto state = frequency > 0 ? now / (1000 / frequency) % 2 : 0;
-        if (state != old_state) {
+        if (state != old_state)
+        {
             Serial.printf("Index: %d  State: %d\n", index, state);
             old_state = state;
         }
-        fairy_light->set_selection(state ? FairyLightsControl::LedSelection::Even : FairyLightsControl::LedSelection::Odd);
-        fairy_light->set_brightness(brightness);
-    } else if (pattern == 1) {
+        fairy_light_control->set_selection(state ? FairyLightsControl::LedSelection::Even : FairyLightsControl::LedSelection::Odd);
+        fairy_light_control->set_brightness(brightness);
+    }
+    else if (pattern == 1)
+    {
         static int old_state = 0;
         // Blink odd/even/all
         auto state = frequency > 0 ? now / (1000 / frequency) % 3 : 0;
-        if (state != old_state) {
+        if (state != old_state)
+        {
             Serial.printf("Index: %d  State: %d\n", index, state);
             old_state = state;
         }
-        fairy_light->set_selection(state == 0 ? FairyLightsControl::LedSelection::Even :
-                                   state == 1 ? FairyLightsControl::LedSelection::Odd :
-                                   FairyLightsControl::LedSelection::All);
-        fairy_light->set_brightness(brightness);
+        fairy_light_control->set_selection(state == 0 ? FairyLightsControl::LedSelection::Even : state == 1 ? FairyLightsControl::LedSelection::Odd
+                                                                                                            : FairyLightsControl::LedSelection::All);
+        fairy_light_control->set_brightness(brightness);
     }
 }

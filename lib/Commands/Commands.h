@@ -82,7 +82,7 @@ public:
   void mapped_ping_pong(LedStructure *leds, CommandParams cmd);
   void gravity(LedStructure *leds, CommandParams cmd);
   void twang(LedStructure *leds);
-  void fairy_light(LedStructure *leds, uint8_t *data);
+  void fairy_light(LedStructure *leds, CommandParams cmd);
 
   // Events
   void gravity_event(LedStructure *leds, uint8_t *data);

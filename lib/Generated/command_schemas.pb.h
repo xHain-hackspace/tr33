@@ -118,6 +118,12 @@ typedef struct _Twang {
     char dummy_field;
 } Twang;
 
+typedef struct _FairyLight { 
+    int32_t pattern; 
+    int32_t frequency; 
+    int32_t brightness; 
+} FairyLight;
+
 typedef struct _FlickerSparkle { 
     int32_t color; 
     int32_t sparkle_width; 
@@ -276,6 +282,7 @@ typedef struct _CommandParams {
         MappedParticles mapped_particles;
         MappedPingPong mapped_ping_pong;
         Twang twang;
+        FairyLight fairy_light;
     } type_params; 
 } CommandParams;
 
@@ -338,6 +345,7 @@ extern "C" {
 #define MappedParticles_init_default             {177, Shape2D_CIRCLE, 128, 128, 50, 50}
 #define MappedPingPong_init_default              {123, 0, 5}
 #define Twang_init_default                       {0}
+#define FairyLight_init_default                  {100, 100, 100}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
 #define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}}
 #define TimeSync_init_zero                       {0}
@@ -360,8 +368,12 @@ extern "C" {
 #define MappedParticles_init_zero                {0, _Shape2D_MIN, 0, 0, 0, 0}
 #define MappedPingPong_init_zero                 {0, 0, 0}
 #define Twang_init_zero                          {0}
+#define FairyLight_init_zero                     {0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
+#define FairyLight_pattern_tag                   1
+#define FairyLight_frequency_tag                 2
+#define FairyLight_brightness_tag                3
 #define FlickerSparkle_color_tag                 1
 #define FlickerSparkle_sparkle_width_tag         2
 #define FlickerSparkle_sparles_per_second_tag    3
@@ -462,6 +474,7 @@ extern "C" {
 #define CommandParams_mapped_particles_tag       22
 #define CommandParams_mapped_ping_pong_tag       23
 #define CommandParams_twang_tag                  24
+#define CommandParams_fairy_light_tag            25
 #define WireMessage_sequence_tag                 1
 #define WireMessage_command_params_tag           2
 #define WireMessage_time_sync_tag                3
@@ -500,7 +513,8 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_slope,type_params.mapped_
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_triangle,type_params.mapped_triangle),  21) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_particles,type_params.mapped_particles),  22) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_ping_pong,type_params.mapped_ping_pong),  23) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24)
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fairy_light,type_params.fairy_light),  25)
 #define CommandParams_CALLBACK NULL
 #define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\x00"
 #define CommandParams_modifiers_MSGTYPE Modifier
@@ -522,6 +536,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24)
 #define CommandParams_type_params_mapped_particles_MSGTYPE MappedParticles
 #define CommandParams_type_params_mapped_ping_pong_MSGTYPE MappedPingPong
 #define CommandParams_type_params_twang_MSGTYPE Twang
+#define CommandParams_type_params_fairy_light_MSGTYPE FairyLight
 
 #define TimeSync_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UINT64,   millis,            1)
@@ -681,6 +696,13 @@ X(a, STATIC,   REQUIRED, INT32,    fade_distance,     3)
 #define Twang_CALLBACK NULL
 #define Twang_DEFAULT NULL
 
+#define FairyLight_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, INT32,    pattern,           1) \
+X(a, STATIC,   REQUIRED, INT32,    frequency,         2) \
+X(a, STATIC,   REQUIRED, INT32,    brightness,        3)
+#define FairyLight_CALLBACK NULL
+#define FairyLight_DEFAULT (const pb_byte_t*)"\x08\x64\x10\x64\x18\x64\x00"
+
 extern const pb_msgdesc_t WireMessage_msg;
 extern const pb_msgdesc_t CommandParams_msg;
 extern const pb_msgdesc_t TimeSync_msg;
@@ -703,6 +725,7 @@ extern const pb_msgdesc_t MappedTriangle_msg;
 extern const pb_msgdesc_t MappedParticles_msg;
 extern const pb_msgdesc_t MappedPingPong_msg;
 extern const pb_msgdesc_t Twang_msg;
+extern const pb_msgdesc_t FairyLight_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define WireMessage_fields &WireMessage_msg
@@ -727,9 +750,11 @@ extern const pb_msgdesc_t Twang_msg;
 #define MappedParticles_fields &MappedParticles_msg
 #define MappedPingPong_fields &MappedPingPong_msg
 #define Twang_fields &Twang_msg
+#define FairyLight_fields &FairyLight_msg
 
 /* Maximum encoded size of messages (where known) */
 #define CommandParams_size                       412
+#define FairyLight_size                          33
 #define FlickerSparkle_size                      77
 #define Gravity_size                             44
 #define Kaleidoscope_size                        0
@@ -768,7 +793,7 @@ struct MessageDescriptor<WireMessage> {
 };
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 24;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 25;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
     }
@@ -911,6 +936,13 @@ struct MessageDescriptor<Twang> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 0;
     static inline const pb_msgdesc_t* fields() {
         return &Twang_msg;
+    }
+};
+template <>
+struct MessageDescriptor<FairyLight> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
+    static inline const pb_msgdesc_t* fields() {
+        return &FairyLight_msg;
     }
 };
 }  // namespace nanopb
