@@ -14,6 +14,7 @@ public:
   static void apply(Modifier modifier, int *value, uint8_t command_index);
   static void apply_envelope(Modifier modifier, int *value);
   static void apply_random(Modifier modifier, int *value, uint8_t command_index);
+  static void apply_beat(Modifier modifier, int *value, uint8_t band);
 
   // generated
   static int *value_from_type_param(CommandParams *cmd, uint8_t field_index);

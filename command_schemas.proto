@@ -96,6 +96,14 @@ enum MovementType {
   RANDOM = 6;
   RANDOM_TRANSITIONS = 7;
   // STEPS = 8;
+  BEATS_1 = 9;
+  BEATS_2 = 10;
+  BEATS_3 = 11;
+  BEATS_4 = 12;
+  BEATS_5 = 13;
+  BEATS_6 = 14;
+  BEATS_7 = 15;
+  BEATS_ALL = 16;
 }
 
 enum SlopeType {
@@ -138,6 +146,7 @@ message CommandParams {
     MappedParticles mapped_particles = 22;
     MappedPingPong mapped_ping_pong = 23;
     Twang twang = 24;
+    BeatEqualizer beat_equalizer = 25;
   }
 }
 
@@ -272,6 +281,11 @@ message MappedPingPong {
   required int32 color = 1 [default = 123];
   required int32 direction = 2 [default = 0];
   required int32 fade_distance = 3 [default = 5];
+}
+
+message BeatEqualizer {
+  required int32 color = 1 [default = 23];
+  required int32 band = 2 [default = 0, (nanopb).max_size=6];
 }
 
 message Twang {

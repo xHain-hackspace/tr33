@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include <Commands.h>
 #include <Modifiers.h>
+#include <Beats.h>
 
 void Modifiers::apply_all(CommandParams *cmd)
 {
@@ -8,21 +9,24 @@ void Modifiers::apply_all(CommandParams *cmd)
 
   for (int i = 0; i < cmd->modifiers_count; i++)
   {
-    switch (cmd->modifiers[i].field_index)
+    if (cmd->modifiers[i].period_100ms > 0)
     {
-    case 0:
-      apply(cmd->modifiers[i], &cmd->brightness, cmd->index);
-      break;
-    case 1:
-      apply(cmd->modifiers[i], &value, cmd->index);
-      cmd->color_palette = static_cast<ColorPalette>(value);
-      break;
-    case 2:
-      apply(cmd->modifiers[i], &cmd->strip_index, cmd->index);
-      break;
-    default:
-      apply(cmd->modifiers[i], value_from_type_param(cmd, cmd->modifiers[i].field_index), cmd->index);
-      break;
+      switch (cmd->modifiers[i].field_index)
+      {
+      case 0:
+        apply(cmd->modifiers[i], &cmd->brightness, cmd->index);
+        break;
+      case 1:
+        apply(cmd->modifiers[i], &value, cmd->index);
+        cmd->color_palette = static_cast<ColorPalette>(value);
+        break;
+      case 2:
+        apply(cmd->modifiers[i], &cmd->strip_index, cmd->index);
+        break;
+      default:
+        apply(cmd->modifiers[i], value_from_type_param(cmd, cmd->modifiers[i].field_index), cmd->index);
+        break;
+      }
     }
   }
 }
@@ -55,6 +59,30 @@ void Modifiers::apply(Modifier modifier, int *value, uint8_t command_index)
   case MovementType_RANDOM:
   case MovementType_RANDOM_TRANSITIONS:
     apply_random(modifier, value, command_index);
+    break;
+  case MovementType_BEATS_1:
+    apply_beat(modifier, value, 0);
+    break;
+  case MovementType_BEATS_2:
+    apply_beat(modifier, value, 1);
+    break;
+  case MovementType_BEATS_3:
+    apply_beat(modifier, value, 2);
+    break;
+  case MovementType_BEATS_4:
+    apply_beat(modifier, value, 3);
+    break;
+  case MovementType_BEATS_5:
+    apply_beat(modifier, value, 4);
+    break;
+  case MovementType_BEATS_6:
+    apply_beat(modifier, value, 5);
+    break;
+  case MovementType_BEATS_7:
+    apply_beat(modifier, value, 6);
+    break;
+  case MovementType_BEATS_ALL:
+    apply_beat(modifier, value, 7);
     break;
   }
 }
@@ -119,4 +147,11 @@ void Modifiers::apply_random(Modifier modifier, int *value, uint8_t command_inde
     last_random_value[command_index][modifier.field_index] = next_random_value[command_index][modifier.field_index];
     next_random_value[command_index][modifier.field_index] = random16(modifier.min, modifier.max);
   }
+}
+
+void Modifiers::apply_beat(Modifier modifier, int *value, uint8_t band)
+{
+  uint16_t rangewidth = modifier.max - modifier.min;
+  uint16_t scaled = scale16(Beats::read_band(band), rangewidth);
+  *value = modifier.min + scaled;
 }

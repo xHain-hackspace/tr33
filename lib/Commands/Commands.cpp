@@ -116,6 +116,9 @@ void Commands::render_commands()
       case CommandParams_mapped_ping_pong_tag:
         mapped_ping_pong(leds, commands[i]);
         break;
+      case CommandParams_beat_equalizer_tag:
+        beat_equalizer(leds, commands[i]);
+        break;
       case CommandParams_gravity_tag:
         gravity(leds, commands[i]);
         break;
