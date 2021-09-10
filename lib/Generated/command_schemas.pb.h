@@ -100,7 +100,16 @@ typedef enum _MovementType {
     MovementType_SAWTOOTH = 4, 
     MovementType_SAWTOOTH_REVERSE = 5, 
     MovementType_RANDOM = 6, 
-    MovementType_RANDOM_TRANSITIONS = 7 /* STEPS = 8; */
+    MovementType_RANDOM_TRANSITIONS = 7, 
+    /* STEPS = 8; */
+    MovementType_BEATS_1 = 9, 
+    MovementType_BEATS_2 = 10, 
+    MovementType_BEATS_3 = 11, 
+    MovementType_BEATS_4 = 12, 
+    MovementType_BEATS_5 = 13, 
+    MovementType_BEATS_6 = 14, 
+    MovementType_BEATS_7 = 15, 
+    MovementType_BEATS_ALL = 16 
 } MovementType;
 
 typedef enum _SlopeType { 
@@ -309,8 +318,8 @@ typedef struct _WireMessage {
 #define _Shape2D_ARRAYSIZE ((Shape2D)(Shape2D_RING+1))
 
 #define _MovementType_MIN MovementType_LINEAR
-#define _MovementType_MAX MovementType_RANDOM_TRANSITIONS
-#define _MovementType_ARRAYSIZE ((MovementType)(MovementType_RANDOM_TRANSITIONS+1))
+#define _MovementType_MAX MovementType_BEATS_ALL
+#define _MovementType_ARRAYSIZE ((MovementType)(MovementType_BEATS_ALL+1))
 
 #define _SlopeType_MIN SlopeType_LINE
 #define _SlopeType_MAX SlopeType_COLOR_SHIFT

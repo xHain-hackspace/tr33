@@ -96,6 +96,14 @@ enum MovementType {
   RANDOM = 6;
   RANDOM_TRANSITIONS = 7;
   // STEPS = 8;
+  BEATS_1 = 9;
+  BEATS_2 = 10;
+  BEATS_3 = 11;
+  BEATS_4 = 12;
+  BEATS_5 = 13;
+  BEATS_6 = 14;
+  BEATS_7 = 15;
+  BEATS_ALL = 16;
 }
 
 enum SlopeType {
