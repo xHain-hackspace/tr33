@@ -15,6 +15,7 @@ void Wolke::set_led(uint8_t strip_index, int led, CRGB color)
     if (strip_index == STRIP_INDEX_ALL || strip_index == WOLKEN_INDEX)
     {
       leds[0][led] = color;
+      leds[1][led] = color;
     }
   }
 }
