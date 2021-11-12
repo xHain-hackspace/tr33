@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-#define MAX_SPARKLES 500
+#define MAX_SPARKLES 400
 
 uint8_t sparkle_index = 0;
 

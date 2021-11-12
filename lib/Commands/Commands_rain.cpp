@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-#define MAX_RAIN_DROPS 500
+#define MAX_RAIN_DROPS 1000
 
 uint8_t drop_index = 0;
 
