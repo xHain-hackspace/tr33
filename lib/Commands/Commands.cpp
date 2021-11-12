@@ -4,6 +4,9 @@
 
 CommandParams commands[COMMAND_COUNT];
 int64_t Commands::millis_offset = 0;
+uint8_t Commands::joystick_x = 0;
+uint8_t Commands::joystick_y = 0;
+boolean Commands::joystick_button = false;
 
 void Commands::init(LedStructure *init_leds)
 {
@@ -27,6 +30,11 @@ void Commands::handle_message(WireMessage msg)
     break;
   case WireMessage_time_sync_tag:
     millis_offset = msg.message.time_sync.millis - millis();
+    break;
+  case WireMessage_joystick_event_tag:
+    joystick_x = msg.message.joystick_event.x;
+    joystick_y = msg.message.joystick_event.y;
+    joystick_button = msg.message.joystick_event.button1;
     break;
   }
 }

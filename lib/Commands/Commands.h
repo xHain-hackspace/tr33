@@ -49,6 +49,10 @@ private:
   static int64_t millis_offset;
 
 public:
+  static uint8_t joystick_x;
+  static uint8_t joystick_y;
+  static bool joystick_button;
+
   void init(LedStructure *leds);
   void process(uint8_t *command, int bytes);
   void handle_message(WireMessage msg);
@@ -86,7 +90,6 @@ public:
 
   // Events
   void gravity_event(LedStructure *leds, uint8_t *data);
-  void twang_joystick(uint8_t *data);
 
   // float easing functions
   static float ease_in_cubic(float t);

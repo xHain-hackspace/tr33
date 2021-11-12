@@ -3,11 +3,11 @@
 
 void Dode::twang(uint8_t *data)
 {
-    twang_loop();
-    twang_render_dode(this);
+    // twang_loop();
+    // twang_render_dode(this);
 }
 
 void Dode::joystick(uint8_t *data)
 {
-    twang_joystick(data);
+    // twang_joystick(data);
 }

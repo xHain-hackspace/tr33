@@ -109,7 +109,9 @@ typedef enum _MovementType {
     MovementType_BEATS_5 = 13, 
     MovementType_BEATS_6 = 14, 
     MovementType_BEATS_7 = 15, 
-    MovementType_BEATS_ALL = 16 
+    MovementType_BEATS_ALL = 16, 
+    MovementType_JOYSTICK_X = 17, 
+    MovementType_JOYSTICK_Y = 18 
 } MovementType;
 
 typedef enum _SlopeType { 
@@ -148,6 +150,15 @@ typedef struct _Gravity {
     int32_t ball_rate; 
     int32_t width; 
 } Gravity;
+
+typedef struct _JoystickEvent { 
+    int32_t x; 
+    int32_t y; 
+    bool button1; 
+    bool button2; 
+    bool button3; 
+    bool button4; 
+} JoystickEvent;
 
 typedef struct _MappedParticles { 
     int32_t color; 
@@ -300,6 +311,7 @@ typedef struct _WireMessage {
     union {
         CommandParams command_params;
         TimeSync time_sync;
+        JoystickEvent joystick_event;
     } message; 
 } WireMessage;
 
@@ -318,8 +330,8 @@ typedef struct _WireMessage {
 #define _Shape2D_ARRAYSIZE ((Shape2D)(Shape2D_RING+1))
 
 #define _MovementType_MIN MovementType_LINEAR
-#define _MovementType_MAX MovementType_BEATS_ALL
-#define _MovementType_ARRAYSIZE ((MovementType)(MovementType_BEATS_ALL+1))
+#define _MovementType_MAX MovementType_JOYSTICK_Y
+#define _MovementType_ARRAYSIZE ((MovementType)(MovementType_JOYSTICK_Y+1))
 
 #define _SlopeType_MIN SlopeType_LINE
 #define _SlopeType_MAX SlopeType_COLOR_SHIFT
@@ -354,6 +366,7 @@ extern "C" {
 #define MappedPingPong_init_default              {123, 0, 5}
 #define BeatEqualizer_init_default               {23, 0}
 #define Twang_init_default                       {0}
+#define JoystickEvent_init_default               {0, 0, false, false, false, false}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
 #define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}}
 #define TimeSync_init_zero                       {0}
@@ -377,6 +390,7 @@ extern "C" {
 #define MappedPingPong_init_zero                 {0, 0, 0}
 #define BeatEqualizer_init_zero                  {0, 0}
 #define Twang_init_zero                          {0}
+#define JoystickEvent_init_zero                  {0, 0, 0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define BeatEqualizer_color_tag                  1
@@ -392,6 +406,12 @@ extern "C" {
 #define Gravity_launch_speed_tag                 2
 #define Gravity_ball_rate_tag                    3
 #define Gravity_width_tag                        4
+#define JoystickEvent_x_tag                      1
+#define JoystickEvent_y_tag                      2
+#define JoystickEvent_button1_tag                3
+#define JoystickEvent_button2_tag                4
+#define JoystickEvent_button3_tag                5
+#define JoystickEvent_button4_tag                6
 #define MappedParticles_color_tag                1
 #define MappedParticles_shape_tag                2
 #define MappedParticles_x_tag                    3
@@ -485,16 +505,19 @@ extern "C" {
 #define WireMessage_sequence_tag                 1
 #define WireMessage_command_params_tag           2
 #define WireMessage_time_sync_tag                3
+#define WireMessage_joystick_event_tag           4
 
 /* Struct field encoding specification for nanopb */
 #define WireMessage_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    sequence,          1) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,command_params,message.command_params),   2) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (message,time_sync,message.time_sync),   3)
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,time_sync,message.time_sync),   3) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,joystick_event,message.joystick_event),   4)
 #define WireMessage_CALLBACK NULL
 #define WireMessage_DEFAULT NULL
 #define WireMessage_message_command_params_MSGTYPE CommandParams
 #define WireMessage_message_time_sync_MSGTYPE TimeSync
+#define WireMessage_message_joystick_event_MSGTYPE JoystickEvent
 
 #define CommandParams_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    index,             1) \
@@ -709,6 +732,16 @@ X(a, STATIC,   REQUIRED, INT32,    band,              2)
 #define Twang_CALLBACK NULL
 #define Twang_DEFAULT NULL
 
+#define JoystickEvent_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, INT32,    x,                 1) \
+X(a, STATIC,   REQUIRED, INT32,    y,                 2) \
+X(a, STATIC,   REQUIRED, BOOL,     button1,           3) \
+X(a, STATIC,   REQUIRED, BOOL,     button2,           4) \
+X(a, STATIC,   REQUIRED, BOOL,     button3,           5) \
+X(a, STATIC,   REQUIRED, BOOL,     button4,           6)
+#define JoystickEvent_CALLBACK NULL
+#define JoystickEvent_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x00\x18\x00\x20\x00\x28\x00\x30\x00\x00"
+
 extern const pb_msgdesc_t WireMessage_msg;
 extern const pb_msgdesc_t CommandParams_msg;
 extern const pb_msgdesc_t TimeSync_msg;
@@ -732,6 +765,7 @@ extern const pb_msgdesc_t MappedParticles_msg;
 extern const pb_msgdesc_t MappedPingPong_msg;
 extern const pb_msgdesc_t BeatEqualizer_msg;
 extern const pb_msgdesc_t Twang_msg;
+extern const pb_msgdesc_t JoystickEvent_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define WireMessage_fields &WireMessage_msg
@@ -757,12 +791,14 @@ extern const pb_msgdesc_t Twang_msg;
 #define MappedPingPong_fields &MappedPingPong_msg
 #define BeatEqualizer_fields &BeatEqualizer_msg
 #define Twang_fields &Twang_msg
+#define JoystickEvent_fields &JoystickEvent_msg
 
 /* Maximum encoded size of messages (where known) */
 #define BeatEqualizer_size                       22
 #define CommandParams_size                       412
 #define FlickerSparkle_size                      77
 #define Gravity_size                             44
+#define JoystickEvent_size                       30
 #define Kaleidoscope_size                        0
 #define MappedParticles_size                     57
 #define MappedPingPong_size                      33
@@ -792,7 +828,7 @@ extern const pb_msgdesc_t Twang_msg;
 namespace nanopb {
 template <>
 struct MessageDescriptor<WireMessage> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 4;
     static inline const pb_msgdesc_t* fields() {
         return &WireMessage_msg;
     }
@@ -949,6 +985,13 @@ struct MessageDescriptor<Twang> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 0;
     static inline const pb_msgdesc_t* fields() {
         return &Twang_msg;
+    }
+};
+template <>
+struct MessageDescriptor<JoystickEvent> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 6;
+    static inline const pb_msgdesc_t* fields() {
+        return &JoystickEvent_msg;
     }
 };
 }  // namespace nanopb

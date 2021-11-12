@@ -3,11 +3,7 @@
 
 void Commands::twang(LedStructure *leds)
 {
-  twang_loop();
+  int movement = int(float(joystick_y) / 255.0 * 180.0) - 90;
+  twang_loop(movement, joystick_button);
   twang_render(leds);
-}
-
-void Commands::twang_joystick(uint8_t *data)
-{
-  twang_joystick_update((int8_t)data[0], (uint8_t)data[1]);
 }

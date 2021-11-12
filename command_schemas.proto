@@ -104,6 +104,8 @@ enum MovementType {
   BEATS_6 = 14;
   BEATS_7 = 15;
   BEATS_ALL = 16;
+  JOYSTICK_X = 17;
+  JOYSTICK_Y = 18;
 }
 
 enum SlopeType {
@@ -117,6 +119,7 @@ message WireMessage {
   oneof message {
     CommandParams command_params = 2;
     TimeSync time_sync = 3;
+    JoystickEvent joystick_event= 4;
   }
 }
 
@@ -289,9 +292,14 @@ message BeatEqualizer {
 }
 
 message Twang {
-
 }
 
-// DancingSlope -> select movement type
-
+message JoystickEvent {
+  required int32 x = 1 [default = 0];
+  required int32 y = 2 [default = 0];
+  required bool button1 = 3 [default = false];
+  required bool button2 = 4 [default = false];
+  required bool button3 = 5 [default = false];
+  required bool button4 = 6 [default = false];
+}
 

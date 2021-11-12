@@ -152,12 +152,6 @@ void clear()
     }
 }
 
-void twang_joystick_update(int8_t tilt, uint8_t wobble)
-{
-    joystickTilt = tilt;
-    joystickWobble = wobble;
-}
-
 void twang_render(LedStructure *leds)
 {
     for (int i = 0; i < NUM_LEDS; i++)
@@ -237,8 +231,12 @@ void twang_render(LedStructure *leds)
 //     }
 // }
 
-void twang_loop()
+// movement: -90>+90
+void twang_loop(int movement, bool button)
 {
+    joystickTilt = movement;
+    joystickWobble = button ? 170 : 0;
+
     long mm = millis();
     int brightness = 0;
 

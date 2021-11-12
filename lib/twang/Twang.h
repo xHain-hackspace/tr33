@@ -18,10 +18,9 @@
 #include "Conveyor.h" */
 
 // void setup();
-void twang_loop();
+void twang_loop(int movement, bool button);
 // void twang_render_dode(LedStructure *leds);
 void twang_render(LedStructure *leds);
-void twang_joystick_update(int8_t tilt, uint8_t wobble);
 
 // ---------------------------------
 // ------------ LEVELS -------------

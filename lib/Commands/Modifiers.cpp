@@ -84,6 +84,12 @@ void Modifiers::apply(Modifier modifier, int *value, uint8_t command_index)
   case MovementType_BEATS_ALL:
     apply_beat(modifier, value, 7);
     break;
+  case MovementType_JOYSTICK_X:
+    *value = Commands::joystick_x;
+    break;
+  case MovementType_JOYSTICK_Y:
+    *value = Commands::joystick_y;
+    break;
   }
 }
 
