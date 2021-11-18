@@ -34,9 +34,9 @@ Trommel leds = Trommel();
 #include <Wolke.h>
 Wolke leds = Wolke();
 #endif
-#ifdef LED_STRUCTURE_DISCOTESTRIG
-#include <Discotestrig.h>
-Discotestrig leds = Discotestrig();
+#ifdef LED_STRUCTURE_SCUBAR
+#include <Scubar.h>
+Scubar leds;
 #endif
 
 Commands command_runner = Commands();

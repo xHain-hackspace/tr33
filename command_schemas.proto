@@ -114,6 +114,11 @@ enum SlopeType {
   COLOR_SHIFT = 2;
 }
 
+enum FairyPattern {
+  ODD_EVEN = 0;
+  ODD_EVEN_ALL = 1;
+}
+
 message WireMessage {
   required int32 sequence = 1;
   oneof message {
@@ -149,7 +154,8 @@ message CommandParams {
     MappedParticles mapped_particles = 22;
     MappedPingPong mapped_ping_pong = 23;
     Twang twang = 24;
-    BeatEqualizer beat_equalizer = 25;
+    FairyLight fairy_light = 25;
+    BeatEqualizer beat_equalizer = 26;
   }
 }
 
@@ -292,6 +298,12 @@ message BeatEqualizer {
 }
 
 message Twang {
+}
+
+message FairyLight {
+  required FairyPattern fairy_pattern = 1 [default = ODD_EVEN];
+  required int32 frequency = 2 [default = 20];
+  required int32 fairy_index = 3 [default = 0];
 }
 
 message JoystickEvent {

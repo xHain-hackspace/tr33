@@ -120,6 +120,11 @@ typedef enum _SlopeType {
     SlopeType_COLOR_SHIFT = 2 
 } SlopeType;
 
+typedef enum _FairyPattern { 
+    FairyPattern_ODD_EVEN = 0, 
+    FairyPattern_ODD_EVEN_ALL = 1 
+} FairyPattern;
+
 /* Struct definitions */
 typedef struct _Kaleidoscope { 
     char dummy_field;
@@ -133,6 +138,12 @@ typedef struct _BeatEqualizer {
     int32_t color; 
     int32_t band; 
 } BeatEqualizer;
+
+typedef struct _FairyLight { 
+    FairyPattern fairy_pattern; 
+    int32_t frequency; 
+    int32_t fairy_index; 
+} FairyLight;
 
 typedef struct _FlickerSparkle { 
     int32_t color; 
@@ -301,6 +312,7 @@ typedef struct _CommandParams {
         MappedParticles mapped_particles;
         MappedPingPong mapped_ping_pong;
         Twang twang;
+        FairyLight fairy_light;
         BeatEqualizer beat_equalizer;
     } type_params; 
 } CommandParams;
@@ -337,6 +349,10 @@ typedef struct _WireMessage {
 #define _SlopeType_MAX SlopeType_COLOR_SHIFT
 #define _SlopeType_ARRAYSIZE ((SlopeType)(SlopeType_COLOR_SHIFT+1))
 
+#define _FairyPattern_MIN FairyPattern_ODD_EVEN
+#define _FairyPattern_MAX FairyPattern_ODD_EVEN_ALL
+#define _FairyPattern_ARRAYSIZE ((FairyPattern)(FairyPattern_ODD_EVEN_ALL+1))
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -366,6 +382,7 @@ extern "C" {
 #define MappedPingPong_init_default              {123, 0, 5}
 #define BeatEqualizer_init_default               {23, 0}
 #define Twang_init_default                       {0}
+#define FairyLight_init_default                  {FairyPattern_ODD_EVEN, 20, 0}
 #define JoystickEvent_init_default               {0, 0, false, false, false, false}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
 #define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}}
@@ -390,11 +407,15 @@ extern "C" {
 #define MappedPingPong_init_zero                 {0, 0, 0}
 #define BeatEqualizer_init_zero                  {0, 0}
 #define Twang_init_zero                          {0}
+#define FairyLight_init_zero                     {_FairyPattern_MIN, 0, 0}
 #define JoystickEvent_init_zero                  {0, 0, 0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define BeatEqualizer_color_tag                  1
 #define BeatEqualizer_band_tag                   2
+#define FairyLight_fairy_pattern_tag             1
+#define FairyLight_frequency_tag                 2
+#define FairyLight_fairy_index_tag               3
 #define FlickerSparkle_color_tag                 1
 #define FlickerSparkle_sparkle_width_tag         2
 #define FlickerSparkle_sparles_per_second_tag    3
@@ -501,7 +522,8 @@ extern "C" {
 #define CommandParams_mapped_particles_tag       22
 #define CommandParams_mapped_ping_pong_tag       23
 #define CommandParams_twang_tag                  24
-#define CommandParams_beat_equalizer_tag         25
+#define CommandParams_fairy_light_tag            25
+#define CommandParams_beat_equalizer_tag         26
 #define WireMessage_sequence_tag                 1
 #define WireMessage_command_params_tag           2
 #define WireMessage_time_sync_tag                3
@@ -544,7 +566,8 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_triangle,type_params.mapp
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_particles,type_params.mapped_particles),  22) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_ping_pong,type_params.mapped_ping_pong),  23) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,beat_equalizer,type_params.beat_equalizer),  25)
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fairy_light,type_params.fairy_light),  25) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,beat_equalizer,type_params.beat_equalizer),  26)
 #define CommandParams_CALLBACK NULL
 #define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\x00"
 #define CommandParams_modifiers_MSGTYPE Modifier
@@ -566,6 +589,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,beat_equalizer,type_params.beat_
 #define CommandParams_type_params_mapped_particles_MSGTYPE MappedParticles
 #define CommandParams_type_params_mapped_ping_pong_MSGTYPE MappedPingPong
 #define CommandParams_type_params_twang_MSGTYPE Twang
+#define CommandParams_type_params_fairy_light_MSGTYPE FairyLight
 #define CommandParams_type_params_beat_equalizer_MSGTYPE BeatEqualizer
 
 #define TimeSync_FIELDLIST(X, a) \
@@ -732,6 +756,13 @@ X(a, STATIC,   REQUIRED, INT32,    band,              2)
 #define Twang_CALLBACK NULL
 #define Twang_DEFAULT NULL
 
+#define FairyLight_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, UENUM,    fairy_pattern,     1) \
+X(a, STATIC,   REQUIRED, INT32,    frequency,         2) \
+X(a, STATIC,   REQUIRED, INT32,    fairy_index,       3)
+#define FairyLight_CALLBACK NULL
+#define FairyLight_DEFAULT (const pb_byte_t*)"\x10\x14\x18\x00\x00"
+
 #define JoystickEvent_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    x,                 1) \
 X(a, STATIC,   REQUIRED, INT32,    y,                 2) \
@@ -765,6 +796,7 @@ extern const pb_msgdesc_t MappedParticles_msg;
 extern const pb_msgdesc_t MappedPingPong_msg;
 extern const pb_msgdesc_t BeatEqualizer_msg;
 extern const pb_msgdesc_t Twang_msg;
+extern const pb_msgdesc_t FairyLight_msg;
 extern const pb_msgdesc_t JoystickEvent_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
@@ -791,11 +823,13 @@ extern const pb_msgdesc_t JoystickEvent_msg;
 #define MappedPingPong_fields &MappedPingPong_msg
 #define BeatEqualizer_fields &BeatEqualizer_msg
 #define Twang_fields &Twang_msg
+#define FairyLight_fields &FairyLight_msg
 #define JoystickEvent_fields &JoystickEvent_msg
 
 /* Maximum encoded size of messages (where known) */
 #define BeatEqualizer_size                       22
 #define CommandParams_size                       412
+#define FairyLight_size                          24
 #define FlickerSparkle_size                      77
 #define Gravity_size                             44
 #define JoystickEvent_size                       30
@@ -835,7 +869,7 @@ struct MessageDescriptor<WireMessage> {
 };
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 25;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 26;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
     }
@@ -985,6 +1019,13 @@ struct MessageDescriptor<Twang> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 0;
     static inline const pb_msgdesc_t* fields() {
         return &Twang_msg;
+    }
+};
+template <>
+struct MessageDescriptor<FairyLight> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
+    static inline const pb_msgdesc_t* fields() {
+        return &FairyLight_msg;
     }
 };
 template <>

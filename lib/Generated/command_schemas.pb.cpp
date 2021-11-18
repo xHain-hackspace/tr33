@@ -75,7 +75,11 @@ PB_BIND(BeatEqualizer, BeatEqualizer, AUTO)
 PB_BIND(Twang, Twang, AUTO)
 
 
+PB_BIND(FairyLight, FairyLight, AUTO)
+
+
 PB_BIND(JoystickEvent, JoystickEvent, AUTO)
+
 
 
 

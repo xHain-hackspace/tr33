@@ -117,6 +117,16 @@ void LedStructure::fade_led(uint8_t strip_index, int led, CRGB target, fract8 am
   }
 }
 
+void LedStructure::shift_led(uint8_t strip_index, int led, uint8_t amount)
+{
+  if (led >= 0 && led < strip_length(strip_index))
+  {
+    CRGB current = get_led(strip_index, led);
+    CRGB faded = blend(current, 0, amount * 255.0);
+    set_led(strip_index, led, faded);
+  }
+}
+
 uint16_t LedStructure::strip_length(uint8_t strip_index)
 {
   return STRIP_PIXEL_COUNT;
@@ -144,6 +154,11 @@ uint8_t LedStructure::random_strip(uint8_t strip_index)
   {
     return random8(0, STRIP_COUNT);
   }
+}
+
+FairyLightsControl *LedStructure::get_fairy_light(uint8_t index)
+{
+  return nullptr;
 }
 
 // void Tr33::show_pin_numbers()
