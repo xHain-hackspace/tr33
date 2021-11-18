@@ -156,7 +156,7 @@ void twang_render(LedStructure *leds)
 {
     for (int i = 0; i < NUM_LEDS; i++)
     {
-        leds->set_led(STRIP_INDEX_ALL, i, twang_leds[i]);
+        leds->fade_led(STRIP_INDEX_ALL, i, twang_leds[i], 255);
     }
 }
 
