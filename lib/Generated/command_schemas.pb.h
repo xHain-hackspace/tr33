@@ -15,61 +15,58 @@ typedef enum _ColorPalette {
     ColorPalette_RAINBOW = 0, 
     ColorPalette_FOREST = 1, 
     ColorPalette_OCEAN = 2, 
-    ColorPalette_PARTY = 3, 
-    ColorPalette_HEAT = 4, 
-    ColorPalette_LAVA = 5, 
-    ColorPalette_CLOUD = 6, 
+    ColorPalette_PARTY = 3, /* HEAT = 4;
+ LAVA = 5;
+ CLOUD = 6; */
     /* Custom */
-    ColorPalette_SCOUTY = 7, 
-    ColorPalette_PURPLE_HEAT = 8, 
-    ColorPalette_SPRING_ANGEL = 9, 
-    ColorPalette_SAGA = 10, 
-    ColorPalette_SAGA2 = 11, 
-    ColorPalette_PARROT = 12, 
-    /* WLED */
-    ColorPalette_SUNSET_REAL = 13, 
+    ColorPalette_SCOUTY = 7, /* PURPLE_HEAT = 8;
+ SPRING_ANGEL = 9;
+ SAGA = 10;
+ SAGA2 = 11;
+ PARROT = 12; */
+    /* WLED
+ SUNSET_REAL = 13; */
     ColorPalette_RIVENDELL = 14, 
-    ColorPalette_OCEAN_BREEZE = 15, 
-    ColorPalette_RGI = 16, 
-    ColorPalette_RETRO2 = 17, 
-    ColorPalette_ANALOGOUS = 18, 
-    ColorPalette_PINKSPLASH = 19, 
-    ColorPalette_SUNSET_YELLOW = 20, 
-    ColorPalette_ANOTHER_SUNSET = 21, 
-    ColorPalette_BEECH = 22, 
-    ColorPalette_VINTAGE = 23, 
-    ColorPalette_DEPARTURE = 24, 
-    ColorPalette_LANDSCAPE = 25, 
-    ColorPalette_LANDSCAPE2 = 26, 
-    ColorPalette_RAINBOWSHERBET = 27, 
-    ColorPalette_HULT = 28, 
-    ColorPalette_HULT2 = 29, 
-    ColorPalette_DRYWET = 30, 
-    ColorPalette_JUL = 31, 
-    ColorPalette_VINTAGE2 = 32, 
-    ColorPalette_IB15 = 33, 
-    ColorPalette_TERTIARY = 34, 
-    ColorPalette_LAVA2 = 35, 
-    ColorPalette_FIERCE_ICE = 36, 
-    ColorPalette_COLORFULL = 37, 
-    ColorPalette_PINK_PURPLE = 38, 
-    ColorPalette_AUTUMN = 39, 
-    ColorPalette_BLACK_BLUE_MAGENTA_WHITE = 40, 
-    ColorPalette_BLACK_MAGENTA_RED = 41, 
-    ColorPalette_BLACK_RED_MAGENTA_YELLOW = 42, 
-    ColorPalette_BLUE_CYAN_YELLOW = 43, 
+    /* OCEAN_BREEZE = 15;
+ RGI = 16;
+ RETRO2 = 17;
+ ANALOGOUS = 18;
+ PINKSPLASH = 19;
+ SUNSET_YELLOW = 20;
+ ANOTHER_SUNSET = 21;
+ BEECH = 22;
+ VINTAGE = 23;
+ DEPARTURE = 24;
+ LANDSCAPE = 25;
+ LANDSCAPE2 = 26;
+ RAINBOWSHERBET = 27;
+ HULT = 28;
+ HULT2 = 29;
+ DRYWET = 30;
+ JUL = 31;
+ VINTAGE2 = 32;
+ IB15 = 33;
+ TERTIARY = 34;
+ LAVA2 = 35;
+ FIERCE_ICE = 36;
+ COLORFULL = 37;
+ PINK_PURPLE = 38;
+ AUTUMN = 39;
+ BLACK_BLUE_MAGENTA_WHITE = 40;
+ BLACK_MAGENTA_RED = 41;
+ BLACK_RED_MAGENTA_YELLOW = 42;
+ BLUE_CYAN_YELLOW = 43; */
     ColorPalette_ORANGE_TEAL = 44, 
-    ColorPalette_TIAMAT = 45, 
-    ColorPalette_APRIL_NIGHT = 46, 
+    /* TIAMAT = 45;
+ APRIL_NIGHT = 46; */
     ColorPalette_ORANGERY = 47, 
-    ColorPalette_C9 = 48, 
+    /* C9 = 48; */
     ColorPalette_SAKURA = 49, 
     ColorPalette_AURORA = 50, 
-    ColorPalette_ATLANTICA = 51, 
-    ColorPalette_C92 = 52, 
-    ColorPalette_C93 = 53, 
-    ColorPalette_TEMPERATURE = 54, 
-    ColorPalette_AURORA2 = 55 
+    ColorPalette_ATLANTICA = 51 /* C92 = 52;
+ C93 = 53;
+ TEMPERATURE = 54;
+ AURORA2 = 55; */
 } ColorPalette;
 
 typedef enum _Shape1D { 
@@ -330,8 +327,8 @@ typedef struct _WireMessage {
 
 /* Helper constants for enums */
 #define _ColorPalette_MIN ColorPalette_RAINBOW
-#define _ColorPalette_MAX ColorPalette_AURORA2
-#define _ColorPalette_ARRAYSIZE ((ColorPalette)(ColorPalette_AURORA2+1))
+#define _ColorPalette_MAX ColorPalette_ATLANTICA
+#define _ColorPalette_ARRAYSIZE ((ColorPalette)(ColorPalette_ATLANTICA+1))
 
 #define _Shape1D_MIN Shape1D_BALL
 #define _Shape1D_MAX Shape1D_SOLID
@@ -362,17 +359,17 @@ extern "C" {
 #define WireMessage_init_default                 {0, 0, {CommandParams_init_default}}
 #define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}}
 #define TimeSync_init_default                    {0}
-#define Modifier_init_default                    {MovementType_SINE, 0, 0, 0, 0, 255}
+#define Modifier_init_default                    {MovementType_SINE, 0, 50, 0, 0, 255}
 #define White_init_default                       {0}
 #define SingleColor_init_default                 {226}
 #define Pixel_init_default                       {0, 0}
 #define PixelRGB_init_default                    {130, 130, 130, 0}
 #define Rainbow_init_default                     {30, 100, 150}
-#define Sparkle_init_default                     {1, 15, 10, 100}
+#define Sparkle_init_default                     {0, 15, 10, 100}
 #define FlickerSparkle_init_default              {255, 90, 215, 8, 7, 119, 80}
 #define PingPong_init_default                    {Shape1D_BALL, MovementType_SINE, 65, 20, 1, 100}
 #define Render_init_default                      {Shape1D_BALL, 210, 20, 20}
-#define Rain_init_default                        {150, 15, 90, 90}
+#define Rain_init_default                        {0, 15, 90, 90}
 #define Gravity_init_default                     {13, 0, 5, 70}
 #define Kaleidoscope_init_default                {0}
 #define MappedSlope_init_default                 {1, SlopeType_FILL, 0, 0, 255, 255, 5}
@@ -605,7 +602,7 @@ X(a, STATIC,   REQUIRED, INT32,    offset_100ms,      4) \
 X(a, STATIC,   REQUIRED, INT32,    min,               5) \
 X(a, STATIC,   REQUIRED, INT32,    max,               6)
 #define Modifier_CALLBACK NULL
-#define Modifier_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x00\x18\x00\x20\x00\x28\x00\x30\xff\x01\x00"
+#define Modifier_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x00\x18\x32\x20\x00\x28\x00\x30\xff\x01\x00"
 
 #define White_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color_temperature,   1)
@@ -644,7 +641,7 @@ X(a, STATIC,   REQUIRED, INT32,    sparkle_width,     2) \
 X(a, STATIC,   REQUIRED, INT32,    sparle_rate,       3) \
 X(a, STATIC,   REQUIRED, INT32,    duration,          4)
 #define Sparkle_CALLBACK NULL
-#define Sparkle_DEFAULT (const pb_byte_t*)"\x08\x01\x10\x0f\x18\x0a\x20\x64\x00"
+#define Sparkle_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x0f\x18\x0a\x20\x64\x00"
 
 #define FlickerSparkle_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \
@@ -681,7 +678,7 @@ X(a, STATIC,   REQUIRED, INT32,    width,             2) \
 X(a, STATIC,   REQUIRED, INT32,    drop_density,      3) \
 X(a, STATIC,   REQUIRED, INT32,    drop_speed,        4)
 #define Rain_CALLBACK NULL
-#define Rain_DEFAULT (const pb_byte_t*)"\x08\x96\x01\x10\x0f\x18\x5a\x20\x5a\x00"
+#define Rain_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x0f\x18\x5a\x20\x5a\x00"
 
 #define Gravity_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \

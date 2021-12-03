@@ -13,9 +13,6 @@
 #ifdef LED_STRUCTURE_TR33
 #include <Tr33_config.h>
 #endif
-#ifdef LED_STRUCTURE_KELLER
-#include <Keller_config.h>
-#endif
 #ifdef LED_STRUCTURE_RANKEN
 #include <Ranken_config.h>
 #endif

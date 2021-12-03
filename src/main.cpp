@@ -14,10 +14,6 @@ Tr33 leds = Tr33();
 #ifdef LED_STRUCTURE_DODE
 Dode leds = Dode();
 #endif
-#ifdef LED_STRUCTURE_KELLER
-#include <Keller.h>
-Keller leds = Keller();
-#endif
 #ifdef LED_STRUCTURE_RANKEN
 #include <Ranken.h>
 Ranken leds = Ranken();

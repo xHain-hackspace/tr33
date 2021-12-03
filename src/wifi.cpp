@@ -53,16 +53,17 @@ void wifi_init()
 
 void upd_init()
 {
-  Serial.printf("Initializing UDP...\n");
+  Serial.printf("Initializing UDP...");
   udp.begin(LISTEN_PORT);
-  Serial.printf("Done. Listening on %s:%d\n", WiFi.localIP().toString().c_str(), LISTEN_PORT);
-  Serial.println("... done");
+  Serial.printf(" Done.\n Listening on %s:%d\n", WiFi.localIP().toString().c_str(), LISTEN_PORT);
+  Serial.printf("Using \"%s\" as control host\n", control_host);
 
   udp_up = true;
 }
 
 void send_sequence()
 {
+  Serial.printf("Sending sequence %i\n", sequence);
   udp.beginPacket(control_host, control_port);
   udp.write((uint8_t *)sequence_header, sequence_header_length);
   if (sequence_error)

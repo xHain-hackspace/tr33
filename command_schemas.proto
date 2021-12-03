@@ -7,62 +7,62 @@ enum ColorPalette {
   FOREST = 1;
   OCEAN = 2;
   PARTY = 3;
-  HEAT = 4;
-  LAVA = 5;
-  CLOUD = 6;
+  // HEAT = 4;
+  // LAVA = 5;
+  // CLOUD = 6;
   
   // Custom
   SCOUTY = 7;
-  PURPLE_HEAT = 8;
-  SPRING_ANGEL = 9;
-  SAGA = 10;
-  SAGA2 = 11;
-  PARROT = 12;
+  // PURPLE_HEAT = 8;
+  // SPRING_ANGEL = 9;
+  // SAGA = 10;
+  // SAGA2 = 11;
+  // PARROT = 12;
 
   // WLED
-  SUNSET_REAL = 13;
+  // SUNSET_REAL = 13;
   RIVENDELL = 14;
-  OCEAN_BREEZE = 15;
-  RGI = 16;
-  RETRO2 = 17;
-  ANALOGOUS = 18;
-  PINKSPLASH = 19;
-  SUNSET_YELLOW = 20;
-  ANOTHER_SUNSET = 21;
-  BEECH = 22;
-  VINTAGE = 23;
-  DEPARTURE = 24;
-  LANDSCAPE = 25;
-  LANDSCAPE2 = 26;
-  RAINBOWSHERBET = 27;
-  HULT = 28;
-  HULT2 = 29;
-  DRYWET = 30;
-  JUL = 31;
-  VINTAGE2 = 32;
-  IB15 = 33;
-  TERTIARY = 34;
-  LAVA2 = 35;
-  FIERCE_ICE = 36;
-  COLORFULL = 37;
-  PINK_PURPLE = 38;
-  AUTUMN = 39;
-  BLACK_BLUE_MAGENTA_WHITE = 40;
-  BLACK_MAGENTA_RED = 41;
-  BLACK_RED_MAGENTA_YELLOW = 42;
-  BLUE_CYAN_YELLOW = 43;
+  // OCEAN_BREEZE = 15;
+  // RGI = 16;
+  // RETRO2 = 17;
+  // ANALOGOUS = 18;
+  // PINKSPLASH = 19;
+  // SUNSET_YELLOW = 20;
+  // ANOTHER_SUNSET = 21;
+  // BEECH = 22;
+  // VINTAGE = 23;
+  // DEPARTURE = 24;
+  // LANDSCAPE = 25;
+  // LANDSCAPE2 = 26;
+  // RAINBOWSHERBET = 27;
+  // HULT = 28;
+  // HULT2 = 29;
+  // DRYWET = 30;
+  // JUL = 31;
+  // VINTAGE2 = 32;
+  // IB15 = 33;
+  // TERTIARY = 34;
+  // LAVA2 = 35;
+  // FIERCE_ICE = 36;
+  // COLORFULL = 37;
+  // PINK_PURPLE = 38;
+  // AUTUMN = 39;
+  // BLACK_BLUE_MAGENTA_WHITE = 40;
+  // BLACK_MAGENTA_RED = 41;
+  // BLACK_RED_MAGENTA_YELLOW = 42;
+  // BLUE_CYAN_YELLOW = 43;
   ORANGE_TEAL = 44;
-  TIAMAT = 45;
-  APRIL_NIGHT = 46;
+  // TIAMAT = 45;
+  // APRIL_NIGHT = 46;
   ORANGERY = 47;
-  C9 = 48;
+  // C9 = 48;
   SAKURA = 49;
   AURORA = 50;
   ATLANTICA = 51;
-  C92 = 52;
-  C93 = 53;
-  TEMPERATURE = 54;
-  AURORA2 = 55;
+  // C92 = 52;
+  // C93 = 53;
+  // TEMPERATURE = 54;
+  // AURORA2 = 55;
 }
 
 enum Shape1D {
@@ -166,7 +166,7 @@ message TimeSync {
 message Modifier {
   required MovementType movement_type = 1 [default = SINE];
   required int32 field_index = 2 [default = 0];
-  required int32 period_100ms = 3 [default = 0];
+  required int32 period_100ms = 3 [default = 50];
   required int32 offset_100ms = 4 [default = 0];
   required int32 min = 5 [default = 0];
   required int32 max = 6 [default = 255];
@@ -199,7 +199,7 @@ message Rainbow {
 }
 
 message Sparkle {
-  required int32 color = 1 [default = 1];  
+  required int32 color = 1 [default = 0];  
   required int32 sparkle_width = 2 [default = 15];
   required int32 sparle_rate = 3 [default = 10];  
   required int32 duration = 4 [default = 100];  
@@ -232,7 +232,7 @@ message Render {
 }
 
 message Rain {
-  required int32 color = 1 [default = 150];  
+  required int32 color = 1 [default = 0];  
   required int32 width = 2 [default = 15];
   required int32 drop_density = 3 [default = 90];  
   required int32 drop_speed = 4 [default = 90];  

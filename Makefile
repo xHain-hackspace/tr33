@@ -6,3 +6,5 @@ generate:
 	python3 nanopb/nanopb_generator.py --cpp-descriptors -S .cpp -D lib/Generated/ command_schemas.proto 
 	elixir generate_field_selectors.exs
 	
+monitor:
+	screen /dev/ttyUSB0 921600

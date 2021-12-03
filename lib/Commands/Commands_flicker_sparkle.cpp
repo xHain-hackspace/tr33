@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-#define MAX_FLICKER_SPARKLES 500
+#define MAX_FLICKER_SPARKLES 200
 #define FLICKER_SPARKLES_DIM_RATE 40
 
 uint8_t flicker_sparkle_index = 0;
