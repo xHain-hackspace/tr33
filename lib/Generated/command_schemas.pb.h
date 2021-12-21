@@ -364,7 +364,7 @@ extern "C" {
 #define SingleColor_init_default                 {226}
 #define Pixel_init_default                       {0, 0}
 #define PixelRGB_init_default                    {130, 130, 130, 0}
-#define Rainbow_init_default                     {30, 100, 150}
+#define Rainbow_init_default                     {30, 100, 152}
 #define Sparkle_init_default                     {0, 15, 10, 100}
 #define FlickerSparkle_init_default              {255, 90, 215, 8, 7, 119, 80}
 #define PingPong_init_default                    {Shape1D_BALL, MovementType_SINE, 65, 20, 1, 100}
@@ -633,7 +633,7 @@ X(a, STATIC,   REQUIRED, INT32,    speed,             1) \
 X(a, STATIC,   REQUIRED, INT32,    wave_size,         2) \
 X(a, STATIC,   REQUIRED, INT32,    rainbow_size,      3)
 #define Rainbow_CALLBACK NULL
-#define Rainbow_DEFAULT (const pb_byte_t*)"\x08\x1e\x10\x64\x18\x96\x01\x00"
+#define Rainbow_DEFAULT (const pb_byte_t*)"\x08\x1e\x10\x64\x18\x98\x01\x00"
 
 #define Sparkle_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \

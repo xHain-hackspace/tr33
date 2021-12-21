@@ -195,7 +195,7 @@ message PixelRGB {
 message Rainbow {  
   required int32 speed = 1 [default = 30];  
   required int32 wave_size = 2 [default = 100];
-  required int32 rainbow_size = 3 [default = 150];
+  required int32 rainbow_size = 3 [default = 152];
 }
 
 message Sparkle {

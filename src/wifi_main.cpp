@@ -1,6 +1,6 @@
-#include <Arduino.h>
+// #include <Arduino.h>
 #include <Commands.h>
-// #include <ESPmDNS.h>
+#include <SPI.h>
 #include <WiFi.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>

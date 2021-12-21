@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <Commands.h>
-#include <uart.h>
+#include <uart_main.h>
 #include <command_schemas.pb.h>
 #include <pb_decode.h>
 
