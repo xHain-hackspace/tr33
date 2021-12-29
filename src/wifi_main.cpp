@@ -176,11 +176,12 @@ CommandParams disable_overlay()
 
 CommandParams color_overlay(uint8_t color)
 {
-  SingleColor single = SingleColor_init_default;
-  single.color = color;
+  Pixel pixel = Pixel_init_default;
+  pixel.color = color;
+  pixel.led_index = 0;
   CommandParams command = CommandParams_init_default;
-  command.which_type_params = CommandParams_single_color_tag;
-  command.type_params.single_color = single;
+  command.which_type_params = CommandParams_pixel_tag;
+  command.type_params.pixel = pixel;
   command.index = COMMAND_COUNT - 1;
   // command.strip_index = 1;
   command.brightness = 100;
