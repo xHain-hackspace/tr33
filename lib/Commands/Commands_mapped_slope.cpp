@@ -24,6 +24,7 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
   float height = (x2 * y1 - x1 * y2) / (x2 - x1);
 
   CRGB color = color_from_palette(cmd, mapped_slope.color);
+  CRGB target_color = color;
 
   float brightness = 0;
   float distance = 0;
@@ -40,14 +41,14 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
     render_full = false;
     render_fade = false;
 
-    if (mapped_slope.slope_type == SlopeType_LINE) // || type == SLOPE_LINE_INVERSE)
+    if (mapped_slope.slope_type == SlopeType_LINE)
     {
       if (fabs(distance) < fade_distance)
       {
         render_fade = true;
       }
     }
-    else if (mapped_slope.slope_type == SlopeType_FILL)
+    else if (mapped_slope.slope_type == SlopeType_FILL || mapped_slope.slope_type == SlopeType_COLOR_SHIFT)
     {
       if (x1 > x2)
       {
@@ -73,10 +74,10 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
       }
     }
 
+    brightness = 0;
     if (render_full)
     {
-      // full brightness
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, render_brightness * 255);
+      brightness = render_brightness;
     }
     else if (render_fade)
     {
@@ -89,7 +90,18 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
       {
         brightness = Commands::ease_in_out_cubic(render_brightness * (1 - fabsf(distance / fade_distance)));
       }
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness * 255);
+    }
+
+    if (brightness > 0)
+    {
+      if (mapped_slope.slope_type == SlopeType_COLOR_SHIFT)
+      {
+        leds->invert_led(leds->mapping[i][0], leds->mapping[i][1], brightness * 255);
+      }
+      else
+      {
+        leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], target_color, brightness * 255);
+      }
     }
   }
 }

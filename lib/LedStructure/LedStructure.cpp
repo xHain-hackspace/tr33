@@ -91,7 +91,6 @@ void LedStructure::set_led(uint8_t strip_index, int led, CRGB color)
 
 CRGB LedStructure::get_led(uint8_t strip_index, int led)
 {
-
   if (strip_index == 0)
   {
     return leds[0][led];
@@ -124,6 +123,18 @@ void LedStructure::shift_led(uint8_t strip_index, int led, uint8_t amount)
     CRGB current = get_led(strip_index, led);
     CRGB faded = blend(current, 0, amount * 255.0);
     set_led(strip_index, led, faded);
+  }
+}
+
+void LedStructure::invert_led(uint8_t strip_index, int led, fract8 amount)
+{
+  if (led >= 0 && led < strip_length(strip_index))
+  {
+    CHSV current = rgb2hsv_approximate(get_led(strip_index, led));
+    CHSV target = current;
+    target.hue = (current.hue + 128 % 256);
+    CRGB blended = blend(current, target, amount);
+    set_led(strip_index, led, blended);
   }
 }
 

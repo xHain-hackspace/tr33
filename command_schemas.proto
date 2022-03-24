@@ -124,7 +124,8 @@ message WireMessage {
   oneof message {
     CommandParams command_params = 2;
     TimeSync time_sync = 3;
-    JoystickEvent joystick_event= 4;
+    JoystickEvent joystick_event = 4;
+    TargetMetrics target_metrics = 5;
   }
 }
 
@@ -315,3 +316,8 @@ message JoystickEvent {
   required bool button4 = 6 [default = false];
 }
 
+message TargetMetrics {
+  required string name = 1 [(nanopb).max_length = 20];
+  required int32 fps = 2;
+  required int32 wifi_strength = 3;  
+}

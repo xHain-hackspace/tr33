@@ -16,15 +16,31 @@ wand:
 
 xhain: tr33 ranken scubar wolken trommel
 
-wolken:
+wolken: wolke1 wolke2 wolke3 wolke4 wolke5 wolke6 wolke8
+
+wolke1:
 	$(pio_binary) run --target upload -e wolke1
+
+wolke2:
 	$(pio_binary) run --target upload -e wolke2
+
+wolke3:
 	$(pio_binary) run --target upload -e wolke3
+
+wolke4:
 	$(pio_binary) run --target upload -e wolke4
+
+wolke5:
 	$(pio_binary) run --target upload -e wolke5
+
+wolke6:
 	$(pio_binary) run --target upload -e wolke6
+
+wolke7:
 	$(pio_binary) run --target upload -e wolke7
-	$(pio_binary) run --target upload -e wolke8
+
+wolke8:
+	$(pio_binary) run --target upload -e wolke
 
 tr33:
 	$(pio_binary) run --target upload -e tr33

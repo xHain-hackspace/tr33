@@ -6,6 +6,7 @@
 #include <ArduinoOTA.h>
 #include <command_schemas.pb.h>
 #include <pb_decode.h>
+#include <pb_encode.h>
 
 #if defined(SECRETS_FILE)
 #include SECRETS_FILE
@@ -23,19 +24,19 @@ bool ota_up = false;
 bool wasdisconnected = true;
 
 // syncing
-uint32_t sequence_period_ms = 20 * 1000;
+uint32_t sequence_period_ms = 10 * 1000;
 uint32_t last_send = 0;
 uint8_t sequence = 0;
 bool sequence_error = false;
 const int control_port = 1337;
-const int sequence_header_length = 3;
-const char sequence_header[] = "SEQ";
 
 #if defined(WIFI_HOSTNAME)
 char hostname[] = WIFI_HOSTNAME;
 #else
 char hostname[] = "esp32";
 #endif
+
+TargetMetrics target_metrics = TargetMetrics_init_default;
 
 const char *ota_password_hash = "d3d57181ad9b5b2e5e82a6c0b94ba22e";
 
@@ -61,20 +62,31 @@ void upd_init()
   udp_up = true;
 }
 
-void send_sequence()
+void send_metrics()
 {
-  Serial.printf("Sending sequence %i\n", sequence);
-  udp.beginPacket(control_host, control_port);
-  udp.write((uint8_t *)sequence_header, sequence_header_length);
+  WireMessage wire_message = WireMessage_init_default;
+
   if (sequence_error)
   {
-    udp.write(0);
+    wire_message.sequence = 0;
   }
   else
   {
-    udp.write(sequence);
+    wire_message.sequence = sequence;
   }
   sequence_error = false;
+
+  target_metrics.fps = FastLED.getFPS();
+  target_metrics.wifi_strength = WiFi.RSSI();
+
+  wire_message.which_message = WireMessage_target_metrics_tag;
+  wire_message.message.target_metrics = target_metrics;
+
+  pb_ostream_t stream = pb_ostream_from_buffer(udp_buffer, UDP_BUFFER_SIZE);
+  pb_encode(&stream, WireMessage_fields, &wire_message);
+
+  udp.beginPacket(control_host, control_port);
+  udp.write(udp_buffer, stream.bytes_written);
   udp.endPacket();
 }
 
@@ -246,10 +258,10 @@ void wifi_loop(Commands commands)
         }
       }
 
-      // regulary send squence to ensure we are in sync
+      // regulary send metrics
       if (millis() - last_send > sequence_period_ms || last_send == 0)
       {
-        send_sequence();
+        send_metrics();
         last_send = millis();
       }
       commands.run();

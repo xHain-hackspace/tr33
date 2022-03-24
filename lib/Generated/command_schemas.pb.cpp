@@ -81,6 +81,9 @@ PB_BIND(FairyLight, FairyLight, AUTO)
 PB_BIND(JoystickEvent, JoystickEvent, AUTO)
 
 
+PB_BIND(TargetMetrics, TargetMetrics, AUTO)
+
+
 
 
 
