@@ -10,3 +10,4 @@
 protobuf/*
 .envrc
 .direnv
+shell.nix

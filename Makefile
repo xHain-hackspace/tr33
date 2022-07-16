@@ -1,9 +1,6 @@
 # default location for binaries installed by platformio IDE in vscode
 pio_binary=~/.platformio/penv/bin/platformio
 
-shell:
-	nix-shell
-
 generate:
 	python3 nanopb/nanopb_generator.py --cpp-descriptors -S .cpp -D lib/Generated/ command_schemas.proto 
 	elixir generate_field_selectors.exs
