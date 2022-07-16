@@ -1,6 +1,6 @@
 ## Flash Firmware to ESP32
 
-You need the `platformio` binary installed as the main dependencies. The required libraries for the project should be fetched automatically. You can either install platformio as vscode extension or just the cli tools. See (here)[https://platformio.org/install/cli] for more details.
+You need the `platformio` binary installed as the main dependencies. The required libraries for the project should be fetched automatically. You can either install platformio as vscode extension or just the cli tools. See [here](https://platformio.org/install/cli) for more details.
 
 The `Makefile` contains all led structures that are supported out of the box. Each has a separate make target that will flash the corresponding firmware. For example 
 
@@ -30,11 +30,11 @@ The commands rendered on the led structure can be changed by sending protobuf co
 
 ## Connecting to the tr33_control frontend
 
-There is a web frontend called (tr33_control)[https://github.com/xHain-hackspace/tr33_control] that can send commands to multiple led structures in parallel. The README contains setup instructions.
+There is a web frontend called [tr33_control](https://github.com/xHain-hackspace/tr33_control) that can send commands to multiple led structures in parallel. The README contains setup instructions.
 
 ## Mapping
 
-Some commands support mapping the leds to xy positions. The mapping for a led structure can be generated with (tr33-pixel-mapping)[https://github.com/xHain-hackspace/tr33-pixel-mapping]. Update the mapping file with the generated content. For example the mapping for `Ranken` is in `lib/Ranken/Ranken_mapping.cpp`. Also the min/max values in `Rankine_config.h` need to be updated.
+Some commands support mapping the leds to xy positions. The mapping for a led structure can be generated with [tr33-pixel-mapping](https://github.com/xHain-hackspace/tr33-pixel-mapping). Update the mapping file with the generated content. For example the mapping for `Ranken` is in `lib/Ranken/Ranken_mapping.cpp`. Also the min/max values in `Rankine_config.h` need to be updated.
 
 
 
