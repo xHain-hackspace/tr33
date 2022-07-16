@@ -2,13 +2,13 @@
 
 You need the `platformio` binary installed as the main dependencies. The required libraries for the project should be fetched automatically. You can either install platformio as vscode extension or just the cli tools. See [here](https://platformio.org/install/cli) for more details.
 
-The `Makefile` contains all led structures that are supported out of the box. Each has a separate make target that will flash the corresponding firmware. For example 
+The `Makefile` contains all led structures that are supported out of the box. Each led structure has a separate make target that will flash the corresponding firmware. For example 
 
 ```
 make ranken
 ```
 
-will flash for a simple led structure that consists of multiple led strips. Details can be configured in the file `lib/Ranken/Ranken_config.h`.
+will flash the `Ranken` led structure. It's a simple structure that consists of multiple led strips. Details can be configured in the file `lib/Ranken/Ranken_config.h`.
 
 ## WiFi Secrets
 
