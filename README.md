@@ -12,7 +12,7 @@ will flash the `Ranken` led structure. It's a simple structure that consists of 
 
 ## WiFi Secrets
 
-You need to create a `src/Secrets.h` file that contains the wifi secrets. The ESP32 will automatically connect to this WiFi. The file should look as follows:
+You need to create a `src/Secrets_xyz.h` file that contains the wifi secrets. The ESP32 will automatically connect to this WiFi. You can check 'DSECRETS_FILE=' in platformio.ini for your target or compile without the file and get the correct name from the error message. The file should look as follows:
 
 ```
 const char *ssid = ""; // String
