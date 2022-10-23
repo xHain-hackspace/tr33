@@ -9,7 +9,7 @@ class Scubar : public LedStructure
 {
 public:
     Scubar();
-    void write_info() override { Serial.println("Scubar"); }
+    String get_name() { return "Scubar"; }
     void init() override;
 
 private:

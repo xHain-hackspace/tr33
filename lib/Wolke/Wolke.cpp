@@ -58,3 +58,8 @@ uint8_t Wolke::random_strip(uint8_t strip_index)
     return strip_index;
   }
 }
+
+String Wolke::get_name()
+{
+  return "Wolke " + String(WOLKEN_INDEX);
+}

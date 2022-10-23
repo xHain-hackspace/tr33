@@ -8,5 +8,5 @@ class Ranken : public LedStructure
 {
 public:
   Ranken();
-  void write_info() { Serial.println("Ranken"); }
+  String get_name() { return "Ranken"; }
 };

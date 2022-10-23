@@ -8,5 +8,5 @@ class Trommel : public LedStructure
 {
 public:
   Trommel();
-  void write_info() { Serial.println("Trommel"); }
+  String get_name() { return "Trommel"; }
 };

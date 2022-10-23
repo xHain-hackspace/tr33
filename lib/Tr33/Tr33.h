@@ -23,5 +23,5 @@ public:
   uint16_t strip_length(uint8_t strip_index);
   uint16_t pixel_count(uint8_t strip_index);
 
-  void write_info() { Serial.println("Tr33"); }
+  String get_name() { return "Tr33"; }
 };

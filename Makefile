@@ -1,12 +1,16 @@
+run_in_nix = nix develop --ignore-environment -k HOME -k OTA_SECRET --command
 # default location for binaries installed by platformio IDE in vscode
-pio_binary=~/.platformio/penv/bin/platformio
+pio_binary = $(run_in_nix) ~/.platformio/penv/bin/platformio
 
 generate:
-	python3 nanopb/nanopb_generator.py --cpp-descriptors -S .cpp -D lib/Generated/ command_schemas.proto 
-	elixir generate_field_selectors.exs
+	$(run_in_nix) python3 nanopb/nanopb_generator.py --cpp-descriptors -S .cpp -D lib/Generated/ command_schemas.proto 
+	$(run_in_nix) elixir generate_field_selectors.exs
 	
 monitor:
 	screen /dev/ttyUSB0 921600
+
+clean:
+	$(pio_binary) run --target clean
 
 wand:
 	$(pio_binary) run --target upload --environment wand_wifi

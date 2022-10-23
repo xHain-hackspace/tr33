@@ -53,8 +53,7 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   digitalWrite(LED_BUILTIN, HIGH);
 
-  Serial.print("Initiating LED structure: ");
-  leds.write_info();
+  Serial.printf("Running on LED structure: %s\n", leds.get_name());
 
 #ifdef COMMANDS_VIA_WIFI
   Serial.println("Receiving Commands via WiFi. Running setup.");

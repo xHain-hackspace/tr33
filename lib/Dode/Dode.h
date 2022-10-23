@@ -215,7 +215,7 @@ public:
     void rotating_plane(uint8_t *data);
     void twang(uint8_t *data);
     void joystick(uint8_t *data);
-    void write_info() { Serial.println("Dode"); }
+    String get_name() { return "Dode"; }
     static void artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data);
 
 private:

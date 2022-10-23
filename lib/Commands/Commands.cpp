@@ -14,7 +14,7 @@ void Commands::init(LedStructure *init_leds)
   FastLED.setCorrection(TypicalLEDStrip);
   for (int i = 0; i < COMMAND_COUNT; i++)
   {
-    commands[i] = CommandParams_init_zero;
+    commands[i] = (CommandParams)CommandParams_init_zero;
   }
   leds->init();
 
@@ -170,10 +170,34 @@ void Commands::run()
 #endif
 }
 
+String Commands::get_led_structure_name()
+{
+  return leds->get_name();
+}
+
 uint64_t Commands::synced_millis()
 {
   return millis() + millis_offset;
 }
+
+void Commands::write_hashes(TargetMetrics *target_metrics)
+{
+  for (int i = 0; i < COMMAND_COUNT; i++)
+  {
+    if (commands[i].enabled && commands[i].has_hash)
+    {
+      memcpy(&target_metrics->hashes[i], &commands[i].hash, sizeof(TargetMetrics_hashes_t));
+    }
+    else
+    {
+      memset(&target_metrics->hashes[i], 0, sizeof(TargetMetrics_hashes_t));
+    }
+  }
+
+  target_metrics->hashes_count = COMMAND_COUNT;
+
+  return;
+};
 
 void Commands::artnet_sync_callback()
 {

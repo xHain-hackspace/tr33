@@ -8,6 +8,8 @@
 #include <pb_decode.h>
 #include <pb_encode.h>
 
+#define CLIENT_VERSION "1.0.0"
+
 #if defined(SECRETS_FILE)
 #include SECRETS_FILE
 #else
@@ -24,10 +26,8 @@ bool ota_up = false;
 bool wasdisconnected = true;
 
 // syncing
-uint32_t sequence_period_ms = 10 * 1000;
+uint32_t metrics_period_ms = 5 * 1000;
 uint32_t last_send = 0;
-uint8_t sequence = 0;
-bool sequence_error = false;
 const int control_port = 1337;
 
 #if defined(WIFI_HOSTNAME)
@@ -62,22 +62,17 @@ void upd_init()
   udp_up = true;
 }
 
-void send_metrics()
+void send_metrics(Commands commands)
 {
   WireMessage wire_message = WireMessage_init_default;
 
-  if (sequence_error)
-  {
-    wire_message.sequence = 0;
-  }
-  else
-  {
-    wire_message.sequence = sequence;
-  }
-  sequence_error = false;
-
+  String name = commands.get_led_structure_name();
+  name.toCharArray(target_metrics.name, 20);
   target_metrics.fps = FastLED.getFPS();
   target_metrics.wifi_strength = WiFi.RSSI();
+  String version = String(CLIENT_VERSION);
+  version.toCharArray(target_metrics.version, 20);
+  commands.write_hashes(&target_metrics);
 
   wire_message.which_message = WireMessage_target_metrics_tag;
   wire_message.message.target_metrics = target_metrics;
@@ -133,8 +128,8 @@ void print_wifi_status(int wifi_status)
 
 void wifi_setup()
 {
-  //this part is for over-the-air (OTA) updates
-  //if you mess this up, you'll have to climb the ladder of shame ;)
+  // this part is for over-the-air (OTA) updates
+  // if you mess this up, you'll have to climb the ladder of shame ;)
   Serial.println("Setting up OTA");
   // Port defaults to 3232
   // ArduinoOTA.setPort(3232);
@@ -154,8 +149,7 @@ void wifi_setup()
                    type = "filesystem";
 
                  // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-                 Serial.println("Start updating " + type);
-               })
+                 Serial.println("Start updating " + type); })
       .onEnd([]()
              { Serial.println("\nEnd"); })
       .onProgress([](unsigned int progress, unsigned int total)
@@ -172,9 +166,8 @@ void wifi_setup()
                  else if (error == OTA_RECEIVE_ERROR)
                    Serial.println("Receive Failed");
                  else if (error == OTA_END_ERROR)
-                   Serial.println("End Failed");
-               });
-  //End of OTA section
+                   Serial.println("End Failed"); });
+  // End of OTA section
 }
 
 CommandParams disable_overlay()
@@ -210,21 +203,21 @@ void wifi_loop(Commands commands)
   {
     if (wasdisconnected)
     {
-      //if this is a reconnect restore the previous effect
+      // if this is a reconnect restore the previous effect
       print_wifi_status(wifi_status);
       commands.handle_command(disable_overlay());
       commands.run();
       wasdisconnected = false;
     }
-    //this part is for over-the-air (OTA) updates
-    //if you mess this up, you'll have to climb the ladder of shame ;)
+    // this part is for over-the-air (OTA) updates
+    // if you mess this up, you'll have to climb the ladder of shame ;)
     if (!ota_up)
     {
       ArduinoOTA.begin();
       ota_up = true;
     }
     ArduinoOTA.handle();
-    //end of OTA section
+    // end of OTA section
 
 #ifdef COMMANDS_VIA_WIFI
     if (udp_up)
@@ -246,12 +239,6 @@ void wifi_loop(Commands commands)
           }
           else
           {
-            if ((sequence + 1) % 256 != wire_message.sequence)
-            {
-              sequence_error = true;
-            }
-
-            sequence = wire_message.sequence;
             commands.handle_message(wire_message);
           }
           last_send = millis();
@@ -259,9 +246,9 @@ void wifi_loop(Commands commands)
       }
 
       // regulary send metrics
-      if (millis() - last_send > sequence_period_ms || last_send == 0)
+      if (millis() - last_send > metrics_period_ms || last_send == 0)
       {
-        send_metrics();
+        send_metrics(commands);
         last_send = millis();
       }
       commands.run();

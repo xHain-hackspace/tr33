@@ -119,8 +119,8 @@ enum FairyPattern {
   ODD_EVEN_ALL = 1;
 }
 
-message WireMessage {
-  required int32 sequence = 1;
+message WireMessage {  
+  required int32 sequence = 1 [default = 0];  // deprecated
   oneof message {
     CommandParams command_params = 2;
     TimeSync time_sync = 3;
@@ -136,6 +136,7 @@ message CommandParams {
   required int32 strip_index = 4 [default = 0]; 
   required ColorPalette color_palette = 5 [default = RAINBOW];
   repeated Modifier modifiers = 6 [(nanopb).max_count = 5];
+  optional bytes hash = 100 [(nanopb).max_size = 4];
   oneof type_params {
     White white = 7;
     SingleColor single_color = 8;
@@ -320,4 +321,6 @@ message TargetMetrics {
   required string name = 1 [(nanopb).max_length = 20];
   required int32 fps = 2;
   required int32 wifi_strength = 3;  
+  required string version = 4 [(nanopb).max_length = 20];
+  repeated bytes hashes = 5 [(nanopb).max_size = 4, (nanopb).max_count = 8];
 }

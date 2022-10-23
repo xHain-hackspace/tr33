@@ -9,7 +9,7 @@
 PB_BIND(WireMessage, WireMessage, AUTO)
 
 
-PB_BIND(CommandParams, CommandParams, AUTO)
+PB_BIND(CommandParams, CommandParams, 2)
 
 
 PB_BIND(TimeSync, TimeSync, AUTO)

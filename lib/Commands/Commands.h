@@ -7,6 +7,7 @@
 #include <LedStructure.h>
 
 #define COMMAND_COUNT 8
+#define COMMAND_HASH_SIZE 4
 
 #define MODE_COMMANDS 0
 #define MODE_STREAM 1
@@ -65,6 +66,8 @@ public:
   static CRGB color_from_palette(CommandParams cmd, uint8_t color);
   static CRGB color_from_palette(CommandParams cmd, uint8_t color, uint8_t brightness);
   static uint64_t synced_millis();
+  String get_led_structure_name();
+  void write_hashes(TargetMetrics *target_metrics);
 
   // Commands
   void white(LedStructure *leds, CommandParams cmd);

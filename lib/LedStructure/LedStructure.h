@@ -63,7 +63,7 @@ public:
   static void artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data);
 
   // misc
-  virtual void write_info();
+  virtual String get_name();
 };
 
 #endif // __LEDSTRUCTURE_H_INCLUDED__

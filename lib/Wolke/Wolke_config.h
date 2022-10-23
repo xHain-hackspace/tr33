@@ -7,7 +7,7 @@
 
 #define STRIP_INDEX_ALL 0
 
-#define WOLKEN_COUNT 8
+#define WOLKEN_COUNT 13
 
 // This is intended to be set via build params in platform.ini
 #ifndef WOLKEN_INDEX

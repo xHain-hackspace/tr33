@@ -8,7 +8,7 @@ class Wolke : public LedStructure
 {
 public:
   Wolke();
-  void write_info() { Serial.println("Wolke"); }
+  String get_name();
 
   void set_led(uint8_t strip_index, int led, CRGB color);
   CRGB get_led(uint8_t strip_index, int led);

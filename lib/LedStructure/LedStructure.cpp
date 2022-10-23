@@ -62,7 +62,7 @@ void LedStructure::init()
   // ping_pong.shape = Shape1D_NYAN_BOUNCE;
   // ping_pong.width = 80;
   // ping_pong.period_100ms = 200;
-  commands[0] = CommandParams_init_default;
+  commands[0] = (CommandParams)CommandParams_init_default;
   commands[0].which_type_params = CommandParams_sparkle_tag;
   commands[0].type_params.sparkle = sparkle;
   commands[0].color_palette = ColorPalette_FOREST;
@@ -276,8 +276,7 @@ void LedStructure::joystick(uint8_t *data)
   return;
 }
 
-void LedStructure::write_info()
+String LedStructure::get_name()
 {
-  Serial.println("Generic Led Structure");
-  return;
+  return "Generic Led Structure";
 }

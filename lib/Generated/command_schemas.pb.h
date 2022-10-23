@@ -273,10 +273,14 @@ typedef struct _Sparkle {
     int32_t duration; 
 } Sparkle;
 
+typedef PB_BYTES_ARRAY_T(4) TargetMetrics_hashes_t;
 typedef struct _TargetMetrics { 
     char name[21]; 
     int32_t fps; 
     int32_t wifi_strength; 
+    char version[21]; 
+    pb_size_t hashes_count;
+    TargetMetrics_hashes_t hashes[8]; 
 } TargetMetrics;
 
 typedef struct _TimeSync { 
@@ -287,6 +291,7 @@ typedef struct _White {
     int32_t color_temperature; 
 } White;
 
+typedef PB_BYTES_ARRAY_T(4) CommandParams_hash_t;
 typedef struct _CommandParams { 
     int32_t index; 
     bool enabled; 
@@ -318,10 +323,12 @@ typedef struct _CommandParams {
         FairyLight fairy_light;
         BeatEqualizer beat_equalizer;
     } type_params; 
+    bool has_hash;
+    CommandParams_hash_t hash; 
 } CommandParams;
 
 typedef struct _WireMessage { 
-    int32_t sequence; 
+    int32_t sequence; /* deprecated */
     pb_size_t which_message;
     union {
         CommandParams command_params;
@@ -364,7 +371,7 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define WireMessage_init_default                 {0, 0, {CommandParams_init_default}}
-#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}}
+#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}, false, {0, {0}}}
 #define TimeSync_init_default                    {0}
 #define Modifier_init_default                    {MovementType_SINE, 0, 50, 0, 0, 255}
 #define White_init_default                       {0}
@@ -388,9 +395,9 @@ extern "C" {
 #define Twang_init_default                       {0}
 #define FairyLight_init_default                  {FairyPattern_ODD_EVEN, 20, 0}
 #define JoystickEvent_init_default               {0, 0, false, false, false, false}
-#define TargetMetrics_init_default               {"", 0, 0}
+#define TargetMetrics_init_default               {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
-#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}}
+#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}, false, {0, {0}}}
 #define TimeSync_init_zero                       {0}
 #define Modifier_init_zero                       {_MovementType_MIN, 0, 0, 0, 0, 0}
 #define White_init_zero                          {0}
@@ -414,7 +421,7 @@ extern "C" {
 #define Twang_init_zero                          {0}
 #define FairyLight_init_zero                     {_FairyPattern_MIN, 0, 0}
 #define JoystickEvent_init_zero                  {0, 0, 0, 0, 0, 0}
-#define TargetMetrics_init_zero                  {"", 0, 0}
+#define TargetMetrics_init_zero                  {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define BeatEqualizer_color_tag                  1
@@ -505,6 +512,8 @@ extern "C" {
 #define TargetMetrics_name_tag                   1
 #define TargetMetrics_fps_tag                    2
 #define TargetMetrics_wifi_strength_tag          3
+#define TargetMetrics_version_tag                4
+#define TargetMetrics_hashes_tag                 5
 #define TimeSync_millis_tag                      1
 #define White_color_temperature_tag              1
 #define CommandParams_index_tag                  1
@@ -533,6 +542,7 @@ extern "C" {
 #define CommandParams_twang_tag                  24
 #define CommandParams_fairy_light_tag            25
 #define CommandParams_beat_equalizer_tag         26
+#define CommandParams_hash_tag                   100
 #define WireMessage_sequence_tag                 1
 #define WireMessage_command_params_tag           2
 #define WireMessage_time_sync_tag                3
@@ -579,7 +589,8 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_particles,type_params.map
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_ping_pong,type_params.mapped_ping_pong),  23) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fairy_light,type_params.fairy_light),  25) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,beat_equalizer,type_params.beat_equalizer),  26)
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,beat_equalizer,type_params.beat_equalizer),  26) \
+X(a, STATIC,   OPTIONAL, BYTES,    hash,            100)
 #define CommandParams_CALLBACK NULL
 #define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\x00"
 #define CommandParams_modifiers_MSGTYPE Modifier
@@ -788,7 +799,9 @@ X(a, STATIC,   REQUIRED, BOOL,     button4,           6)
 #define TargetMetrics_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, STRING,   name,              1) \
 X(a, STATIC,   REQUIRED, INT32,    fps,               2) \
-X(a, STATIC,   REQUIRED, INT32,    wifi_strength,     3)
+X(a, STATIC,   REQUIRED, INT32,    wifi_strength,     3) \
+X(a, STATIC,   REQUIRED, STRING,   version,           4) \
+X(a, STATIC,   REPEATED, BYTES,    hashes,            5)
 #define TargetMetrics_CALLBACK NULL
 #define TargetMetrics_DEFAULT NULL
 
@@ -849,7 +862,7 @@ extern const pb_msgdesc_t TargetMetrics_msg;
 
 /* Maximum encoded size of messages (where known) */
 #define BeatEqualizer_size                       22
-#define CommandParams_size                       412
+#define CommandParams_size                       419
 #define FairyLight_size                          24
 #define FlickerSparkle_size                      77
 #define Gravity_size                             44
@@ -869,11 +882,11 @@ extern const pb_msgdesc_t TargetMetrics_msg;
 #define Render_size                              35
 #define SingleColor_size                         11
 #define Sparkle_size                             44
-#define TargetMetrics_size                       44
+#define TargetMetrics_size                       114
 #define TimeSync_size                            11
 #define Twang_size                               0
 #define White_size                               11
-#define WireMessage_size                         426
+#define WireMessage_size                         433
 
 #ifdef __cplusplus
 } /* extern "C" */
@@ -891,7 +904,7 @@ struct MessageDescriptor<WireMessage> {
 };
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 26;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 27;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
     }
@@ -1059,7 +1072,7 @@ struct MessageDescriptor<JoystickEvent> {
 };
 template <>
 struct MessageDescriptor<TargetMetrics> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 5;
     static inline const pb_msgdesc_t* fields() {
         return &TargetMetrics_msg;
     }
