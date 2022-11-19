@@ -8,8 +8,6 @@
 #include <pb_decode.h>
 #include <pb_encode.h>
 
-#define CLIENT_VERSION "1.0.0"
-
 #if defined(SECRETS_FILE)
 #include SECRETS_FILE
 #else
@@ -30,13 +28,15 @@ uint32_t metrics_period_ms = 5 * 1000;
 uint32_t last_send = 0;
 const int control_port = 1337;
 
+// FPS
+uint32_t framecount = 0;
+uint32_t last_metrics = 0;
+
 #if defined(WIFI_HOSTNAME)
 char hostname[] = WIFI_HOSTNAME;
 #else
 char hostname[] = "esp32";
 #endif
-
-TargetMetrics target_metrics = TargetMetrics_init_default;
 
 const char *ota_password_hash = "d3d57181ad9b5b2e5e82a6c0b94ba22e";
 
@@ -64,25 +64,34 @@ void upd_init()
 
 void send_metrics(Commands commands)
 {
-  WireMessage wire_message = WireMessage_init_default;
+  WireMessage wm = WireMessage_init_default;
+  wm.which_message = WireMessage_target_metrics_tag;
+  wm.message.target_metrics = (TargetMetrics)TargetMetrics_init_default;
 
+  // todo: write metrics inside Commands
   String name = commands.get_led_structure_name();
-  name.toCharArray(target_metrics.name, 20);
-  target_metrics.fps = FastLED.getFPS();
-  target_metrics.wifi_strength = WiFi.RSSI();
-  String version = String(CLIENT_VERSION);
-  version.toCharArray(target_metrics.version, 20);
-  commands.write_hashes(&target_metrics);
+  name.toCharArray(wm.message.target_metrics.name, 20);
+  wm.message.target_metrics.wifi_strength = WiFi.RSSI();
+  String version = String(VERSION);
+  version.toCharArray(wm.message.target_metrics.version, 20);
+  commands.write_hashes(&wm.message.target_metrics);
 
-  wire_message.which_message = WireMessage_target_metrics_tag;
-  wire_message.message.target_metrics = target_metrics;
+  // FPS
+  if (last_metrics != 0)
+  {
+    uint32_t fps = float(framecount) / (float(millis() - last_metrics) / 1000.0);
+    wm.message.target_metrics.fps = fps;
+    framecount = 0;
+  }
 
   pb_ostream_t stream = pb_ostream_from_buffer(udp_buffer, UDP_BUFFER_SIZE);
-  pb_encode(&stream, WireMessage_fields, &wire_message);
+  pb_encode(&stream, WireMessage_fields, &wm);
 
   udp.beginPacket(control_host, control_port);
   udp.write(udp_buffer, stream.bytes_written);
   udp.endPacket();
+
+  last_metrics = millis();
 }
 
 void print_wifi_status(int wifi_status)
@@ -198,6 +207,7 @@ void wifi_loop(Commands commands)
 {
   int wifi_status = WiFi.status();
   int bytes;
+  framecount++;
 
   if (wifi_status == WL_CONNECTED)
   {
@@ -206,7 +216,6 @@ void wifi_loop(Commands commands)
       // if this is a reconnect restore the previous effect
       print_wifi_status(wifi_status);
       commands.handle_command(disable_overlay());
-      commands.run();
       wasdisconnected = false;
     }
     // this part is for over-the-air (OTA) updates
@@ -222,6 +231,13 @@ void wifi_loop(Commands commands)
 #ifdef COMMANDS_VIA_WIFI
     if (udp_up)
     {
+      // regulary send metrics
+      if (millis() - last_send > metrics_period_ms || last_send == 0)
+      {
+        send_metrics(commands);
+        last_send = millis();
+      }
+
       // wifi and upd is up, check if we received a UDP packet
       while (udp.parsePacket())
       {
@@ -244,14 +260,6 @@ void wifi_loop(Commands commands)
           last_send = millis();
         }
       }
-
-      // regulary send metrics
-      if (millis() - last_send > metrics_period_ms || last_send == 0)
-      {
-        send_metrics(commands);
-        last_send = millis();
-      }
-      commands.run();
     }
     else
     {
@@ -267,7 +275,6 @@ void wifi_loop(Commands commands)
     ota_up = false;
     wasdisconnected = true;
     commands.handle_command(color_overlay(HUE_ORANGE));
-    commands.run();
     delay(500);
   }
   else
@@ -277,7 +284,6 @@ void wifi_loop(Commands commands)
     ota_up = false;
     wasdisconnected = true;
     commands.handle_command(color_overlay(HUE_RED));
-    commands.run();
     wifi_init();
   }
 }

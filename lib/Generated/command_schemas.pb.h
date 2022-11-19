@@ -557,7 +557,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (message,time_sync,message.time_sync),   3) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,joystick_event,message.joystick_event),   4) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,target_metrics,message.target_metrics),   5)
 #define WireMessage_CALLBACK NULL
-#define WireMessage_DEFAULT NULL
+#define WireMessage_DEFAULT (const pb_byte_t*)"\x08\x00\x00"
 #define WireMessage_message_command_params_MSGTYPE CommandParams
 #define WireMessage_message_time_sync_MSGTYPE TimeSync
 #define WireMessage_message_joystick_event_MSGTYPE JoystickEvent

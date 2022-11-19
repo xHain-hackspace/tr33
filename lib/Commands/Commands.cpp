@@ -198,8 +198,3 @@ void Commands::write_hashes(TargetMetrics *target_metrics)
 
   return;
 };
-
-void Commands::artnet_sync_callback()
-{
-  FastLED.show();
-}

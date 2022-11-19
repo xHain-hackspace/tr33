@@ -66,6 +66,10 @@ void LedStructure::init()
   commands[0].which_type_params = CommandParams_sparkle_tag;
   commands[0].type_params.sparkle = sparkle;
   commands[0].color_palette = ColorPalette_FOREST;
+  commands[0].has_hash = true;
+  commands[0].hash.size = 1;
+  commands[0].hash.bytes[0] = 23;
+
   // commands[0].modifiers[0].field_index = 1;
   // commands[0].modifiers[0].field_index = 1;
 }

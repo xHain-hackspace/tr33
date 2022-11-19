@@ -12,12 +12,16 @@ monitor:
 clean:
 	$(pio_binary) run --target clean
 
+dev: 
+	$(pio_binary) run --target upload -e dev2 -e dev1
+	
 wand:
-	$(pio_binary) run --target upload --environment wand_wifi
+	$(pio_binary) run --target upload --environment wand
 
 xhain: tr33 ranken scubar wolken trommel
 
-wolken: wolke1 wolke2 wolke3 wolke4 wolke5 wolke6 wolke8 wolke9 wolke10 wolke11 wolke12
+wolken:
+	$(pio_binary) run --target upload -e wolke1 -e wolke2 -e wolke3 -e wolke4 -e wolke5 -e wolke6 -e wolke10 -e wolke11 -e wolke12 -e wolke13
 
 wolke1:
 	$(pio_binary) run --target upload -e wolke1

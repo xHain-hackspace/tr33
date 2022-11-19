@@ -205,10 +205,6 @@ void Tr33::fade_led(uint8_t strip_index, int led, CRGB target, fract8 amount)
   }
 }
 
-//
-// -- Helper ------------------------------------------------------
-//
-
 uint8_t Tr33::random_strip(uint8_t strip_index)
 {
   if (is_trunk(strip_index) || is_branch(strip_index))
