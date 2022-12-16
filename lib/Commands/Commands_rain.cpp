@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-#define MAX_RAIN_DROPS 1000
+#define MAX_RAIN_DROPS 800
 
 uint8_t drop_index = 0;
 
@@ -18,7 +18,7 @@ struct Drop
 
 Drop drops[MAX_RAIN_DROPS];
 
-int drop_duration = 7500; // ms
+int drop_duration = 10000; // ms
 int last_drop[COMMAND_COUNT];
 
 void Commands::rain(LedStructure *leds, CommandParams cmd)
@@ -44,7 +44,6 @@ void Commands::rain(LedStructure *leds, CommandParams cmd)
     drops[drop_index].command_index = cmd.index;
     drops[drop_index].center = random(0, leds->strip_length(drops[drop_index].strip_index) + 20);
     drops[drop_index].start_time = now;
-    // drops[drop_index].rate = rate;
     last_drop[cmd.index] = now;
   }
 

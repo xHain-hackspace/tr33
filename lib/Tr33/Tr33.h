@@ -24,4 +24,5 @@ public:
   uint16_t pixel_count(uint8_t strip_index);
 
   String get_name() { return "Tr33"; }
+  uint8_t get_max_strip_index();
 };

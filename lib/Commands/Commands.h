@@ -46,10 +46,10 @@ extern CommandParams commands[COMMAND_COUNT];
 class Commands
 {
 private:
-  LedStructure *leds;
   static int64_t millis_offset;
 
 public:
+  LedStructure *leds;
   static uint8_t joystick_x;
   static uint8_t joystick_y;
   static bool joystick_button;
@@ -65,8 +65,8 @@ public:
   static void load_palettes();
   static CRGB color_from_palette(CommandParams cmd, uint8_t color);
   static CRGB color_from_palette(CommandParams cmd, uint8_t color, uint8_t brightness);
+  static CRGB color_from_palette(ColorPalette palette_tag, uint8_t color_index, uint8_t brightness);
   static uint64_t synced_millis();
-  String get_led_structure_name();
   void write_hashes(TargetMetrics *target_metrics);
 
   // Commands
@@ -109,8 +109,6 @@ public:
 
   // Mapped
   static void mapped_render_ball(LedStructure *leds, float x, float y, float size, CRGB color, float brightness, float fade_distance);
-
-  static void artnet_sync_callback();
 
 private:
   void render_commands();

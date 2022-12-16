@@ -9,6 +9,7 @@ class Wolke : public LedStructure
 public:
   Wolke();
   String get_name();
+  uint8_t get_max_strip_index();
 
   void set_led(uint8_t strip_index, int led, CRGB color);
   CRGB get_led(uint8_t strip_index, int led);

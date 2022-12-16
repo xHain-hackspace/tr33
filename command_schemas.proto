@@ -119,13 +119,15 @@ enum FairyPattern {
   ODD_EVEN_ALL = 1;
 }
 
-message WireMessage {  
+message WireMessage {    
   required int32 sequence = 1 [default = 0];  // deprecated
   oneof message {
     CommandParams command_params = 2;
     TimeSync time_sync = 3;
     JoystickEvent joystick_event = 4;
     TargetMetrics target_metrics = 5;
+    ColorPaletteRequest color_palette_request = 6;
+    ColorPaletteResponse color_palette_response = 7;
   }
 }
 
@@ -323,4 +325,20 @@ message TargetMetrics {
   required int32 wifi_strength = 3;  
   required string version = 4 [(nanopb).max_length = 20];
   repeated bytes hashes = 5 [(nanopb).max_size = 4, (nanopb).max_count = 8];
+  required int32 max_strip_index = 6;  
+}
+
+message Color {
+  required uint32 r = 1;
+  required uint32 g = 2;
+  required uint32 b = 3;
+}
+
+message ColorPaletteRequest {
+  required ColorPalette color_palette = 1;
+}
+
+message ColorPaletteResponse {
+  required ColorPalette color_palette = 1;
+  repeated uint32 colors = 2 [(nanopb).max_count = 256, (nanopb).fixed_count = true];
 }

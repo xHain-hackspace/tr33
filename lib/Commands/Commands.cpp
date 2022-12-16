@@ -170,11 +170,6 @@ void Commands::run()
 #endif
 }
 
-String Commands::get_led_structure_name()
-{
-  return leds->get_name();
-}
-
 uint64_t Commands::synced_millis()
 {
   return millis() + millis_offset;

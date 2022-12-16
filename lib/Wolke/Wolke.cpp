@@ -63,3 +63,8 @@ String Wolke::get_name()
 {
   return "Wolke " + String(WOLKEN_INDEX);
 }
+
+uint8_t Wolke::get_max_strip_index()
+{
+  return WOLKEN_COUNT;
+}

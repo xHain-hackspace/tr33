@@ -58,5 +58,10 @@ CRGB Commands::color_from_palette(CommandParams cmd, uint8_t color_index)
 
 CRGB Commands::color_from_palette(CommandParams cmd, uint8_t color_index, uint8_t brightness)
 {
-  return ColorFromPalette(palettes[tag_to_index(cmd.color_palette)], color_index, brightness);
+  return color_from_palette(cmd.color_palette, color_index, brightness);
+}
+
+CRGB Commands::color_from_palette(ColorPalette palette_tag, uint8_t color_index, uint8_t brightness)
+{
+  return ColorFromPalette(palettes[tag_to_index(palette_tag)], color_index, brightness);
 }

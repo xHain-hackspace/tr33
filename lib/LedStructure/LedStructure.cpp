@@ -176,75 +176,6 @@ FairyLightsControl *LedStructure::get_fairy_light(uint8_t index)
   return nullptr;
 }
 
-// void Tr33::show_pin_numbers()
-// {
-//   // Serial.println("Showing pin Numbers");
-
-//   // command_buffer[0].type = SHOW_NUMBER;
-//   // command_buffer[0].data[0] = 0;
-//   // command_buffer[0].data[1] = TRUNK_PIN_1;
-
-//   // command_buffer[1].type = SHOW_NUMBER;
-//   // command_buffer[1].data[0] = 1;
-//   // command_buffer[1].data[1] = TRUNK_PIN_2;
-
-//   // command_buffer[2].type = SHOW_NUMBER;
-//   // command_buffer[2].data[0] = 2;
-//   // command_buffer[2].data[1] = TRUNK_PIN_3;
-
-//   // command_buffer[3].type = SHOW_NUMBER;
-//   // command_buffer[3].data[0] = 3;
-//   // command_buffer[3].data[1] = TRUNK_PIN_4;
-
-//   // command_buffer[4].type = SHOW_NUMBER;
-//   // command_buffer[4].data[0] = TRUNK_STRIP_COUNT;
-//   // command_buffer[4].data[1] = STRIP_PIN_1;
-
-//   // command_buffer[5].type = SHOW_NUMBER;
-//   // command_buffer[5].data[0] = TRUNK_STRIP_COUNT + 1;
-//   // command_buffer[5].data[1] = STRIP_PIN_2;
-
-//   // command_buffer[6].type = SHOW_NUMBER;
-//   // command_buffer[6].data[0] = TRUNK_STRIP_COUNT + 2;
-//   // command_buffer[6].data[1] = STRIP_PIN_3;
-
-//   // command_buffer[7].type = SHOW_NUMBER;
-//   // command_buffer[7].data[0] = TRUNK_STRIP_COUNT + 3;
-//   // command_buffer[7].data[1] = STRIP_PIN_4;
-
-//   // command_buffer[8].type = SHOW_NUMBER;
-//   // command_buffer[8].data[0] = TRUNK_STRIP_COUNT + 4;
-//   // command_buffer[8].data[1] = STRIP_PIN_5;
-
-//   // command_buffer[9].type = SHOW_NUMBER;
-//   // command_buffer[9].data[0] = TRUNK_STRIP_COUNT + 5;
-//   // command_buffer[9].data[1] = STRIP_PIN_6;
-
-//   // command_buffer[10].type = SHOW_NUMBER;
-//   // command_buffer[10].data[0] = TRUNK_STRIP_COUNT + 6;
-//   // command_buffer[10].data[1] = STRIP_PIN_7;
-
-//   // command_buffer[11].type = SHOW_NUMBER;
-//   // command_buffer[11].data[0] = TRUNK_STRIP_COUNT + 7;
-//   // command_buffer[11].data[1] = STRIP_PIN_8;
-
-//   // command_buffer[12].type = SHOW_NUMBER;
-//   // command_buffer[12].data[0] = TRUNK_STRIP_COUNT + 8;
-//   // command_buffer[12].data[1] = STRIP_PIN_9;
-
-//   // command_buffer[13].type = SHOW_NUMBER;
-//   // command_buffer[13].data[0] = TRUNK_STRIP_COUNT + 9;
-//   // command_buffer[13].data[1] = STRIP_PIN_10;
-
-//   // command_buffer[14].type = SHOW_NUMBER;
-//   // command_buffer[14].data[0] = TRUNK_STRIP_COUNT + 10;
-//   // command_buffer[14].data[1] = STRIP_PIN_11;
-
-//   // command_buffer[15].type = SHOW_NUMBER;
-//   // command_buffer[15].data[0] = TRUNK_STRIP_COUNT + 11;
-//   // command_buffer[15].data[1] = STRIP_PIN_12;
-// }
-
 void LedStructure::beats(uint8_t *data)
 {
   return;
@@ -283,4 +214,16 @@ void LedStructure::joystick(uint8_t *data)
 String LedStructure::get_name()
 {
   return "Generic Led Structure";
+}
+
+uint8_t LedStructure::get_max_strip_index()
+{
+  if (STRIP_COUNT == 1)
+  {
+    return 0;
+  }
+  else
+  {
+    return STRIP_COUNT;
+  }
 }

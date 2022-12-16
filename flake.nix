@@ -1,6 +1,6 @@
 {
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-22.05";
+    nixpkgs.url = "nixpkgs/nixos-22.11";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
@@ -20,7 +20,7 @@
           devShell = pkgs.mkShell
             {
               name = "${pname}";
-              buildInputs = with pkgs; [ protobuf python-with-packages elixir ];
+              buildInputs = with pkgs; [ protobuf python-with-packages beam.packages.erlangR25.elixir_1_14 ];
             };
 
         });

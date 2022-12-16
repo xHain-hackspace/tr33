@@ -225,6 +225,11 @@ uint8_t Tr33::random_strip(uint8_t strip_index)
   }
 }
 
+uint8_t Tr33::get_max_strip_index()
+{
+  return TRUNK_STRIP_COUNT + 2;
+}
+
 void show_pin_numbers()
 {
   // Serial.println("Showing pin Numbers");

@@ -69,12 +69,13 @@ void send_metrics(Commands commands)
   wm.message.target_metrics = (TargetMetrics)TargetMetrics_init_default;
 
   // todo: write metrics inside Commands
-  String name = commands.get_led_structure_name();
+  String name = commands.leds->get_name();
   name.toCharArray(wm.message.target_metrics.name, 20);
   wm.message.target_metrics.wifi_strength = WiFi.RSSI();
   String version = String(VERSION);
   version.toCharArray(wm.message.target_metrics.version, 20);
   commands.write_hashes(&wm.message.target_metrics);
+  wm.message.target_metrics.max_strip_index = commands.leds->get_max_strip_index();
 
   // FPS
   if (last_metrics != 0)
@@ -93,6 +94,31 @@ void send_metrics(Commands commands)
 
   last_metrics = millis();
 }
+
+// void send_color_palette(WireMessage wire_message)
+// {
+//   WireMessage wm = WireMessage_init_default;
+//   wm.which_message = WireMessage_color_palette_request_tag;
+//   wm.message.color_palette_response = (ColorPaletteResponse)ColorPaletteResponse_init_default;
+//   wm.message.color_palette_response.color_palette = wire_message.message.color_palette_request.color_palette;
+
+//   CRGB color;
+
+//   for (uint8_t i = 0; i < 256; i++)
+//   {
+//     color = Commands::color_from_palette(wire_message.message.color_palette_request.color_palette, i, 255);
+//     wm.message.color_palette_response.colors[i].r = color.r;
+//     wm.message.color_palette_response.colors[i].g = color.g;
+//     wm.message.color_palette_response.colors[i].b = color.b;
+//   }
+
+// pb_ostream_t stream = pb_ostream_from_buffer(udp_buffer, UDP_BUFFER_SIZE);
+// pb_encode(&stream, WireMessage_fields, &wm);
+
+// udp.beginPacket(control_host, control_port);
+// udp.write(udp_buffer, stream.bytes_written);
+// udp.endPacket();
+// }
 
 void print_wifi_status(int wifi_status)
 {
@@ -253,6 +279,10 @@ void wifi_loop(Commands commands)
           {
             Serial.printf("Protobuf decoding failed: %s\n", PB_GET_ERROR(&stream));
           }
+          // else if (wire_message.which_message == WireMessage_color_palette_request_tag)
+          // {
+          //   send_color_palette(wire_message);
+          // }
           else
           {
             commands.handle_message(wire_message);

@@ -5,18 +5,22 @@ pio_binary = $(run_in_nix) ~/.platformio/penv/bin/platformio
 generate:
 	$(run_in_nix) python3 nanopb/nanopb_generator.py --cpp-descriptors -S .cpp -D lib/Generated/ command_schemas.proto 
 	$(run_in_nix) elixir generate_field_selectors.exs
-	
+	cp command_schemas.proto ../tr33_control/
+
 monitor:
-	screen /dev/ttyUSB0 921600
+	$(pio_binary) device monitor
 
 clean:
 	$(pio_binary) run --target clean
 
-dev: 
-	$(pio_binary) run --target upload -e dev2 -e dev1
-	
+dev1: 
+	$(pio_binary) run --target upload -e dev1
+
+dev2: 
+	$(pio_binary) run --target upload -e dev2
+
 wand:
-	$(pio_binary) run --target upload --environment wand
+	$(pio_binary) run --target upload -e wand
 
 xhain: tr33 ranken scubar wolken trommel
 

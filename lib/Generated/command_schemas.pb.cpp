@@ -6,7 +6,7 @@
 #error Regenerate this file with the current version of nanopb generator.
 #endif
 
-PB_BIND(WireMessage, WireMessage, AUTO)
+PB_BIND(WireMessage, WireMessage, 2)
 
 
 PB_BIND(CommandParams, CommandParams, 2)
@@ -82,6 +82,15 @@ PB_BIND(JoystickEvent, JoystickEvent, AUTO)
 
 
 PB_BIND(TargetMetrics, TargetMetrics, AUTO)
+
+
+PB_BIND(Color, Color, AUTO)
+
+
+PB_BIND(ColorPaletteRequest, ColorPaletteRequest, AUTO)
+
+
+PB_BIND(ColorPaletteResponse, ColorPaletteResponse, 2)
 
 
 

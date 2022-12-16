@@ -64,6 +64,7 @@ public:
 
   // misc
   virtual String get_name();
+  virtual uint8_t get_max_strip_index();
 };
 
 #endif // __LEDSTRUCTURE_H_INCLUDED__

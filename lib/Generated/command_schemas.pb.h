@@ -136,6 +136,21 @@ typedef struct _BeatEqualizer {
     int32_t band; 
 } BeatEqualizer;
 
+typedef struct _Color { 
+    uint32_t r; 
+    uint32_t g; 
+    uint32_t b; 
+} Color;
+
+typedef struct _ColorPaletteRequest { 
+    ColorPalette color_palette; 
+} ColorPaletteRequest;
+
+typedef struct _ColorPaletteResponse { 
+    ColorPalette color_palette; 
+    uint32_t colors[256]; 
+} ColorPaletteResponse;
+
 typedef struct _FairyLight { 
     FairyPattern fairy_pattern; 
     int32_t frequency; 
@@ -281,6 +296,7 @@ typedef struct _TargetMetrics {
     char version[21]; 
     pb_size_t hashes_count;
     TargetMetrics_hashes_t hashes[8]; 
+    int32_t max_strip_index; 
 } TargetMetrics;
 
 typedef struct _TimeSync { 
@@ -335,6 +351,8 @@ typedef struct _WireMessage {
         TimeSync time_sync;
         JoystickEvent joystick_event;
         TargetMetrics target_metrics;
+        ColorPaletteRequest color_palette_request;
+        ColorPaletteResponse color_palette_response;
     } message; 
 } WireMessage;
 
@@ -395,7 +413,10 @@ extern "C" {
 #define Twang_init_default                       {0}
 #define FairyLight_init_default                  {FairyPattern_ODD_EVEN, 20, 0}
 #define JoystickEvent_init_default               {0, 0, false, false, false, false}
-#define TargetMetrics_init_default               {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}}
+#define TargetMetrics_init_default               {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}, 0}
+#define Color_init_default                       {0, 0, 0}
+#define ColorPaletteRequest_init_default         {_ColorPalette_MIN}
+#define ColorPaletteResponse_init_default        {_ColorPalette_MIN, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
 #define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}, false, {0, {0}}}
 #define TimeSync_init_zero                       {0}
@@ -421,11 +442,20 @@ extern "C" {
 #define Twang_init_zero                          {0}
 #define FairyLight_init_zero                     {_FairyPattern_MIN, 0, 0}
 #define JoystickEvent_init_zero                  {0, 0, 0, 0, 0, 0}
-#define TargetMetrics_init_zero                  {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}}
+#define TargetMetrics_init_zero                  {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}, 0}
+#define Color_init_zero                          {0, 0, 0}
+#define ColorPaletteRequest_init_zero            {_ColorPalette_MIN}
+#define ColorPaletteResponse_init_zero           {_ColorPalette_MIN, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
 
 /* Field tags (for use in manual encoding/decoding) */
 #define BeatEqualizer_color_tag                  1
 #define BeatEqualizer_band_tag                   2
+#define Color_r_tag                              1
+#define Color_g_tag                              2
+#define Color_b_tag                              3
+#define ColorPaletteRequest_color_palette_tag    1
+#define ColorPaletteResponse_color_palette_tag   1
+#define ColorPaletteResponse_colors_tag          2
 #define FairyLight_fairy_pattern_tag             1
 #define FairyLight_frequency_tag                 2
 #define FairyLight_fairy_index_tag               3
@@ -514,6 +544,7 @@ extern "C" {
 #define TargetMetrics_wifi_strength_tag          3
 #define TargetMetrics_version_tag                4
 #define TargetMetrics_hashes_tag                 5
+#define TargetMetrics_max_strip_index_tag        6
 #define TimeSync_millis_tag                      1
 #define White_color_temperature_tag              1
 #define CommandParams_index_tag                  1
@@ -548,6 +579,8 @@ extern "C" {
 #define WireMessage_time_sync_tag                3
 #define WireMessage_joystick_event_tag           4
 #define WireMessage_target_metrics_tag           5
+#define WireMessage_color_palette_request_tag    6
+#define WireMessage_color_palette_response_tag   7
 
 /* Struct field encoding specification for nanopb */
 #define WireMessage_FIELDLIST(X, a) \
@@ -555,13 +588,17 @@ X(a, STATIC,   REQUIRED, INT32,    sequence,          1) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,command_params,message.command_params),   2) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,time_sync,message.time_sync),   3) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,joystick_event,message.joystick_event),   4) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (message,target_metrics,message.target_metrics),   5)
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,target_metrics,message.target_metrics),   5) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,color_palette_request,message.color_palette_request),   6) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,color_palette_response,message.color_palette_response),   7)
 #define WireMessage_CALLBACK NULL
 #define WireMessage_DEFAULT (const pb_byte_t*)"\x08\x00\x00"
 #define WireMessage_message_command_params_MSGTYPE CommandParams
 #define WireMessage_message_time_sync_MSGTYPE TimeSync
 #define WireMessage_message_joystick_event_MSGTYPE JoystickEvent
 #define WireMessage_message_target_metrics_MSGTYPE TargetMetrics
+#define WireMessage_message_color_palette_request_MSGTYPE ColorPaletteRequest
+#define WireMessage_message_color_palette_response_MSGTYPE ColorPaletteResponse
 
 #define CommandParams_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    index,             1) \
@@ -801,9 +838,28 @@ X(a, STATIC,   REQUIRED, STRING,   name,              1) \
 X(a, STATIC,   REQUIRED, INT32,    fps,               2) \
 X(a, STATIC,   REQUIRED, INT32,    wifi_strength,     3) \
 X(a, STATIC,   REQUIRED, STRING,   version,           4) \
-X(a, STATIC,   REPEATED, BYTES,    hashes,            5)
+X(a, STATIC,   REPEATED, BYTES,    hashes,            5) \
+X(a, STATIC,   REQUIRED, INT32,    max_strip_index,   6)
 #define TargetMetrics_CALLBACK NULL
 #define TargetMetrics_DEFAULT NULL
+
+#define Color_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, UINT32,   r,                 1) \
+X(a, STATIC,   REQUIRED, UINT32,   g,                 2) \
+X(a, STATIC,   REQUIRED, UINT32,   b,                 3)
+#define Color_CALLBACK NULL
+#define Color_DEFAULT NULL
+
+#define ColorPaletteRequest_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, UENUM,    color_palette,     1)
+#define ColorPaletteRequest_CALLBACK NULL
+#define ColorPaletteRequest_DEFAULT NULL
+
+#define ColorPaletteResponse_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, UENUM,    color_palette,     1) \
+X(a, STATIC,   FIXARRAY, UINT32,   colors,            2)
+#define ColorPaletteResponse_CALLBACK NULL
+#define ColorPaletteResponse_DEFAULT NULL
 
 extern const pb_msgdesc_t WireMessage_msg;
 extern const pb_msgdesc_t CommandParams_msg;
@@ -831,6 +887,9 @@ extern const pb_msgdesc_t Twang_msg;
 extern const pb_msgdesc_t FairyLight_msg;
 extern const pb_msgdesc_t JoystickEvent_msg;
 extern const pb_msgdesc_t TargetMetrics_msg;
+extern const pb_msgdesc_t Color_msg;
+extern const pb_msgdesc_t ColorPaletteRequest_msg;
+extern const pb_msgdesc_t ColorPaletteResponse_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define WireMessage_fields &WireMessage_msg
@@ -859,9 +918,15 @@ extern const pb_msgdesc_t TargetMetrics_msg;
 #define FairyLight_fields &FairyLight_msg
 #define JoystickEvent_fields &JoystickEvent_msg
 #define TargetMetrics_fields &TargetMetrics_msg
+#define Color_fields &Color_msg
+#define ColorPaletteRequest_fields &ColorPaletteRequest_msg
+#define ColorPaletteResponse_fields &ColorPaletteResponse_msg
 
 /* Maximum encoded size of messages (where known) */
 #define BeatEqualizer_size                       22
+#define ColorPaletteRequest_size                 2
+#define ColorPaletteResponse_size                1538
+#define Color_size                               18
 #define CommandParams_size                       419
 #define FairyLight_size                          24
 #define FlickerSparkle_size                      77
@@ -882,11 +947,11 @@ extern const pb_msgdesc_t TargetMetrics_msg;
 #define Render_size                              35
 #define SingleColor_size                         11
 #define Sparkle_size                             44
-#define TargetMetrics_size                       114
+#define TargetMetrics_size                       125
 #define TimeSync_size                            11
 #define Twang_size                               0
 #define White_size                               11
-#define WireMessage_size                         433
+#define WireMessage_size                         1552
 
 #ifdef __cplusplus
 } /* extern "C" */
@@ -897,7 +962,7 @@ extern const pb_msgdesc_t TargetMetrics_msg;
 namespace nanopb {
 template <>
 struct MessageDescriptor<WireMessage> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 5;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 7;
     static inline const pb_msgdesc_t* fields() {
         return &WireMessage_msg;
     }
@@ -1072,9 +1137,30 @@ struct MessageDescriptor<JoystickEvent> {
 };
 template <>
 struct MessageDescriptor<TargetMetrics> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 5;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 6;
     static inline const pb_msgdesc_t* fields() {
         return &TargetMetrics_msg;
+    }
+};
+template <>
+struct MessageDescriptor<Color> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
+    static inline const pb_msgdesc_t* fields() {
+        return &Color_msg;
+    }
+};
+template <>
+struct MessageDescriptor<ColorPaletteRequest> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 1;
+    static inline const pb_msgdesc_t* fields() {
+        return &ColorPaletteRequest_msg;
+    }
+};
+template <>
+struct MessageDescriptor<ColorPaletteResponse> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 2;
+    static inline const pb_msgdesc_t* fields() {
+        return &ColorPaletteResponse_msg;
     }
 };
 }  // namespace nanopb
