@@ -42,11 +42,14 @@ const char *ota_password_hash = "d3d57181ad9b5b2e5e82a6c0b94ba22e";
 
 void wifi_init()
 {
-  WiFi.disconnect(true);
-  delay(10);                                          // for some reason this makes reconnects more reliable
-  WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE); // needs to be here for the hostname to work...
+  WiFi.disconnect(true, true);
+  delay(500);                                                      // for some reason this makes reconnects more reliable
+  WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE, INADDR_NONE); // needs to be here for the hostname to work...
+  if (!WiFi.setHostname(hostname))
+  {
+    Serial.printf("Failed to set hostname to %s\n", hostname);
+  };
   WiFi.mode(WIFI_STA);
-  WiFi.setHostname(hostname);
   Serial.printf("Connecting to ssid %s, setting hostname to %s\n", ssid, hostname);
   int status = WiFi.begin(ssid, password);
   Serial.printf("Wlan begin status %i\n", status);
@@ -95,30 +98,32 @@ void send_metrics(Commands commands)
   last_metrics = millis();
 }
 
-// void send_color_palette(WireMessage wire_message)
-// {
-//   WireMessage wm = WireMessage_init_default;
-//   wm.which_message = WireMessage_color_palette_request_tag;
-//   wm.message.color_palette_response = (ColorPaletteResponse)ColorPaletteResponse_init_default;
-//   wm.message.color_palette_response.color_palette = wire_message.message.color_palette_request.color_palette;
+void send_color_palette_response(WireMessage wire_message)
+{
+  Serial.printf("Creating color_palette_response\n");
 
-//   CRGB color;
+  WireMessage wm = WireMessage_init_default;
+  wm.which_message = WireMessage_color_palette_response_tag;
+  wm.message.color_palette_response = (ColorPaletteResponse)ColorPaletteResponse_init_default;
 
-//   for (uint8_t i = 0; i < 256; i++)
-//   {
-//     color = Commands::color_from_palette(wire_message.message.color_palette_request.color_palette, i, 255);
-//     wm.message.color_palette_response.colors[i].r = color.r;
-//     wm.message.color_palette_response.colors[i].g = color.g;
-//     wm.message.color_palette_response.colors[i].b = color.b;
-//   }
+  wm.message.color_palette_response.color_palette = wire_message.message.color_palette_request.color_palette;
 
-// pb_ostream_t stream = pb_ostream_from_buffer(udp_buffer, UDP_BUFFER_SIZE);
-// pb_encode(&stream, WireMessage_fields, &wm);
+  CRGB color = CRGB::Black;
 
-// udp.beginPacket(control_host, control_port);
-// udp.write(udp_buffer, stream.bytes_written);
-// udp.endPacket();
-// }
+  for (uint16_t i = 0; i < 256; i++)
+  {
+    color = Commands::color_from_palette(wire_message.message.color_palette_request.color_palette, i, 255);
+    wm.message.color_palette_response.colors[i] = color.r << 16 | color.g << 8 | color.b;
+  }
+
+  pb_ostream_t stream = pb_ostream_from_buffer(udp_buffer, UDP_BUFFER_SIZE);
+  pb_encode(&stream, WireMessage_fields, &wm);
+
+  Serial.println("Sending color palette response");
+  udp.beginPacket(control_host, control_port);
+  udp.write(udp_buffer, stream.bytes_written);
+  udp.endPacket();
+}
 
 void print_wifi_status(int wifi_status)
 {
@@ -279,10 +284,11 @@ void wifi_loop(Commands commands)
           {
             Serial.printf("Protobuf decoding failed: %s\n", PB_GET_ERROR(&stream));
           }
-          // else if (wire_message.which_message == WireMessage_color_palette_request_tag)
-          // {
-          //   send_color_palette(wire_message);
-          // }
+          else if (wire_message.which_message == WireMessage_color_palette_request_tag)
+          {
+            Serial.printf("Received color_palette_request\n", PB_GET_ERROR(&stream));
+            send_color_palette_response(wire_message);
+          }
           else
           {
             commands.handle_message(wire_message);

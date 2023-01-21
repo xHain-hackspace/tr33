@@ -72,10 +72,10 @@ typedef enum _ColorPalette {
 typedef enum _Shape1D { 
     Shape1D_BALL = 0, 
     Shape1D_COMET = 1, 
-    Shape1D_COMET_BOUNCE = 2, 
+    /* COMET_BOUNCE = 2; */
     Shape1D_NYAN = 3, 
-    Shape1D_NYAN_BOUNCE = 4, 
-    Shape1D_SOLID = 5 
+    /* NYAN_BOUNCE = 4; */
+    Shape1D_FILLED = 5 
 } Shape1D;
 
 typedef enum _Shape2D { 
@@ -121,6 +121,12 @@ typedef enum _FairyPattern {
     FairyPattern_ODD_EVEN = 0, 
     FairyPattern_ODD_EVEN_ALL = 1 
 } FairyPattern;
+
+typedef enum _SparkleType { 
+    SparkleType_SINGLE_COLOR = 0, 
+    SparkleType_RANDOM_COLOR = 1, 
+    SparkleType_WHITE = 2 
+} SparkleType;
 
 /* Struct definitions */
 typedef struct _Kaleidoscope { 
@@ -286,6 +292,8 @@ typedef struct _Sparkle {
     int32_t sparkle_width; 
     int32_t sparle_rate; 
     int32_t duration; 
+    bool has_sparkle_type;
+    SparkleType sparkle_type; 
 } Sparkle;
 
 typedef PB_BYTES_ARRAY_T(4) TargetMetrics_hashes_t;
@@ -363,8 +371,8 @@ typedef struct _WireMessage {
 #define _ColorPalette_ARRAYSIZE ((ColorPalette)(ColorPalette_ATLANTICA+1))
 
 #define _Shape1D_MIN Shape1D_BALL
-#define _Shape1D_MAX Shape1D_SOLID
-#define _Shape1D_ARRAYSIZE ((Shape1D)(Shape1D_SOLID+1))
+#define _Shape1D_MAX Shape1D_FILLED
+#define _Shape1D_ARRAYSIZE ((Shape1D)(Shape1D_FILLED+1))
 
 #define _Shape2D_MIN Shape2D_SQUARE
 #define _Shape2D_MAX Shape2D_RING
@@ -382,6 +390,10 @@ typedef struct _WireMessage {
 #define _FairyPattern_MAX FairyPattern_ODD_EVEN_ALL
 #define _FairyPattern_ARRAYSIZE ((FairyPattern)(FairyPattern_ODD_EVEN_ALL+1))
 
+#define _SparkleType_MIN SparkleType_SINGLE_COLOR
+#define _SparkleType_MAX SparkleType_WHITE
+#define _SparkleType_ARRAYSIZE ((SparkleType)(SparkleType_WHITE+1))
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -397,7 +409,7 @@ extern "C" {
 #define Pixel_init_default                       {0, 0}
 #define PixelRGB_init_default                    {130, 130, 130, 0}
 #define Rainbow_init_default                     {30, 100, 152}
-#define Sparkle_init_default                     {0, 15, 10, 100}
+#define Sparkle_init_default                     {0, 15, 10, 100, false, SparkleType_SINGLE_COLOR}
 #define FlickerSparkle_init_default              {255, 90, 215, 8, 7, 119, 80}
 #define PingPong_init_default                    {Shape1D_BALL, MovementType_SINE, 65, 20, 1, 100}
 #define Render_init_default                      {Shape1D_BALL, 210, 20, 20}
@@ -426,7 +438,7 @@ extern "C" {
 #define Pixel_init_zero                          {0, 0}
 #define PixelRGB_init_zero                       {0, 0, 0, 0}
 #define Rainbow_init_zero                        {0, 0, 0}
-#define Sparkle_init_zero                        {0, 0, 0, 0}
+#define Sparkle_init_zero                        {0, 0, 0, 0, false, _SparkleType_MIN}
 #define FlickerSparkle_init_zero                 {0, 0, 0, 0, 0, 0, 0}
 #define PingPong_init_zero                       {_Shape1D_MIN, _MovementType_MIN, 0, 0, 0, 0}
 #define Render_init_zero                         {_Shape1D_MIN, 0, 0, 0}
@@ -539,6 +551,7 @@ extern "C" {
 #define Sparkle_sparkle_width_tag                2
 #define Sparkle_sparle_rate_tag                  3
 #define Sparkle_duration_tag                     4
+#define Sparkle_sparkle_type_tag                 5
 #define TargetMetrics_name_tag                   1
 #define TargetMetrics_fps_tag                    2
 #define TargetMetrics_wifi_strength_tag          3
@@ -702,7 +715,8 @@ X(a, STATIC,   REQUIRED, INT32,    rainbow_size,      3)
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \
 X(a, STATIC,   REQUIRED, INT32,    sparkle_width,     2) \
 X(a, STATIC,   REQUIRED, INT32,    sparle_rate,       3) \
-X(a, STATIC,   REQUIRED, INT32,    duration,          4)
+X(a, STATIC,   REQUIRED, INT32,    duration,          4) \
+X(a, STATIC,   OPTIONAL, UENUM,    sparkle_type,      5)
 #define Sparkle_CALLBACK NULL
 #define Sparkle_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x0f\x18\x0a\x20\x64\x00"
 
@@ -946,7 +960,7 @@ extern const pb_msgdesc_t ColorPaletteResponse_msg;
 #define Rainbow_size                             33
 #define Render_size                              35
 #define SingleColor_size                         11
-#define Sparkle_size                             44
+#define Sparkle_size                             46
 #define TargetMetrics_size                       125
 #define TimeSync_size                            11
 #define Twang_size                               0
@@ -1025,7 +1039,7 @@ struct MessageDescriptor<Rainbow> {
 };
 template <>
 struct MessageDescriptor<Sparkle> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 4;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 5;
     static inline const pb_msgdesc_t* fields() {
         return &Sparkle_msg;
     }

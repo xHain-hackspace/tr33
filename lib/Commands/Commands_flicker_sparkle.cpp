@@ -76,7 +76,7 @@ void Commands::flicker_sparkle(LedStructure *leds, CommandParams cmd)
             float brightness = Commands::ease_out_cubic(flicker_sparkles[i].brightness - float(now - flicker_sparkles[i].start_time) / (20.0 * float(duration)));
             if (brightness > 0)
             {
-                render_ball(leds, flicker_sparkles[i].strip_index, flicker_sparkles[i].center, flicker_sparkles[i].width, flicker_sparkles[i].color, brightness * float(cmd.brightness) / 255.0);
+                render_ball(leds, flicker_sparkles[i].strip_index, flicker_sparkles[i].center, flicker_sparkles[i].width, flicker_sparkles[i].color, brightness * float(cmd.brightness) / 255.0, false);
             }
             else
             {

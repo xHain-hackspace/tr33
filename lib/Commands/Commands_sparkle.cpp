@@ -30,14 +30,37 @@ void Commands::sparkle(LedStructure *leds, CommandParams cmd)
 
   int now = millis();
 
+  // new sparkle
   if (frequency > 0 && (1000.0 / float(now - last_sparkle[cmd.index]) < frequency))
   {
+    CRGB new_color;
+
+    if (sparkle.has_sparkle_type)
+    {
+      switch (sparkle.sparkle_type)
+      {
+      case SparkleType_SINGLE_COLOR:
+        new_color = color_from_palette(cmd, sparkle.color);
+        break;
+      case SparkleType_RANDOM_COLOR:
+        new_color = color_from_palette(cmd, random(0, 255));
+        break;
+      case SparkleType_WHITE:
+        new_color = COLOR_WHITE;
+        break;
+      }
+    }
+    else
+    {
+      new_color = color_from_palette(cmd, sparkle.color);
+    }
+
     if (sparkle_index++ >= MAX_SPARKLES)
     {
       sparkle_index = 0;
     }
     sparkles[sparkle_index].enabled = true;
-    sparkles[sparkle_index].color = sparkle.color == 255 ? COLOR_WHITE : color_from_palette(cmd, random_or_value(sparkle.color, 1, 255));
+    sparkles[sparkle_index].color = new_color;
     sparkles[sparkle_index].width = width;
     sparkles[sparkle_index].brightness = (float(random(10)) / 20.0 + 0.5);
     sparkles[sparkle_index].strip_index = leds->random_strip(cmd.strip_index);
@@ -54,7 +77,7 @@ void Commands::sparkle(LedStructure *leds, CommandParams cmd)
       float brightness = Commands::ease_out_cubic(sparkles[i].brightness - float(now - sparkles[i].start_time) / (20.0 * float(duration))) * float(cmd.brightness) / 255.0;
       if (brightness > 0)
       {
-        render_ball(leds, sparkles[i].strip_index, sparkles[i].center, sparkles[i].width, sparkles[i].color, brightness);
+        render_ball(leds, sparkles[i].strip_index, sparkles[i].center, sparkles[i].width, sparkles[i].color, brightness, false);
       }
       else
       {

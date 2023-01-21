@@ -10,6 +10,9 @@
 #ifdef LED_STRUCTURE_WAND
 #include <Wand_config.h>
 #endif
+#ifdef LED_STRUCTURE_NEON
+#include <Neon_config.h>
+#endif
 #ifdef LED_STRUCTURE_TR33
 #include <Tr33_config.h>
 #endif
@@ -24,6 +27,9 @@
 #endif
 #ifdef LED_STRUCTURE_SCUBAR
 #include <Scubar_config.h>
+#endif
+#ifdef LED_STRUCTURE_TREPPE
+#include <Treppe_config.h>
 #endif
 
 class LedStructure

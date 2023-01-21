@@ -62,7 +62,7 @@ void Commands::rain(LedStructure *leds, CommandParams cmd)
       }
       else
       {
-        render(leds, Shape1D_COMET, drops[i].strip_index, center, drops[i].width, drops[i].color, brightness, false);
+        render(leds, Shape1D_COMET, drops[i].strip_index, center, drops[i].width, drops[i].color, brightness, false, false, false);
       }
     }
   }

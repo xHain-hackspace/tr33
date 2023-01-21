@@ -1,19 +1,22 @@
 #include <Commands.h>
 
-void Commands::mapped_ping_pong(LedStructure *leds, CommandParams cmd)
-{
-}
 void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
 {
   MappedSlope mapped_slope = cmd.type_params.mapped_slope;
 
-  float render_brightness = float(cmd.brightness) / 255.0;
+  float brightness = float(cmd.brightness) / 255.0;
   float x1 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(mapped_slope.x1) / 255.0 + MAPPING_X_MIN;
   float y1 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - mapped_slope.y1) / 255.0 + MAPPING_Y_MIN;
   float x2 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(mapped_slope.x2) / 255.0 + MAPPING_X_MIN;
   float y2 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - mapped_slope.y2) / 255.0 + MAPPING_Y_MIN;
   float fade_distance = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(mapped_slope.fade_distance) / 255.0 / 0.5;
+  CRGB color = color_from_palette(cmd, mapped_slope.color);
 
+  render_mappled_slope(leds, x1, y1, x2, y2, mapped_slope.slope_type, fade_distance, color, brightness);
+}
+
+void Commands::render_mappled_slope(LedStructure *leds, float x1, float y1, float x2, float y2, SlopeType slope_type, float fade_distance, CRGB color, float brightness)
+{
   // avoid infitity
   if (x1 == x2)
   {
@@ -23,10 +26,9 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
   float slope = (y2 - y1) / (x2 - x1);
   float height = (x2 * y1 - x1 * y2) / (x2 - x1);
 
-  CRGB color = color_from_palette(cmd, mapped_slope.color);
   CRGB target_color = color;
 
-  float brightness = 0;
+  float current_brightness = 0;
   float distance = 0;
 
   bool render_full = false;
@@ -41,14 +43,14 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
     render_full = false;
     render_fade = false;
 
-    if (mapped_slope.slope_type == SlopeType_LINE)
+    if (slope_type == SlopeType_LINE)
     {
       if (fabs(distance) < fade_distance)
       {
         render_fade = true;
       }
     }
-    else if (mapped_slope.slope_type == SlopeType_FILL || mapped_slope.slope_type == SlopeType_COLOR_SHIFT)
+    else if (slope_type == SlopeType_FILL || slope_type == SlopeType_COLOR_SHIFT)
     {
       if (x1 > x2)
       {
@@ -74,33 +76,33 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
       }
     }
 
-    brightness = 0;
+    current_brightness = 0;
     if (render_full)
     {
-      brightness = render_brightness;
+      current_brightness = brightness;
     }
     else if (render_fade)
     {
       // fade
-      if (mapped_slope.slope_type == SlopeType_FILL) // || type == SLOPE_LINE_INVERSE)
+      if (slope_type == SlopeType_FILL) // || type == SLOPE_LINE_INVERSE)
       {
-        brightness = Commands::ease_in_out_cubic(render_brightness * fabsf(distance / fade_distance));
+        current_brightness = Commands::ease_in_out_cubic(brightness * fabsf(distance / fade_distance));
       }
-      else if (mapped_slope.slope_type == SlopeType_LINE)
+      else if (slope_type == SlopeType_LINE)
       {
-        brightness = Commands::ease_in_out_cubic(render_brightness * (1 - fabsf(distance / fade_distance)));
+        current_brightness = Commands::ease_in_out_cubic(brightness * (1 - fabsf(distance / fade_distance)));
       }
     }
 
-    if (brightness > 0)
+    if (current_brightness > 0)
     {
-      if (mapped_slope.slope_type == SlopeType_COLOR_SHIFT)
+      if (slope_type == SlopeType_COLOR_SHIFT)
       {
-        leds->invert_led(leds->mapping[i][0], leds->mapping[i][1], brightness * 255);
+        leds->invert_led(leds->mapping[i][0], leds->mapping[i][1], current_brightness * 255);
       }
       else
       {
-        leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], target_color, brightness * 255);
+        leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], target_color, current_brightness * 255);
       }
     }
   }

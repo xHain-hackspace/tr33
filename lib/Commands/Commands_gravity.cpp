@@ -88,7 +88,7 @@ void Commands::gravity(LedStructure *leds, CommandParams cmd)
     {
       update_ball(i);
       float width = balls[i].rate * float(gravity.width) / 1500.0;
-      render_comet(leds, balls[i].strip_index, balls[i].position, width, balls[i].color, 1.0, true, false, false);
+      render_comet(leds, balls[i].strip_index, balls[i].position, width, balls[i].color, 1.0, true, false, false, false);
     }
   }
 }

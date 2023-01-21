@@ -22,7 +22,10 @@ dev2:
 wand:
 	$(pio_binary) run --target upload -e wand
 
-xhain: tr33 ranken scubar wolken trommel
+neon:
+	$(pio_binary) run --target upload -e neon
+
+xhain: tr33 ranken scubar wolken trommel treppe
 
 wolken:
 	$(pio_binary) run --target upload -e wolke1 -e wolke2 -e wolke3 -e wolke4 -e wolke5 -e wolke6 -e wolke10 -e wolke11 -e wolke12 -e wolke13
@@ -77,3 +80,6 @@ ranken:
 
 scubar:
 	$(pio_binary) run --target upload -e scubar
+
+treppe:
+	$(pio_binary) run --target upload -e treppe

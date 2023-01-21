@@ -102,13 +102,14 @@ public:
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
   // Render
-  static void render(LedStructure *leds, Shape1D shape, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction);
-  static void render_ball(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness);
-  static void render_comet(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce);
+  static void render(LedStructure *leds, Shape1D shape, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool bounce, bool wrap);
+  static void render_ball(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool wrap);
+  static void render_comet(LedStructure *leds, uint8_t strip_index, float position, float width, CRGB color, float brightness, bool direction, bool nyan, bool bounce, bool wrap);
   static void render_fill(LedStructure *leds, uint8_t strip_index, float position, CRGB color, float brightness, bool direction);
 
   // Mapped
   static void mapped_render_ball(LedStructure *leds, float x, float y, float size, CRGB color, float brightness, float fade_distance);
+  static void render_mappled_slope(LedStructure *leds, float x1, float y1, float x2, float y2, SlopeType slope_type, float fade_distance, CRGB color, float brightness);
 
 private:
   void render_commands();

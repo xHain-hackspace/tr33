@@ -68,10 +68,10 @@ enum ColorPalette {
 enum Shape1D {
   BALL = 0;
   COMET = 1;
-  COMET_BOUNCE = 2;
+  // COMET_BOUNCE = 2;
   NYAN = 3;
-  NYAN_BOUNCE = 4;
-  SOLID = 5;
+  // NYAN_BOUNCE = 4;
+  FILLED = 5;
 }
 
 enum Shape2D {
@@ -117,6 +117,12 @@ enum SlopeType {
 enum FairyPattern {
   ODD_EVEN = 0;
   ODD_EVEN_ALL = 1;
+}
+
+enum SparkleType {
+  SINGLE_COLOR = 0;
+  RANDOM_COLOR = 1;
+  WHITE = 2;
 }
 
 message WireMessage {    
@@ -177,7 +183,7 @@ message Modifier {
 }
 
 message White {
-  required int32 color_temperature = 1 [default = 0];
+  required int32 color_temperature = 1 [default = 0, (nanopb).max_size=5];
 }
 
 message SingleColor {
@@ -207,6 +213,7 @@ message Sparkle {
   required int32 sparkle_width = 2 [default = 15];
   required int32 sparle_rate = 3 [default = 10];  
   required int32 duration = 4 [default = 100];  
+  optional SparkleType sparkle_type = 5 [default = SINGLE_COLOR];
 }
 
 message FlickerSparkle {

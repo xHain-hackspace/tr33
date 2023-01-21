@@ -22,6 +22,10 @@ Ranken leds = Ranken();
 #include <Wand.h>
 Wand leds = Wand();
 #endif
+#ifdef LED_STRUCTURE_NEON
+#include <Neon.h>
+Neon leds = Neon();
+#endif
 #ifdef LED_STRUCTURE_TROMMEL
 #include <Trommel.h>
 Trommel leds = Trommel();
@@ -33,6 +37,10 @@ Wolke leds = Wolke();
 #ifdef LED_STRUCTURE_SCUBAR
 #include <Scubar.h>
 Scubar leds;
+#endif
+#ifdef LED_STRUCTURE_TREPPE
+#include <Treppe.h>
+Treppe leds;
 #endif
 
 Commands command_runner = Commands();
