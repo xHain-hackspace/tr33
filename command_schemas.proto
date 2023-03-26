@@ -119,9 +119,9 @@ enum FairyPattern {
   ODD_EVEN_ALL = 1;
 }
 
-enum SparkleType {
-  SINGLE_COLOR = 0;
-  RANDOM_COLOR = 1;
+enum ColorType {
+  RANDOM_COLOR = 0;
+  SINGLE_COLOR = 1;
   WHITE = 2;
 }
 
@@ -213,7 +213,7 @@ message Sparkle {
   required int32 sparkle_width = 2 [default = 15];
   required int32 sparle_rate = 3 [default = 10];  
   required int32 duration = 4 [default = 100];  
-  optional SparkleType sparkle_type = 5 [default = SINGLE_COLOR];
+  optional ColorType color_type = 5 [default = SINGLE_COLOR];
 }
 
 message FlickerSparkle {
@@ -247,6 +247,7 @@ message Rain {
   required int32 width = 2 [default = 15];
   required int32 drop_density = 3 [default = 90];  
   required int32 drop_speed = 4 [default = 90];  
+  optional ColorType color_type = 5 [default = RANDOM_COLOR];
 }
 
 message Gravity {

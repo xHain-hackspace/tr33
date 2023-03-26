@@ -22,6 +22,7 @@ WiFiUDP udp;
 bool udp_up = false;
 bool ota_up = false;
 bool wasdisconnected = true;
+uint8_t wifi_error_count = 0;
 
 // syncing
 uint32_t metrics_period_ms = 5 * 1000;
@@ -45,10 +46,15 @@ void wifi_init()
   // todo: figure out this works
   // WiFi.setAutoReconnect(true)
 
+  // WiFi.disconnect(true, true);
+  // WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE); // needs to be here for the hostname to work...
+  WiFi.setHostname(hostname);
+  // WiFi.begin(ssid, password);
+
   Serial.printf("Initializing WiFi...\n");
   boolean res = WiFi.disconnect(true, true);
-  Serial.printf("Disconnection from previous wifi: %s\n", res ? "OK" : "FAIL");
-  WiFi.mode(WIFI_MODE_NULL);
+  // Serial.printf("Disconnection from previous wifi: %s\n", res ? "OK" : "FAIL");
+  // WiFi.mode(WIFI_MODE_NULL);
 
   delay(10);
   res = WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE); // needs to be here for the hostname to work...
@@ -59,10 +65,12 @@ void wifi_init()
   {
     Serial.printf("Failed to set hostname to %s\n", hostname);
   };
-  WiFi.mode(WIFI_STA);
+  // WiFi.mode(WIFI_STA);
 
   Serial.printf("Wlan begin... ");
   WiFi.begin(ssid, password);
+
+  wifi_error_count = 0;
 }
 
 void upd_init()
@@ -144,31 +152,31 @@ void print_wifi_status(int wifi_status)
   }
   else if (wifi_status == WL_NO_SHIELD)
   {
-    Serial.printf("WiFi status: WL_NO_SHIELD\n");
+    Serial.printf("WiFi status: WL_NO_SHIELD, error_count: %d\n", wifi_error_count);
   }
   else if (wifi_status == WL_IDLE_STATUS)
   {
-    Serial.printf("WiFi status: WL_IDLE_STATUS\n");
+    Serial.printf("WiFi status: WL_IDLE_STATUS, error_count: %d\n", wifi_error_count);
   }
   else if (wifi_status == WL_NO_SSID_AVAIL)
   {
-    Serial.printf("WiFi status: WL_NO_SSID_AVAIL\n");
+    Serial.printf("WiFi status: WL_NO_SSID_AVAIL, error_count: %d\n", wifi_error_count);
   }
   else if (wifi_status == WL_SCAN_COMPLETED)
   {
-    Serial.printf("WiFi status: WL_SCAN_COMPLETED\n");
+    Serial.printf("WiFi status: WL_SCAN_COMPLETED, error_count: %d\n", wifi_error_count);
   }
   else if (wifi_status == WL_CONNECT_FAILED)
   {
-    Serial.printf("WiFi status: WL_CONNECT_FAILED\n");
+    Serial.printf("WiFi status: WL_CONNECT_FAILED, error_count: %d\n", wifi_error_count);
   }
   else if (wifi_status == WL_CONNECTION_LOST)
   {
-    Serial.printf("WiFi status: WL_CONNECTION_LOST\n");
+    Serial.printf("WiFi status: WL_CONNECTION_LOST, error_count: %d\n", wifi_error_count);
   }
   else if (wifi_status == WL_DISCONNECTED)
   {
-    Serial.printf("WiFi status: WL_DISCONNECTED\n");
+    Serial.printf("WiFi status: WL_DISCONNECTED, error_count: %d\n", wifi_error_count);
   }
   else
   {
@@ -252,6 +260,8 @@ void wifi_loop(Commands commands)
 
   if (wifi_status == WL_CONNECTED)
   {
+    wifi_error_count = 0;
+
     if (wasdisconnected)
     {
       // if this is a reconnect restore the previous effect
@@ -321,7 +331,12 @@ void wifi_loop(Commands commands)
     ota_up = false;
     wasdisconnected = true;
     commands.handle_command(color_overlay(HUE_ORANGE));
-    delay(500);
+    wifi_error_count++;
+    if (wifi_error_count > 150)
+    {
+      wifi_error_count = 0;
+      wifi_init();
+    }
   }
   else
   {
@@ -330,6 +345,7 @@ void wifi_loop(Commands commands)
     ota_up = false;
     wasdisconnected = true;
     commands.handle_command(color_overlay(HUE_RED));
+
     wifi_init();
   }
 }

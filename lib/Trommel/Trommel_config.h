@@ -4,9 +4,6 @@
 #define STRIP_PIXEL_COUNT 33
 #define STRIP_COUNT 1
 
-// strip index
-#define STRIP_INDEX_ALL STRIP_COUNT
-
 // mapping
 
 #define MAPPING_X_MIN 65.27403259277344

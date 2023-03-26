@@ -12,7 +12,7 @@ struct Flicker_Sparkle
     uint8_t command_index;
     CRGB color;
     int start_time;
-    float width;
+    // float width;
     float brightness;
     int center;
 };
@@ -58,7 +58,7 @@ void Commands::flicker_sparkle(LedStructure *leds, CommandParams cmd)
         }
         flicker_sparkles[flicker_sparkle_index].enabled = true;
         flicker_sparkles[flicker_sparkle_index].color = flicker_sparkle.color == 255 ? COLOR_WHITE : color_from_palette(cmd, random_or_value(flicker_sparkle.color, 1, 255));
-        flicker_sparkles[flicker_sparkle_index].width = width;
+        // flicker_sparkles[flicker_sparkle_index].width = width;
         flicker_sparkles[flicker_sparkle_index].brightness = float(random(10)) / 20.0 + 0.5;
 
         flicker_number--;
@@ -76,7 +76,7 @@ void Commands::flicker_sparkle(LedStructure *leds, CommandParams cmd)
             float brightness = Commands::ease_out_cubic(flicker_sparkles[i].brightness - float(now - flicker_sparkles[i].start_time) / (20.0 * float(duration)));
             if (brightness > 0)
             {
-                render_ball(leds, flicker_sparkles[i].strip_index, flicker_sparkles[i].center, flicker_sparkles[i].width, flicker_sparkles[i].color, brightness * float(cmd.brightness) / 255.0, false);
+                render_ball(leds, flicker_sparkles[i].strip_index, flicker_sparkles[i].center, width, flicker_sparkles[i].color, brightness * float(cmd.brightness) / 255.0, false);
             }
             else
             {

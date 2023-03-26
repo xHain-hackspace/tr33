@@ -3,6 +3,8 @@
 #include <pb_decode.h>
 
 CommandParams commands[COMMAND_COUNT];
+EffectItem effect_items[EFFECT_ITEM_COUNT];
+
 int64_t Commands::millis_offset = 0;
 uint8_t Commands::joystick_x = 0;
 uint8_t Commands::joystick_y = 0;

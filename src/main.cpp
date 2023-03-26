@@ -5,7 +5,7 @@
 #include <Commands.h>
 #include <Twang.h>
 #include <wifi_main.h>
-#include <uart_main.h>
+// #include <uart_main.h>
 
 #ifdef LED_STRUCTURE_TR33
 #include <Tr33.h>

@@ -122,11 +122,11 @@ typedef enum _FairyPattern {
     FairyPattern_ODD_EVEN_ALL = 1 
 } FairyPattern;
 
-typedef enum _SparkleType { 
-    SparkleType_SINGLE_COLOR = 0, 
-    SparkleType_RANDOM_COLOR = 1, 
-    SparkleType_WHITE = 2 
-} SparkleType;
+typedef enum _ColorType { 
+    ColorType_RANDOM_COLOR = 0, 
+    ColorType_SINGLE_COLOR = 1, 
+    ColorType_WHITE = 2 
+} ColorType;
 
 /* Struct definitions */
 typedef struct _Kaleidoscope { 
@@ -268,6 +268,8 @@ typedef struct _Rain {
     int32_t width; 
     int32_t drop_density; 
     int32_t drop_speed; 
+    bool has_color_type;
+    ColorType color_type; 
 } Rain;
 
 typedef struct _Rainbow { 
@@ -292,8 +294,8 @@ typedef struct _Sparkle {
     int32_t sparkle_width; 
     int32_t sparle_rate; 
     int32_t duration; 
-    bool has_sparkle_type;
-    SparkleType sparkle_type; 
+    bool has_color_type;
+    ColorType color_type; 
 } Sparkle;
 
 typedef PB_BYTES_ARRAY_T(4) TargetMetrics_hashes_t;
@@ -390,9 +392,9 @@ typedef struct _WireMessage {
 #define _FairyPattern_MAX FairyPattern_ODD_EVEN_ALL
 #define _FairyPattern_ARRAYSIZE ((FairyPattern)(FairyPattern_ODD_EVEN_ALL+1))
 
-#define _SparkleType_MIN SparkleType_SINGLE_COLOR
-#define _SparkleType_MAX SparkleType_WHITE
-#define _SparkleType_ARRAYSIZE ((SparkleType)(SparkleType_WHITE+1))
+#define _ColorType_MIN ColorType_RANDOM_COLOR
+#define _ColorType_MAX ColorType_WHITE
+#define _ColorType_ARRAYSIZE ((ColorType)(ColorType_WHITE+1))
 
 
 #ifdef __cplusplus
@@ -409,11 +411,11 @@ extern "C" {
 #define Pixel_init_default                       {0, 0}
 #define PixelRGB_init_default                    {130, 130, 130, 0}
 #define Rainbow_init_default                     {30, 100, 152}
-#define Sparkle_init_default                     {0, 15, 10, 100, false, SparkleType_SINGLE_COLOR}
+#define Sparkle_init_default                     {0, 15, 10, 100, false, ColorType_SINGLE_COLOR}
 #define FlickerSparkle_init_default              {255, 90, 215, 8, 7, 119, 80}
 #define PingPong_init_default                    {Shape1D_BALL, MovementType_SINE, 65, 20, 1, 100}
 #define Render_init_default                      {Shape1D_BALL, 210, 20, 20}
-#define Rain_init_default                        {0, 15, 90, 90}
+#define Rain_init_default                        {0, 15, 90, 90, false, ColorType_RANDOM_COLOR}
 #define Gravity_init_default                     {13, 0, 5, 70}
 #define Kaleidoscope_init_default                {0}
 #define MappedSlope_init_default                 {1, SlopeType_FILL, 0, 0, 255, 255, 5}
@@ -438,11 +440,11 @@ extern "C" {
 #define Pixel_init_zero                          {0, 0}
 #define PixelRGB_init_zero                       {0, 0, 0, 0}
 #define Rainbow_init_zero                        {0, 0, 0}
-#define Sparkle_init_zero                        {0, 0, 0, 0, false, _SparkleType_MIN}
+#define Sparkle_init_zero                        {0, 0, 0, 0, false, _ColorType_MIN}
 #define FlickerSparkle_init_zero                 {0, 0, 0, 0, 0, 0, 0}
 #define PingPong_init_zero                       {_Shape1D_MIN, _MovementType_MIN, 0, 0, 0, 0}
 #define Render_init_zero                         {_Shape1D_MIN, 0, 0, 0}
-#define Rain_init_zero                           {0, 0, 0, 0}
+#define Rain_init_zero                           {0, 0, 0, 0, false, _ColorType_MIN}
 #define Gravity_init_zero                        {0, 0, 0, 0}
 #define Kaleidoscope_init_zero                   {0}
 #define MappedSlope_init_zero                    {0, _SlopeType_MIN, 0, 0, 0, 0, 0}
@@ -539,6 +541,7 @@ extern "C" {
 #define Rain_width_tag                           2
 #define Rain_drop_density_tag                    3
 #define Rain_drop_speed_tag                      4
+#define Rain_color_type_tag                      5
 #define Rainbow_speed_tag                        1
 #define Rainbow_wave_size_tag                    2
 #define Rainbow_rainbow_size_tag                 3
@@ -551,7 +554,7 @@ extern "C" {
 #define Sparkle_sparkle_width_tag                2
 #define Sparkle_sparle_rate_tag                  3
 #define Sparkle_duration_tag                     4
-#define Sparkle_sparkle_type_tag                 5
+#define Sparkle_color_type_tag                   5
 #define TargetMetrics_name_tag                   1
 #define TargetMetrics_fps_tag                    2
 #define TargetMetrics_wifi_strength_tag          3
@@ -716,9 +719,9 @@ X(a, STATIC,   REQUIRED, INT32,    color,             1) \
 X(a, STATIC,   REQUIRED, INT32,    sparkle_width,     2) \
 X(a, STATIC,   REQUIRED, INT32,    sparle_rate,       3) \
 X(a, STATIC,   REQUIRED, INT32,    duration,          4) \
-X(a, STATIC,   OPTIONAL, UENUM,    sparkle_type,      5)
+X(a, STATIC,   OPTIONAL, UENUM,    color_type,        5)
 #define Sparkle_CALLBACK NULL
-#define Sparkle_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x0f\x18\x0a\x20\x64\x00"
+#define Sparkle_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x0f\x18\x0a\x20\x64\x28\x01\x00"
 
 #define FlickerSparkle_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \
@@ -753,7 +756,8 @@ X(a, STATIC,   REQUIRED, INT32,    width,             4)
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \
 X(a, STATIC,   REQUIRED, INT32,    width,             2) \
 X(a, STATIC,   REQUIRED, INT32,    drop_density,      3) \
-X(a, STATIC,   REQUIRED, INT32,    drop_speed,        4)
+X(a, STATIC,   REQUIRED, INT32,    drop_speed,        4) \
+X(a, STATIC,   OPTIONAL, UENUM,    color_type,        5)
 #define Rain_CALLBACK NULL
 #define Rain_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x0f\x18\x5a\x20\x5a\x00"
 
@@ -956,7 +960,7 @@ extern const pb_msgdesc_t ColorPaletteResponse_msg;
 #define PingPong_size                            48
 #define PixelRGB_size                            44
 #define Pixel_size                               22
-#define Rain_size                                44
+#define Rain_size                                46
 #define Rainbow_size                             33
 #define Render_size                              35
 #define SingleColor_size                         11
@@ -1067,7 +1071,7 @@ struct MessageDescriptor<Render> {
 };
 template <>
 struct MessageDescriptor<Rain> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 4;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 5;
     static inline const pb_msgdesc_t* fields() {
         return &Rain_msg;
     }

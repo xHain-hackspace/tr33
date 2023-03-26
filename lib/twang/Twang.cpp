@@ -2,7 +2,7 @@
 #include "Twang.h"
 // #include "I2Cdev.h"
 // #include "MPU6050.h"
-//#include "Wire.h"
+// #include "Wire.h"
 // #include "toneAC.h"
 #include "iSin.h"
 // #include "RunningMedian.h"
@@ -17,25 +17,25 @@
 #include "Conveyor.h"
 
 // MPU
-//MPU6050 accelgyro;
+// MPU6050 accelgyro;
 int16_t ax, ay, az;
 int16_t gx, gy, gz;
 
-//drunk coding section start
+// drunk coding section start
 int count = 0;
-//drunk coding section end
+// drunk coding section end
 
 #define max_compare(a, b) ((a) > (b) ? (a) : (b))
 
 // LED setup
-//#define NUM_LEDS             80
+// #define NUM_LEDS             80
 
-//Define Path to follow (edge number): 19, -9, 22, -12, 25, -15, 28, -3, 16, -6
-// #define NUM_LEDS (NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25 + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_28 + NR_LEDS_EDGE_03 + NR_LEDS_EDGE_16 + NR_LEDS_EDGE_06)
+// Define Path to follow (edge number): 19, -9, 22, -12, 25, -15, 28, -3, 16, -6
+//  #define NUM_LEDS (NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25 + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_28 + NR_LEDS_EDGE_03 + NR_LEDS_EDGE_16 + NR_LEDS_EDGE_06)
 #define NUM_LEDS STRIP_PIXEL_COUNT
-//Calculate number of LEDs from path and running total in array
-// int running_total_leds[] = {
-//     NR_LEDS_EDGE_19,
+// Calculate number of LEDs from path and running total in array
+//  int running_total_leds[] = {
+//      NR_LEDS_EDGE_19,
 
 //     NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09,
 
@@ -56,7 +56,7 @@ int count = 0;
 //     NR_LEDS_EDGE_19 + NR_LEDS_EDGE_09 + NR_LEDS_EDGE_22 + NR_LEDS_EDGE_12 + NR_LEDS_EDGE_25 + NR_LEDS_EDGE_15 + NR_LEDS_EDGE_28 + NR_LEDS_EDGE_03 + NR_LEDS_EDGE_16 + NR_LEDS_EDGE_06};
 
 // #define DATA_PIN             4
-//#define CLOCK_PIN            4
+// #define CLOCK_PIN            4
 // #define LED_COLOR_ORDER      BGR//GBR
 // #define BRIGHTNESS           150
 #define DIRECTION 1            // 0 = right to left, 1 = left to right
@@ -118,8 +118,8 @@ int const conveyorCount = 2;
 Boss boss = Boss();
 
 CRGB twang_leds[NUM_LEDS];
-//RunningMedian MPUAngleSamples = RunningMedian(5);
-//RunningMedian MPUWobbleSamples = RunningMedian(5);
+// RunningMedian MPUAngleSamples = RunningMedian(5);
+// RunningMedian MPUWobbleSamples = RunningMedian(5);
 
 // void setup() {
 // Serial.begin(9600);
@@ -130,7 +130,7 @@ CRGB twang_leds[NUM_LEDS];
     accelgyro.initialize();
      */
 // Fast LED
-//FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, LED_COLOR_ORDER>(leds, NUM_LEDS);
+// FastLED.addLeds<APA102, DATA_PIN, CLOCK_PIN, LED_COLOR_ORDER>(leds, NUM_LEDS);
 // FastLED.addLeds<WS2812B, DATA_PIN>(leds, NUM_LEDS);
 // FastLED.setBrightness(BRIGHTNESS);
 // FastLED.setDither(1);
@@ -156,7 +156,7 @@ void twang_render(LedStructure *leds)
 {
     for (int i = 0; i < NUM_LEDS; i++)
     {
-        leds->fade_led(STRIP_INDEX_ALL, i, twang_leds[i], 255);
+        leds->fade_led(0, i, twang_leds[i], 255);
     }
 }
 
@@ -244,16 +244,16 @@ void twang_loop(int movement, bool button)
     {
         if (attacking)
         {
-            //SFXattacking();
+            // SFXattacking();
         }
         else
         {
-            //SFXtilt(joystickTilt);
+            // SFXtilt(joystickTilt);
         }
     }
     else if (stage == "DEAD")
     {
-        //SFXdead();
+        // SFXdead();
     }
 
     if (mm - previousMillis >= MIN_REDRAW_INTERVAL)
@@ -352,7 +352,7 @@ void twang_loop(int movement, bool button)
                     brightness = 255;
                     twang_leds[i] = CRGB(0, brightness, 0);
                 }
-                //SFXwin();
+                // SFXwin();
             }
             else if (stageStartTime + 1000 > mm)
             {
@@ -362,7 +362,7 @@ void twang_loop(int movement, bool button)
                     brightness = 255;
                     twang_leds[i] = CRGB(0, brightness, 0);
                 }
-                //SFXwin();
+                // SFXwin();
             }
             else if (stageStartTime + 1200 > mm)
             {
@@ -376,7 +376,7 @@ void twang_loop(int movement, bool button)
         else if (stage == "COMPLETE")
         {
             clear();
-            //SFXcomplete();
+            // SFXcomplete();
             if (stageStartTime + 500 > mm)
             {
                 int n = max_compare(map(((mm - stageStartTime)), 0, 500, NUM_LEDS, 0), 0);
@@ -637,13 +637,13 @@ void tickEnemies()
                 if (enemyPool[i]._pos > playerPosition - (ATTACK_WIDTH / 2) && enemyPool[i]._pos < playerPosition + (ATTACK_WIDTH / 2))
                 {
                     enemyPool[i].Kill();
-                    //SFXkill();
+                    // SFXkill();
                 }
             }
             if (inLava(enemyPool[i]._pos))
             {
                 enemyPool[i].Kill();
-                //SFXkill();
+                // SFXkill();
             }
             // Draw (if still alive)
             if (enemyPool[i].Alive())
@@ -943,36 +943,36 @@ void getInput()
     if(a < 0) a += JOYSTICK_DEADZONE;
     MPUAngleSamples.add(a);
     MPUWobbleSamples.add(g);
-    
+
     joystickTilt = MPUAngleSamples.getMedian();
     if(JOYSTICK_DIRECTION == 1) {
         joystickTilt = 0-joystickTilt;
     }
     joystickWobble = abs(MPUWobbleSamples.getHighest()); */
-    //drunk coding start
-    // if (joystickWobble == 35000 && count > 2){
-    //         joystickWobble =0;
-    //         joystickTilt = 100;
-    //         count = 0;
-    // }
-    // if (joystickTilt == 100 && count > 3){
-    //         joystickWobble =35000;
-    //         joystickTilt = 0;
-    //         count =0;
-    // }
-    // count++;
-    //drunk coding end
+    // drunk coding start
+    //  if (joystickWobble == 35000 && count > 2){
+    //          joystickWobble =0;
+    //          joystickTilt = 100;
+    //          count = 0;
+    //  }
+    //  if (joystickTilt == 100 && count > 3){
+    //          joystickWobble =35000;
+    //          joystickTilt = 0;
+    //          count =0;
+    //  }
+    //  count++;
+    // drunk coding end
 }
 
 /* // ---------------------------------
 // -------------- SFX --------------
 // ---------------------------------
-void SFXtilt(int amount){ 
+void SFXtilt(int amount){
     int f = map(abs(amount), 0, 90, 80, 900)+random8(100);
     if(playerPositionModifier < 0) f -= 500;
     if(playerPositionModifier > 0) f += 200;
     toneAC(f, min(min(abs(amount)/9, 5), MAX_VOLUME));
-    
+
 }
 void SFXattacking(){
     int freq = map(sin(millis()/2.0)*1000.0, -1000, 1000, 500, 600);

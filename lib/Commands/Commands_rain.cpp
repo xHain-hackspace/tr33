@@ -1,68 +1,74 @@
 #include <Commands.h>
 
-#define MAX_RAIN_DROPS 800
-
-uint8_t drop_index = 0;
-
-struct Drop
-{
-  bool enabled;
-  uint8_t strip_index;
-  uint8_t command_index;
-  CRGB color;
-  float width;
-  float center;
-  int start_time;
-  // float rate;
-};
-
-Drop drops[MAX_RAIN_DROPS];
-
-int drop_duration = 10000; // ms
-int last_drop[COMMAND_COUNT];
+float drop_duration = 10000; // ms
+uint32_t last_drop_time[COMMAND_COUNT];
 
 void Commands::rain(LedStructure *leds, CommandParams cmd)
 {
   Rain rain = cmd.type_params.rain;
 
-  float width = float(rain.width) / 10.0;
-  float frequency = float(rain.drop_density) * float(leds->pixel_count(cmd.strip_index)) / 2000.0; // drops per second (scaled with pixel count)
+  float width = float(rain.width) / 8.0;
+  float frequency = float(rain.drop_density) * float(leds->pixel_count(cmd.strip_index)) / 2500.0; // drops per second (scaled with pixel count)
   float rate = float(rain.drop_speed) / 10.0;                                                      // drop speed
 
-  int now = millis();
+  uint32_t now = millis();
+  CRGB color;
 
-  if (frequency > 0 && (1000.0 / float(now - last_drop[cmd.index])) < frequency)
+  if (frequency > 0 && (1000.0 / float(max((uint32_t)1, now - last_drop_time[cmd.index]))) < frequency)
   {
-    if (drop_index++ >= MAX_RAIN_DROPS)
+    effect_item_index++;
+    if (effect_item_index >= EFFECT_ITEM_COUNT)
     {
-      drop_index = 0;
+      effect_item_index = 0;
     }
-    drops[drop_index].enabled = true;
-    drops[drop_index].color = color_from_palette(cmd, random_or_value(rain.color, 0, 255));
-    drops[drop_index].width = width;
-    drops[drop_index].strip_index = leds->random_strip(cmd.strip_index);
-    drops[drop_index].command_index = cmd.index;
-    drops[drop_index].center = random(0, leds->strip_length(drops[drop_index].strip_index) + 20);
-    drops[drop_index].start_time = now;
-    last_drop[cmd.index] = now;
+
+    uint8_t new_color_index = 0;
+    switch (rain.color_type)
+    {
+    case ColorType_SINGLE_COLOR:
+      new_color_index = rain.color;
+      break;
+    case ColorType_RANDOM_COLOR:
+      new_color_index = random(0, 255);
+      break;
+    }
+
+    effect_items[effect_item_index].enabled = true;
+    effect_items[effect_item_index].color_index = new_color_index;
+    effect_items[effect_item_index].strip_index = leds->random_strip(cmd.strip_index);
+    effect_items[effect_item_index].command_index = cmd.index;
+    effect_items[effect_item_index].center = random(0, leds->strip_length(effect_items[effect_item_index].strip_index) + leds->strip_length(effect_items[effect_item_index].strip_index) / 4);
+    effect_items[effect_item_index].start_time = now;
+
+    last_drop_time[cmd.index] = now;
   }
 
-  for (int i = 0; i < MAX_RAIN_DROPS; i++)
+  for (int i = 0; i < EFFECT_ITEM_COUNT; i++)
   {
-    if (drops[i].enabled && drops[i].command_index == cmd.index)
+    if (effect_items[i].enabled && effect_items[i].command_index == cmd.index)
     {
-      int time_diff = (now - drops[i].start_time);
-      float center = drops[i].center - float(time_diff) / 1000.0 * float(rate);
-      float time_to_peak = 1.0 - fabs(time_diff - drop_duration / 2) / float(drop_duration / 2);
-      float brightness = Commands::ease_out_cubic(time_to_peak) * float(cmd.brightness) / 255;
+      uint32_t time_diff = (now - effect_items[i].start_time);
+      float center = effect_items[i].center - float(time_diff) / 1000.0 * float(rate);
 
       if (time_diff > drop_duration || center < -10)
       {
-        drops[i].enabled = false;
+        effect_items[i].enabled = false;
       }
       else
       {
-        render(leds, Shape1D_COMET, drops[i].strip_index, center, drops[i].width, drops[i].color, brightness, false, false, false);
+        float time_to_peak = 1.0 - fabs(time_diff - drop_duration / 2) / float(drop_duration / 2);
+        float brightness = Commands::ease_out_cubic(time_to_peak) * float(cmd.brightness) / 255;
+
+        if (rain.color_type == ColorType_WHITE)
+        {
+          color = COLOR_WHITE;
+        }
+        else
+        {
+          color = color_from_palette(cmd, effect_items[i].color_index);
+        }
+
+        render(leds, Shape1D_COMET, effect_items[i].strip_index, center, width, color, brightness, false, false, false);
       }
     }
   }

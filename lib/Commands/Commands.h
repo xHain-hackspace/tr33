@@ -43,10 +43,24 @@
 
 extern CommandParams commands[COMMAND_COUNT];
 
+#define EFFECT_ITEM_COUNT 1200
+struct EffectItem
+{
+  bool enabled;
+  uint8_t strip_index;
+  uint8_t command_index;
+  uint8_t color_index;
+  uint8_t param_1;
+  float center;
+  uint32_t start_time;
+};
+extern EffectItem effect_items[EFFECT_ITEM_COUNT];
+
 class Commands
 {
 private:
   static int64_t millis_offset;
+  uint16_t effect_item_index = 0;
 
 public:
   LedStructure *leds;
