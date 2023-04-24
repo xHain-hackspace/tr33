@@ -40,9 +40,20 @@ uint16_t linear(uint16_t in)
   return in * 2;
 }
 
-uint16_t sawtooth(uint32_t period_ms, uint32_t offset_ms)
+uint16_t sawtooth_last_value[COMMAND_COUNT][MAX_MODIFIERS];
+uint32_t sawtooth_last_update_ms[COMMAND_COUNT][MAX_MODIFIERS];
+
+uint16_t sawtooth(uint8_t command_index, uint8_t field_index, uint32_t period_ms, uint32_t offset_ms)
 {
-  return (Commands::synced_millis() + offset_ms % period_ms) * UINT16_MAX / period_ms;
+  uint32_t now = Commands::synced_millis();
+  uint16_t time_diff_ms = now - sawtooth_last_update_ms[command_index][field_index];
+  sawtooth_last_update_ms[command_index][field_index] = now;
+
+  uint16_t value_diff = (time_diff_ms + offset_ms) * UINT16_MAX / period_ms;
+  uint16_t new_value = sawtooth_last_value[command_index][field_index] + value_diff;
+  sawtooth_last_value[command_index][field_index] = new_value;
+
+  return new_value;
 }
 
 void Modifiers::apply(Modifier modifier, int *value, uint8_t command_index)
@@ -54,7 +65,7 @@ void Modifiers::apply(Modifier modifier, int *value, uint8_t command_index)
   case MovementType_QUADRATIC:
   case MovementType_SAWTOOTH:
   case MovementType_SAWTOOTH_REVERSE:
-    apply_envelope(modifier, value);
+    apply_envelope(modifier, value, command_index);
     break;
   case MovementType_RANDOM:
   case MovementType_RANDOM_TRANSITIONS:
@@ -93,9 +104,9 @@ void Modifiers::apply(Modifier modifier, int *value, uint8_t command_index)
   }
 }
 
-void Modifiers::apply_envelope(Modifier modifier, int *value)
+void Modifiers::apply_envelope(Modifier modifier, int *value, uint8_t command_index)
 {
-  uint16_t beat = sawtooth(modifier.period_100ms * 100, modifier.offset_100ms * 100);
+  uint16_t beat = sawtooth(command_index, modifier.field_index, modifier.period_100ms * 100, modifier.offset_100ms * 100);
   uint16_t rangewidth = modifier.max - modifier.min;
   uint16_t applied;
 

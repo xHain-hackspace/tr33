@@ -1,23 +1,6 @@
 #include <Commands.h>
 
-#define MAX_FLICKER_SPARKLES 100
 #define FLICKER_SPARKLES_DIM_RATE 40
-
-uint8_t flicker_sparkle_index = 0;
-
-struct Flicker_Sparkle
-{
-    bool enabled;
-    uint8_t strip_index;
-    uint8_t command_index;
-    CRGB color;
-    int start_time;
-    // float width;
-    float brightness;
-    int center;
-};
-
-Flicker_Sparkle flicker_sparkles[MAX_FLICKER_SPARKLES];
 
 int last_flicker_sparkle[COMMAND_COUNT];
 
@@ -44,43 +27,70 @@ void Commands::flicker_sparkle(LedStructure *leds, CommandParams cmd)
     if (flicker_number < 1 && times_up)
     {
         flicker_number = random(1, flicker_maxflicker);
-        flicker_width = random(1, min(int(flicker_maxwidth), leds->strip_length(flicker_sparkles[flicker_sparkle_index].strip_index) - 1));
-        flicker_position = random(1, leds->strip_length(flicker_sparkles[flicker_sparkle_index].strip_index) - flicker_width - 1);
         flicker_stripindex = leds->random_strip(cmd.strip_index);
+        flicker_width = random(1, min(int(flicker_maxwidth), leds->strip_length(flicker_stripindex) - 1));
+        flicker_position = random(1, leds->strip_length(flicker_stripindex) - flicker_width - 1);
         flicker_timestamp = millis();
     }
 
     if (times_up || (flicker_number > 0 && (frequency > 0 && (1000 / (now - last_flicker_sparkle[cmd.index]) < frequency))))
     {
-        if (flicker_sparkle_index++ >= MAX_FLICKER_SPARKLES)
+        // new sparkles
+        effect_item_index++;
+        if (effect_item_index >= EFFECT_ITEM_COUNT)
         {
-            flicker_sparkle_index = 0;
+            effect_item_index = 0;
         }
-        flicker_sparkles[flicker_sparkle_index].enabled = true;
-        flicker_sparkles[flicker_sparkle_index].color = flicker_sparkle.color == 255 ? COLOR_WHITE : color_from_palette(cmd, random_or_value(flicker_sparkle.color, 1, 255));
-        // flicker_sparkles[flicker_sparkle_index].width = width;
-        flicker_sparkles[flicker_sparkle_index].brightness = float(random(10)) / 20.0 + 0.5;
+
+        EffectItem *new_sparkle = &effect_items[effect_item_index];
+
+        CRGB new_color;
+        switch (flicker_sparkle.color_type)
+        {
+        case ColorType_SINGLE_COLOR:
+            new_color = color_from_palette(cmd, flicker_sparkle.color);
+            break;
+        case ColorType_RANDOM_COLOR:
+            new_color = color_from_palette(cmd, random(0, 255));
+            break;
+        case ColorType_WHITE:
+            new_color = COLOR_WHITE;
+            break;
+        }
+
+        new_sparkle->enabled = true;
+        new_sparkle->color = new_color;
+        new_sparkle->strip_index = cmd.strip_index;
+        new_sparkle->command_index = cmd.index;
+        new_sparkle->param_1 = random(0, 255); // initial brightness
+        new_sparkle->center = flicker_position + random(0, flicker_width);
+        new_sparkle->start_time = now;
+        new_sparkle->type = CommandParams_flicker_sparkle_tag;
+
+        last_flicker_sparkle[cmd.index] = now;
 
         flicker_number--;
-        flicker_sparkles[flicker_sparkle_index].center = flicker_position + random(0, flicker_width);
-        flicker_sparkles[flicker_sparkle_index].strip_index = flicker_stripindex;
-        flicker_sparkles[flicker_sparkle_index].command_index = cmd.index;
-        flicker_sparkles[flicker_sparkle_index].start_time = now;
-        last_flicker_sparkle[cmd.index] = now;
     }
 
-    for (int i = 0; i < MAX_FLICKER_SPARKLES; i++)
+    for (int i = 0; i < EFFECT_ITEM_COUNT; i++)
     {
-        if (flicker_sparkles[i].enabled && flicker_sparkles[i].command_index == cmd.index)
+        EffectItem *sparkle_item = &effect_items[i];
+
+        if (sparkle_item->enabled && sparkle_item->command_index == cmd.index && sparkle_item->type == CommandParams_flicker_sparkle_tag)
         {
-            float brightness = Commands::ease_out_cubic(flicker_sparkles[i].brightness - float(now - flicker_sparkles[i].start_time) / (20.0 * float(duration)));
-            if (brightness > 0)
+
+            uint32_t time_diff = (now - sparkle_item->start_time);
+
+            if (time_diff > duration)
             {
-                render_ball(leds, flicker_sparkles[i].strip_index, flicker_sparkles[i].center, width, flicker_sparkles[i].color, brightness * float(cmd.brightness) / 255.0, false);
+                sparkle_item->enabled = false;
             }
             else
             {
-                flicker_sparkles[i].enabled = false;
+                float brightness_modifier = Commands::ease_out_cubic(float(sparkle_item->param_1) / 255.0);
+                float brightness = Commands::ease_out_cubic(1.0 - float(time_diff) / duration) * brightness_modifier * float(cmd.brightness) / 255.0;
+
+                render_ball(leds, sparkle_item->strip_index, sparkle_item->center, width, sparkle_item->color, brightness, false);
             }
         }
     }

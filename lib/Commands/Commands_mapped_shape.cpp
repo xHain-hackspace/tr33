@@ -70,8 +70,6 @@ void Commands::mapped_shape(LedStructure *leds, CommandParams cmd)
   float brightness = 0;
   float distance = 0;
 
-  Serial.println(render_brightness);
-
   if (mapped_shape.shape == Shape2D_CIRCLE)
   {
     mapped_render_ball(leds, x, y, size, color, render_brightness, fade_distance);

@@ -209,9 +209,9 @@ message Rainbow {
 }
 
 message Sparkle {
-  required int32 color = 1 [default = 0];  
+  required int32 color = 1 [default = 200];  
   required int32 sparkle_width = 2 [default = 15];
-  required int32 sparle_rate = 3 [default = 10];  
+  required int32 sparle_rate = 3 [default = 30];  
   required int32 duration = 4 [default = 100];  
   optional ColorType color_type = 5 [default = SINGLE_COLOR];
 }
@@ -224,6 +224,7 @@ message FlickerSparkle {
   required int32 flicker_delay = 5 [default = 7];  
   required int32 flicker_window = 6 [default = 119];  
   required int32 max_flickers = 7 [default = 80];  
+  optional ColorType color_type = 8 [default = WHITE];
 }
 
 message PingPong {
@@ -244,17 +245,18 @@ message Render {
 
 message Rain {
   required int32 color = 1 [default = 0];  
-  required int32 width = 2 [default = 15];
-  required int32 drop_density = 3 [default = 90];  
-  required int32 drop_speed = 4 [default = 90];  
+  required int32 width = 2 [default = 50];
+  required int32 drop_density = 3 [default = 75];  
+  required int32 drop_speed = 4 [default = 50];  
   optional ColorType color_type = 5 [default = RANDOM_COLOR];
 }
 
 message Gravity {
   required int32 color = 1 [default = 13];
-  required int32 launch_speed = 2 [default  = 0];
-  required int32 ball_rate = 3 [default = 5];
-  required int32 width = 4 [default = 70];
+  required int32 launch_speed = 2 [default  = 185];
+  required int32 ball_rate = 3 [default = 50];
+  required int32 width = 4 [default = 50];
+  optional ColorType color_type = 5 [default = RANDOM_COLOR];
 }
 
 message Kaleidoscope {

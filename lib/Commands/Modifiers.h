@@ -12,7 +12,7 @@ public:
   static void test();
   static void apply_all(CommandParams *cmd);
   static void apply(Modifier modifier, int *value, uint8_t command_index);
-  static void apply_envelope(Modifier modifier, int *value);
+  static void apply_envelope(Modifier modifier, int *value, uint8_t command_index);
   static void apply_random(Modifier modifier, int *value, uint8_t command_index);
   static void apply_beat(Modifier modifier, int *value, uint8_t band);
 

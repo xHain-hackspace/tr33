@@ -171,6 +171,8 @@ typedef struct _FlickerSparkle {
     int32_t flicker_delay; 
     int32_t flicker_window; 
     int32_t max_flickers; 
+    bool has_color_type;
+    ColorType color_type; 
 } FlickerSparkle;
 
 typedef struct _Gravity { 
@@ -178,6 +180,8 @@ typedef struct _Gravity {
     int32_t launch_speed; 
     int32_t ball_rate; 
     int32_t width; 
+    bool has_color_type;
+    ColorType color_type; 
 } Gravity;
 
 typedef struct _JoystickEvent { 
@@ -411,12 +415,12 @@ extern "C" {
 #define Pixel_init_default                       {0, 0}
 #define PixelRGB_init_default                    {130, 130, 130, 0}
 #define Rainbow_init_default                     {30, 100, 152}
-#define Sparkle_init_default                     {0, 15, 10, 100, false, ColorType_SINGLE_COLOR}
-#define FlickerSparkle_init_default              {255, 90, 215, 8, 7, 119, 80}
+#define Sparkle_init_default                     {200, 15, 30, 100, false, ColorType_SINGLE_COLOR}
+#define FlickerSparkle_init_default              {255, 90, 215, 8, 7, 119, 80, false, ColorType_WHITE}
 #define PingPong_init_default                    {Shape1D_BALL, MovementType_SINE, 65, 20, 1, 100}
 #define Render_init_default                      {Shape1D_BALL, 210, 20, 20}
-#define Rain_init_default                        {0, 15, 90, 90, false, ColorType_RANDOM_COLOR}
-#define Gravity_init_default                     {13, 0, 5, 70}
+#define Rain_init_default                        {0, 50, 75, 50, false, ColorType_RANDOM_COLOR}
+#define Gravity_init_default                     {13, 185, 50, 50, false, ColorType_RANDOM_COLOR}
 #define Kaleidoscope_init_default                {0}
 #define MappedSlope_init_default                 {1, SlopeType_FILL, 0, 0, 255, 255, 5}
 #define MappedShape_init_default                 {1, Shape2D_SQUARE, 128, 128, 50, 50}
@@ -441,11 +445,11 @@ extern "C" {
 #define PixelRGB_init_zero                       {0, 0, 0, 0}
 #define Rainbow_init_zero                        {0, 0, 0}
 #define Sparkle_init_zero                        {0, 0, 0, 0, false, _ColorType_MIN}
-#define FlickerSparkle_init_zero                 {0, 0, 0, 0, 0, 0, 0}
+#define FlickerSparkle_init_zero                 {0, 0, 0, 0, 0, 0, 0, false, _ColorType_MIN}
 #define PingPong_init_zero                       {_Shape1D_MIN, _MovementType_MIN, 0, 0, 0, 0}
 #define Render_init_zero                         {_Shape1D_MIN, 0, 0, 0}
 #define Rain_init_zero                           {0, 0, 0, 0, false, _ColorType_MIN}
-#define Gravity_init_zero                        {0, 0, 0, 0}
+#define Gravity_init_zero                        {0, 0, 0, 0, false, _ColorType_MIN}
 #define Kaleidoscope_init_zero                   {0}
 #define MappedSlope_init_zero                    {0, _SlopeType_MIN, 0, 0, 0, 0, 0}
 #define MappedShape_init_zero                    {0, _Shape2D_MIN, 0, 0, 0, 0}
@@ -480,10 +484,12 @@ extern "C" {
 #define FlickerSparkle_flicker_delay_tag         5
 #define FlickerSparkle_flicker_window_tag        6
 #define FlickerSparkle_max_flickers_tag          7
+#define FlickerSparkle_color_type_tag            8
 #define Gravity_color_tag                        1
 #define Gravity_launch_speed_tag                 2
 #define Gravity_ball_rate_tag                    3
 #define Gravity_width_tag                        4
+#define Gravity_color_type_tag                   5
 #define JoystickEvent_x_tag                      1
 #define JoystickEvent_y_tag                      2
 #define JoystickEvent_button1_tag                3
@@ -721,7 +727,7 @@ X(a, STATIC,   REQUIRED, INT32,    sparle_rate,       3) \
 X(a, STATIC,   REQUIRED, INT32,    duration,          4) \
 X(a, STATIC,   OPTIONAL, UENUM,    color_type,        5)
 #define Sparkle_CALLBACK NULL
-#define Sparkle_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x0f\x18\x0a\x20\x64\x28\x01\x00"
+#define Sparkle_DEFAULT (const pb_byte_t*)"\x08\xc8\x01\x10\x0f\x18\x1e\x20\x64\x28\x01\x00"
 
 #define FlickerSparkle_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \
@@ -730,9 +736,10 @@ X(a, STATIC,   REQUIRED, INT32,    sparles_per_second,   3) \
 X(a, STATIC,   REQUIRED, INT32,    duration,          4) \
 X(a, STATIC,   REQUIRED, INT32,    flicker_delay,     5) \
 X(a, STATIC,   REQUIRED, INT32,    flicker_window,    6) \
-X(a, STATIC,   REQUIRED, INT32,    max_flickers,      7)
+X(a, STATIC,   REQUIRED, INT32,    max_flickers,      7) \
+X(a, STATIC,   OPTIONAL, UENUM,    color_type,        8)
 #define FlickerSparkle_CALLBACK NULL
-#define FlickerSparkle_DEFAULT (const pb_byte_t*)"\x08\xff\x01\x10\x5a\x18\xd7\x01\x20\x08\x28\x07\x30\x77\x38\x50\x00"
+#define FlickerSparkle_DEFAULT (const pb_byte_t*)"\x08\xff\x01\x10\x5a\x18\xd7\x01\x20\x08\x28\x07\x30\x77\x38\x50\x40\x02\x00"
 
 #define PingPong_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UENUM,    shape,             1) \
@@ -759,15 +766,16 @@ X(a, STATIC,   REQUIRED, INT32,    drop_density,      3) \
 X(a, STATIC,   REQUIRED, INT32,    drop_speed,        4) \
 X(a, STATIC,   OPTIONAL, UENUM,    color_type,        5)
 #define Rain_CALLBACK NULL
-#define Rain_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x0f\x18\x5a\x20\x5a\x00"
+#define Rain_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x32\x18\x4b\x20\x32\x00"
 
 #define Gravity_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \
 X(a, STATIC,   REQUIRED, INT32,    launch_speed,      2) \
 X(a, STATIC,   REQUIRED, INT32,    ball_rate,         3) \
-X(a, STATIC,   REQUIRED, INT32,    width,             4)
+X(a, STATIC,   REQUIRED, INT32,    width,             4) \
+X(a, STATIC,   OPTIONAL, UENUM,    color_type,        5)
 #define Gravity_CALLBACK NULL
-#define Gravity_DEFAULT (const pb_byte_t*)"\x08\x0d\x10\x00\x18\x05\x20\x46\x00"
+#define Gravity_DEFAULT (const pb_byte_t*)"\x08\x0d\x10\xb9\x01\x18\x32\x20\x32\x00"
 
 #define Kaleidoscope_FIELDLIST(X, a) \
 
@@ -945,10 +953,10 @@ extern const pb_msgdesc_t ColorPaletteResponse_msg;
 #define ColorPaletteRequest_size                 2
 #define ColorPaletteResponse_size                1538
 #define Color_size                               18
-#define CommandParams_size                       419
+#define CommandParams_size                       420
 #define FairyLight_size                          24
-#define FlickerSparkle_size                      77
-#define Gravity_size                             44
+#define FlickerSparkle_size                      79
+#define Gravity_size                             46
 #define JoystickEvent_size                       30
 #define Kaleidoscope_size                        0
 #define MappedParticles_size                     57
@@ -1050,7 +1058,7 @@ struct MessageDescriptor<Sparkle> {
 };
 template <>
 struct MessageDescriptor<FlickerSparkle> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 7;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 8;
     static inline const pb_msgdesc_t* fields() {
         return &FlickerSparkle_msg;
     }
@@ -1078,7 +1086,7 @@ struct MessageDescriptor<Rain> {
 };
 template <>
 struct MessageDescriptor<Gravity> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 4;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 5;
     static inline const pb_msgdesc_t* fields() {
         return &Gravity_msg;
     }

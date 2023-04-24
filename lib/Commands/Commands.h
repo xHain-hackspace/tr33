@@ -47,10 +47,11 @@ extern CommandParams commands[COMMAND_COUNT];
 struct EffectItem
 {
   bool enabled;
+  uint8_t type;
   uint8_t strip_index;
   uint8_t command_index;
-  uint8_t color_index;
   uint8_t param_1;
+  CRGB color;
   float center;
   uint32_t start_time;
 };

@@ -21,9 +21,13 @@ void Commands::ping_pong(LedStructure *leds, CommandParams cmd)
 
   Modifiers::apply(modifier, &value, cmd.index);
 
-  bool direction = value > last_value[cmd.index];
+  int value_change = value - last_value[cmd.index];
+  bool direction = value_change > 0;
   bool bounce = false;
   bool wrap = false;
+
+  float position;
+  float width;
 
   switch (ping_pong.movement)
   {
@@ -71,9 +75,13 @@ void Commands::ping_pong(LedStructure *leds, CommandParams cmd)
   }
   last_value[cmd.index] = value;
 
+  float scale_factor = float(leds->strip_length(cmd.strip_index)) / 65535;
+
   for (int i = 0; i < max(1, ping_pong.count); i++)
   {
-    float position = float((value + (i * 65535) / max(1, ping_pong.count)) % 65535) / 65535 * float(leds->strip_length(cmd.strip_index)); //* max_height;
-    render(leds, ping_pong.shape, cmd.strip_index, position, ping_pong.width, color, brightness, direction, bounce, wrap);
+    position = float((value + (i * 65535) / max(1, ping_pong.count)) % 65535) * scale_factor; //* max_height;
+    width = float(ping_pong.width) * (float(abs(value_change * 4)) * scale_factor);
+
+    render(leds, ping_pong.shape, cmd.strip_index, position, width, color, brightness, direction, bounce, wrap);
   }
 }
