@@ -11,7 +11,7 @@
           pkgs = import nixpkgs { inherit system; };
           pname = "tr33";
 
-          python-with-packages = pkgs.python310.withPackages (pp: with pp; [
+          python-with-packages = pkgs.python311.withPackages (pp: with pp; [
             protobuf
             setuptools
           ]);
