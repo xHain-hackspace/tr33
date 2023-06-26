@@ -42,6 +42,10 @@ Scubar leds;
 #include <Treppe.h>
 Treppe leds;
 #endif
+#ifdef LED_STRUCTURE_ARROW
+#include <Arrow.h>
+Arrow leds;
+#endif
 
 Commands command_runner = Commands();
 

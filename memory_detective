@@ -1,0 +1,31 @@
+WiFiUDP udp; 17 KB
+Using WiFi in wifi_init: 10 KB
+Wifi rest: up to 108 KB (10 more)
+
+Include Wand.h up to 112 KB (4 more)
+command_runner.init(&leds): up to 114 KB (2 more)
+
+wifi_loop: up to 170 KB (56 more)
+command_runner.run(): up to 205 KB (35 more)
+
+with twang: up 209 KB (4 more)
++ 1000 drops: up to 228 KB (19 more)
++ 1500 drops: up to 238 KB (10 more)
++ 2000 drops: up to 247 KB (19 more) // break
+
+no drops: up to 193 KB (16 less)
+no sparkles: up to 181 KB (12 less)
+no command_runner.run(): up to 171 KB (10 less)
+
+no wifi_loop up to 115 KB (56 less)
+
+>> no COMMANDS_VIA_WIFI: up 167 KB (4 less)
+>> with send_metrics: up to 171 KB (4 more)
+>> rest: 171 KB (0 more)
+
+only COMMANDS_VIA_WIFI: up 123 KB (8 more)
+OTA: up to 134 KB (11 more)
+rest without wifi_init: up to 134 KB (0 more)
+with wifi_init: up to 171 KB (37 more)
+
+

@@ -31,6 +31,9 @@
 #ifdef LED_STRUCTURE_TREPPE
 #include <Treppe_config.h>
 #endif
+#ifdef LED_STRUCTURE_ARROW
+#include <Arrow_config.h>
+#endif
 
 class LedStructure
 {

@@ -52,12 +52,12 @@ void wifi_init()
   // WiFi.begin(ssid, password);
 
   Serial.printf("Initializing WiFi...\n");
-  boolean res = WiFi.disconnect(true, true);
+  // boolean res = WiFi.disconnect(true, true);
   // Serial.printf("Disconnection from previous wifi: %s\n", res ? "OK" : "FAIL");
   // WiFi.mode(WIFI_MODE_NULL);
 
   delay(10);
-  res = WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE); // needs to be here for the hostname to work...
+  WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE); // needs to be here for the hostname to work...
 
   Serial.printf("Connecting to ssid %s, setting hostname to %s\n", ssid, hostname);
 

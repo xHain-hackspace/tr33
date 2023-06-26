@@ -83,3 +83,7 @@ scubar:
 
 treppe:
 	$(pio_binary) run --target upload -e treppe
+	
+arrow:
+	$(pio_binary) run --target upload -e arrow
+	
