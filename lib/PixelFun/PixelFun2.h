@@ -5,7 +5,8 @@
 #include <cctype>
 #include <cstring>
 #include <tuple>
-#include <libfixmath/fix16.h>
+#include <fpm_fixed.hpp>
+#include <fpm_math.hpp>
 
 enum ExprType
 {
@@ -70,6 +71,8 @@ enum FuncType
     FUNC_HYPOT,
 };
 
+using fpm::fixed_16_16;
+
 struct Expr
 {
     ExprType type;
@@ -125,7 +128,7 @@ public:
         return false;
     }
 
-    fix16_t eval(fix16_t t, fix16_t i, fix16_t x, fix16_t y)
+    fixed_16_16 eval(fixed_16_16 t, fixed_16_16 i, fixed_16_16 x, fixed_16_16 y)
     {
         return eval(root, t, i, x, y);
     }
@@ -169,17 +172,17 @@ private:
         freeIndices[stackTop++] = idx;
     }
 
-    fix16_t eval(Expr *expr, fix16_t t, fix16_t i, fix16_t x, fix16_t y)
+    fixed_16_16 eval(Expr *expr, fixed_16_16 t, fixed_16_16 i, fixed_16_16 x, fixed_16_16 y)
     {
         if (!expr)
         {
-            return 0;
+            return fixed_16_16(0);
         }
 
         switch (expr->type)
         {
         case EXPR_NUMBER:
-            return expr->number;
+            return fixed_16_16(expr->number);
         case EXPR_VAR:
             switch (expr->var)
             {
@@ -192,105 +195,100 @@ private:
             case VAR_Y:
                 return y;
             case VAR_PI:
-                return PI;
+                return fixed_16_16(PI);
             case VAR_TAU:
-                return 2 * PI;
+                return fixed_16_16(PI) * 2;
             }
         case EXPR_FUNC:
             switch (expr->funcCall.func)
             {
             case FUNC_RAND:
             case FUNC_RANDOM:
-                return (float)random(RAND_MAX) / (float)RAND_MAX;
+                return fixed_16_16(random(RAND_MAX)) / fixed_16_16(RAND_MAX);
             case FUNC_SIN:
-                return fix16_sin(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::sin(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_COS:
-                return fix16_cos(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::cos(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_TAN:
-                return fix16_tan(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::tan(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_ASIN:
-                return fix16_asin(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::asin(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_ACOS:
-                return fix16_acos(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::acos(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_ATAN:
-                return fix16_atan(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::atan(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_ATAN2:
-                return fix16_atan2(eval(expr->funcCall.args[0], t, i, x, y),
-                                   eval(expr->funcCall.args[1], t, i, x, y));
-            case FUNC_ASINH:
-                return asinhf(eval(expr->funcCall.args[0], t, i, x, y));
-            case FUNC_ACOSH:
-                return acoshf(eval(expr->funcCall.args[0], t, i, x, y));
-            case FUNC_ATANH:
-                return atanhf(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::atan2(eval(expr->funcCall.args[0], t, i, x, y),
+                                  eval(expr->funcCall.args[1], t, i, x, y));
             case FUNC_FLOOR:
-                return floorf(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::floor(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_CEIL:
-                return ceilf(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::ceil(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_ROUND:
-                return roundf(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::round(eval(expr->funcCall.args[0], t, i, x, y));
             case FUNC_FRACT:
             {
                 auto arg = eval(expr->funcCall.args[0], t, i, x, y);
-                return arg - truncf(arg);
+                return arg - fpm::trunc(arg);
             }
             case FUNC_TRUNC:
-                return truncf(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::trunc(eval(expr->funcCall.args[0], t, i, x, y));
+
             case FUNC_HYPOT:
-                return sqrt(pow(eval(expr->funcCall.args[0], t, i, x, y), 2.0f) +
-                            pow(eval(expr->funcCall.args[1], t, i, x, y), 2.0f));
+                return fpm::hypot(eval(expr->funcCall.args[0], t, i, x, y), eval(expr->funcCall.args[1], t, i, x, y));
             }
-        case EXPR_BINOP:
-            float lhs = eval(expr->binop.a, t, i, x, y);
-            float rhs = eval(expr->binop.b, t, i, x, y);
-            switch (expr->binop.op)
-            {
-            case BINOP_POW:
-                return pow(lhs, rhs);
-            case BINOP_MOD:
-                return fmod(lhs, rhs);
-            case BINOP_ADD:
-                return lhs + rhs;
-            case BINOP_SUB:
-                return lhs - rhs;
-            case BINOP_MUL:
-                return lhs * rhs;
-            case BINOP_DIV:
-                if (rhs == 0)
-                {
-                    return 0;
-                }
-                return lhs / rhs;
-            case BINOP_LSHIFT:
-                return (float)((int)lhs << (int)rhs);
-            case BINOP_RSHIFT:
-                return (float)((int)lhs >> (int)rhs);
-            case BINOP_LTE:
-                return lhs <= rhs ? 1.0 : 0.0;
-            case BINOP_GTE:
-                return lhs >= rhs ? 1.0 : 0.0;
-            case BINOP_LT:
-                return lhs < rhs ? 1.0 : 0.0;
-            case BINOP_GT:
-                return lhs > rhs ? 1.0 : 0.0;
-            case BINOP_EQ:
-                return lhs == rhs ? 1.0 : 0.0;
-            case BINOP_NEQ:
-                return lhs != rhs ? 1.0 : 0.0;
-            case BINOP_OR:
-                return (lhs == 1.0 || rhs == 1.0) ? 1.0 : 0.0;
-            case BINOP_BIT_OR:
-                return (float)((int)lhs | (int)rhs);
-            case BINOP_AND:
-                return (lhs == 1.0 && rhs == 1.0) ? 1.0 : 0.0;
-            case BINOP_BIT_AND:
-                return (float)((int)lhs & (int)rhs);
-            case BINOP_BIT_XOR:
-                return (float)((int)lhs ^ (int)rhs);
-            }
+            // todo
+            // case EXPR_BINOP:
+            //     fixed_16_16 lhs = eval(expr->binop.a, t, i, x, y);
+            //     fixed_16_16 rhs = eval(expr->binop.b, t, i, x, y);
+            //     switch (expr->binop.op)
+            //     {
+            //     case BINOP_POW:
+            //         return fpm::pow(lhs, rhs);
+            //     case BINOP_MOD:
+            //         return fpm::fmod(lhs, rhs);
+            //     case BINOP_ADD:
+            //         return lhs + rhs;
+            //     case BINOP_SUB:
+            //         return lhs - rhs;
+            //     case BINOP_MUL:
+            //         return lhs * rhs;
+            //     case BINOP_DIV:
+            //         if (rhs == fixed_16_16(0))
+            //         {
+            //             return fixed_16_16(0);
+            //         }
+            //         return lhs / rhs;
+            //     case BINOP_LSHIFT:
+            //         return (float)((int)lhs << (int)rhs);
+            //     case BINOP_RSHIFT:
+            //         return (float)((int)lhs >> (int)rhs);
+            //     case BINOP_LTE:
+            //         return lhs <= rhs ? 1 : fixed_16_16(0);
+            //     case BINOP_GTE:
+            //         return lhs >= rhs ? 1 : fixed_16_16(0);
+            //     case BINOP_LT:
+            //         return lhs < rhs ? 1 : fixed_16_16(0);
+            //     case BINOP_GT:
+            //         return lhs > rhs ? 1 : fixed_16_16(0);
+            //     case BINOP_EQ:
+            //         return lhs == rhs ? 1 : fixed_16_16(0);
+            //     case BINOP_NEQ:
+            //         return lhs != rhs ? 1 : fixed_16_16(0);
+            //     case BINOP_OR:
+            //         return (lhs == 1 || rhs == 1) ? 1 : fixed_16_16(0);
+            //     case BINOP_BIT_OR:
+            //         return (float)((int)lhs | (int)rhs);
+            //     case BINOP_AND:
+            //         return (lhs == 1 && rhs == 1) ? 1 : fixed_16_16(0);
+            //     case BINOP_BIT_AND:
+            //         return (float)((int)lhs & (int)rhs);
+            //     case BINOP_BIT_XOR:
+            //         return (float)((int)lhs ^ (int)rhs);
+            //     }
         }
 
-        return 0;
+        return fixed_16_16(0);
     }
 
     const char *parseExpr(const char *input, Expr *&node)
