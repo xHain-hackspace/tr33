@@ -97,6 +97,8 @@ void send_metrics(Commands commands)
   version.toCharArray(wm.message.target_metrics.version, 20);
   commands.write_hashes(&wm.message.target_metrics);
   wm.message.target_metrics.max_strip_index = commands.leds->get_max_strip_index();
+  wm.message.target_metrics.free_heap = ESP.getFreeHeap();
+  wm.message.target_metrics.heap_size = ESP.getHeapSize();
 
   // FPS
   if (last_metrics != 0)
@@ -105,6 +107,26 @@ void send_metrics(Commands commands)
     wm.message.target_metrics.fps = fps;
     framecount = 0;
   }
+
+  pb_ostream_t stream = pb_ostream_from_buffer(udp_buffer, UDP_BUFFER_SIZE);
+  pb_encode(&stream, WireMessage_fields, &wm);
+
+  udp.beginPacket(control_host, control_port);
+  udp.write(udp_buffer, stream.bytes_written);
+  udp.endPacket();
+
+  last_metrics = millis();
+}
+
+void remote_log(String message)
+{
+  Serial.println("Remote log: " + message);
+
+  WireMessage wm = WireMessage_init_default;
+  wm.which_message = WireMessage_remote_log_tag;
+  wm.message.remote_log = (RemoteLog)RemoteLog_init_default;
+
+  message.toCharArray(wm.message.remote_log.message, 100);
 
   pb_ostream_t stream = pb_ostream_from_buffer(udp_buffer, UDP_BUFFER_SIZE);
   pb_encode(&stream, WireMessage_fields, &wm);
@@ -302,7 +324,7 @@ void wifi_loop(Commands commands)
 
           if (!status)
           {
-            Serial.printf("Protobuf decoding failed: %s\n", PB_GET_ERROR(&stream));
+            remote_log("Protobuf decoding failed: " + String(PB_GET_ERROR(&stream)));
           }
           else if (wire_message.which_message == WireMessage_color_palette_request_tag)
           {

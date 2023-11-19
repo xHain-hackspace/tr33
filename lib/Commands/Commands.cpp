@@ -1,6 +1,7 @@
 #include <Commands.h>
 #include <Modifiers.h>
 #include <pb_decode.h>
+#include <Network.h>
 
 CommandParams commands[COMMAND_COUNT];
 EffectItem effect_items[EFFECT_ITEM_COUNT];
@@ -9,6 +10,14 @@ int64_t Commands::millis_offset = 0;
 uint8_t Commands::joystick_x = 0;
 uint8_t Commands::joystick_y = 0;
 boolean Commands::joystick_button = false;
+
+FirmwareConfig Commands::firmware_config = FirmwareConfig_init_default;
+
+// debug
+uint32_t debug_interval = 1000;
+uint32_t last_debug = 0;
+bool send_debug = false;
+long durations[6];
 
 void Commands::init(LedStructure *init_leds)
 {
@@ -37,6 +46,26 @@ void Commands::handle_message(WireMessage msg)
     joystick_x = msg.message.joystick_event.x;
     joystick_y = msg.message.joystick_event.y;
     joystick_button = msg.message.joystick_event.button1;
+    break;
+  case WireMessage_firmware_config_tag:
+    if (msg.message.firmware_config.calibration_fastled != firmware_config.calibration_fastled || msg.message.firmware_config.calibration_custom != firmware_config.calibration_custom)
+    {
+      if (firmware_config.calibration_fastled)
+      {
+        FastLED.setCorrection(TypicalLEDStrip); /* 255, 176, 240 */
+      }
+      else if (firmware_config.calibration_custom)
+      {
+        FastLED.setCorrection(CRGB(255, 168, 242)); // old CRGB(255, 246, 102)
+      }
+      else
+      {
+        FastLED.setCorrection(UncorrectedColor);
+      }
+    }
+
+    firmware_config = msg.message.firmware_config;
+
     break;
   }
 }
@@ -67,6 +96,12 @@ void Commands::process(uint8_t *buffer, int bytes)
 
 void Commands::render_commands()
 {
+  if (millis() - last_debug > debug_interval)
+  {
+    send_debug = false;
+    durations[0] = millis();
+  }
+
   for (int i = 0; i < COMMAND_COUNT; i++)
   {
     if (commands[i].enabled)
@@ -80,6 +115,9 @@ void Commands::render_commands()
         break;
       case CommandParams_single_color_tag:
         single_color(leds, commands[i]);
+        break;
+      case CommandParams_calibrate_tag:
+        calibrate(leds, commands[i]);
         break;
       case CommandParams_pixel_tag:
         pixel(leds, commands[i]);
@@ -126,9 +164,6 @@ void Commands::render_commands()
       case CommandParams_mapped_ping_pong_tag:
         mapped_ping_pong(leds, commands[i]);
         break;
-      case CommandParams_beat_equalizer_tag:
-        beat_equalizer(leds, commands[i]);
-        break;
       case CommandParams_gravity_tag:
         gravity(leds, commands[i]);
         break;
@@ -138,8 +173,34 @@ void Commands::render_commands()
       case CommandParams_fairy_light_tag:
         fairy_light(leds, commands[i]);
         break;
+      case CommandParams_pixel_func_tag:
+        if (send_debug)
+        {
+          durations[1] = millis();
+        }
+        pixel_func(leds, commands[i]);
+        if (send_debug)
+        {
+          durations[2] = millis();
+        }
+        break;
+      case CommandParams_debug_tag:
+        debug(leds, commands[i]);
+        break;
       }
     }
+  }
+
+  if (send_debug)
+  {
+    durations[3] = millis();
+  }
+
+  if (send_debug)
+  {
+    last_debug = millis();
+    send_debug = false;
+    Network::remote_log("Durations. PixelFun: " + String(durations[2] - durations[1]) + " Total: " + String(durations[3] - durations[0]));
   }
 }
 
@@ -147,29 +208,9 @@ uint16_t fps;
 
 void Commands::run()
 {
-  // switch (currentMode)
-  // {
-  // case MODE_ARTNET:
-  //   artnet.read();
-  //   break;
-  // case MODE_STREAM:
-  //   // FastLED.show();
-  //   break;
-  // default:
-  // Serial.println("RUN");
   FastLED.clearData();
   render_commands();
   FastLED.show();
-  // break;
-  // }
-
-#ifdef SEND_FPS
-  if (FastLED.getFPS() != fps)
-  {
-    fps = FastLED.getFPS();
-    Serial.printf("FPS: %i\n", fps);
-  }
-#endif
 }
 
 uint64_t Commands::synced_millis()
@@ -181,7 +222,7 @@ void Commands::write_hashes(TargetMetrics *target_metrics)
 {
   for (int i = 0; i < COMMAND_COUNT; i++)
   {
-    if (commands[i].enabled && commands[i].has_hash)
+    if (commands[i].enabled)
     {
       memcpy(&target_metrics->hashes[i], &commands[i].hash, sizeof(TargetMetrics_hashes_t));
     }

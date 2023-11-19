@@ -37,10 +37,10 @@ void Commands::mapped_triangle(LedStructure *leds, CommandParams cmd)
   for (int i = 0; i < MAPPING_SIZE; i++)
   {
 
-    if (point_in_triange(leds->mapping[i][2], leds->mapping[i][3], x1, y1, x2, y2, x3, y3))
+    if (point_in_triange(leds->mapping_x(i), leds->mapping_y(i), x1, y1, x2, y2, x3, y3))
     {
       // full brightness
-      leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], color, brightness * 255);
+      leds->fade_led(leds->mapping_sprip_index(i), leds->mapping_led(i), color, brightness * 255);
     }
   }
 }

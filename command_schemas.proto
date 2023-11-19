@@ -125,6 +125,7 @@ enum ColorType {
   WHITE = 2;
 }
 
+
 message WireMessage {    
   required int32 sequence = 1 [default = 0];  // deprecated
   oneof message {
@@ -132,8 +133,10 @@ message WireMessage {
     TimeSync time_sync = 3;
     JoystickEvent joystick_event = 4;
     TargetMetrics target_metrics = 5;
+    RemoteLog remote_log = 9;
     ColorPaletteRequest color_palette_request = 6;
     ColorPaletteResponse color_palette_response = 7;
+    FirmwareConfig firmware_config = 8;
   }
 }
 
@@ -144,7 +147,7 @@ message CommandParams {
   required int32 strip_index = 4 [default = 0]; 
   required ColorPalette color_palette = 5 [default = RAINBOW];
   repeated Modifier modifiers = 6 [(nanopb).max_count = 5];
-  optional bytes hash = 100 [(nanopb).max_size = 4];
+  required bytes hash = 100 [default = "", (nanopb).max_size = 4];
   oneof type_params {
     White white = 7;
     SingleColor single_color = 8;
@@ -165,7 +168,9 @@ message CommandParams {
     MappedPingPong mapped_ping_pong = 23;
     Twang twang = 24;
     FairyLight fairy_light = 25;
-    BeatEqualizer beat_equalizer = 26;
+    Calibrate calibrate = 27;
+    PixelFunc pixel_func = 28;
+    Debug debug = 29;
   }
 }
 
@@ -188,6 +193,12 @@ message White {
 
 message SingleColor {
   required int32 color = 1 [default = 226];
+}
+
+message Calibrate {
+  required int32 red = 1 [default = 130];
+  required int32 green = 2 [default = 130];
+  required int32 blue = 3 [default = 130];
 }
 
 message Pixel {
@@ -306,9 +317,15 @@ message MappedPingPong {
   required int32 fade_distance = 3 [default = 5];
 }
 
-message BeatEqualizer {
-  required int32 color = 1 [default = 23];
-  required int32 band = 2 [default = 0, (nanopb).max_size=6];
+message PixelFunc {
+  required string function = 1 [ default = "sin(2*t-hypot(x-3.5,y-3.5))", (nanopb).max_length = 40]; 
+  required int32 color_distance = 2 [ default = 100 ] ;
+}
+
+message Debug {
+  required int32 param1 = 1 [default = 0];
+  required int32 param2 = 2 [default = 0];
+  required int32 param3 = 3 [default = 0];
 }
 
 message Twang {
@@ -336,6 +353,16 @@ message TargetMetrics {
   required string version = 4 [(nanopb).max_length = 20];
   repeated bytes hashes = 5 [(nanopb).max_size = 4, (nanopb).max_count = 8];
   required int32 max_strip_index = 6;  
+  required uint32 heap_size = 12;
+  required uint32 free_heap = 13;
+  required uint32 cpu_freq_mhz = 14;
+  required string chip_model = 15 [(nanopb).max_length = 20];
+  required uint32 chip_revision = 16;
+  required string sdk_version = 17 [(nanopb).max_length = 20];
+}
+
+message RemoteLog {
+  required string message = 1 [(nanopb).max_length = 100];
 }
 
 message Color {
@@ -351,4 +378,13 @@ message ColorPaletteRequest {
 message ColorPaletteResponse {
   required ColorPalette color_palette = 1;
   repeated uint32 colors = 2 [(nanopb).max_count = 256, (nanopb).fixed_count = true];
+}
+
+message FirmwareConfig {
+  required uint32 phash = 1 [default = 0];
+  required bool calibration_fastled = 2 [default = true];
+  required bool calibration_custom = 3 [default = false];
+  // required bool calibration_lookup_table = 4 [default = false];
+  required bool gamma_correction = 5 [default = true];
+
 }

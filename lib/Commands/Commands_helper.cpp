@@ -1,5 +1,25 @@
 #include <Commands.h>
 
+float Commands::ease_in_quad(float t)
+{
+  return t * t;
+}
+
+float Commands::ease_out_quad(float t)
+{
+  t -= 1;
+  return 1 - t * t;
+}
+
+float Commands::ease_in_out_quad(float t)
+{
+  t *= 2;
+  if (t < 1)
+    return 0.5f * t * t;
+  t -= 2;
+  return 0.5f * (t * t + 2);
+}
+
 float Commands::ease_in_cubic(float t)
 {
   return t * t * t;

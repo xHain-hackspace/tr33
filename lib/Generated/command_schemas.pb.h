@@ -137,10 +137,11 @@ typedef struct _Twang {
     char dummy_field;
 } Twang;
 
-typedef struct _BeatEqualizer { 
-    int32_t color; 
-    int32_t band; 
-} BeatEqualizer;
+typedef struct _Calibrate { 
+    int32_t red; 
+    int32_t green; 
+    int32_t blue; 
+} Calibrate;
 
 typedef struct _Color { 
     uint32_t r; 
@@ -157,11 +158,25 @@ typedef struct _ColorPaletteResponse {
     uint32_t colors[256]; 
 } ColorPaletteResponse;
 
+typedef struct _Debug { 
+    int32_t param1; 
+    int32_t param2; 
+    int32_t param3; 
+} Debug;
+
 typedef struct _FairyLight { 
     FairyPattern fairy_pattern; 
     int32_t frequency; 
     int32_t fairy_index; 
 } FairyLight;
+
+typedef struct _FirmwareConfig { 
+    uint32_t phash; 
+    bool calibration_fastled; 
+    bool calibration_custom; 
+    /* required bool calibration_lookup_table = 4 [default = false]; */
+    bool gamma_correction; 
+} FirmwareConfig;
 
 typedef struct _FlickerSparkle { 
     int32_t color; 
@@ -260,6 +275,11 @@ typedef struct _Pixel {
     int32_t led_index; 
 } Pixel;
 
+typedef struct _PixelFunc { 
+    char function[41]; 
+    int32_t color_distance; 
+} PixelFunc;
+
 typedef struct _PixelRGB { 
     int32_t red; 
     int32_t green; 
@@ -281,6 +301,10 @@ typedef struct _Rainbow {
     int32_t wave_size; 
     int32_t rainbow_size; 
 } Rainbow;
+
+typedef struct _RemoteLog { 
+    char message[101]; 
+} RemoteLog;
 
 typedef struct _Render { 
     Shape1D shape; 
@@ -311,6 +335,12 @@ typedef struct _TargetMetrics {
     pb_size_t hashes_count;
     TargetMetrics_hashes_t hashes[8]; 
     int32_t max_strip_index; 
+    uint32_t heap_size; 
+    uint32_t free_heap; 
+    uint32_t cpu_freq_mhz; 
+    char chip_model[21]; 
+    uint32_t chip_revision; 
+    char sdk_version[21]; 
 } TargetMetrics;
 
 typedef struct _TimeSync { 
@@ -351,9 +381,10 @@ typedef struct _CommandParams {
         MappedPingPong mapped_ping_pong;
         Twang twang;
         FairyLight fairy_light;
-        BeatEqualizer beat_equalizer;
+        Calibrate calibrate;
+        PixelFunc pixel_func;
+        Debug debug;
     } type_params; 
-    bool has_hash;
     CommandParams_hash_t hash; 
 } CommandParams;
 
@@ -367,6 +398,8 @@ typedef struct _WireMessage {
         TargetMetrics target_metrics;
         ColorPaletteRequest color_palette_request;
         ColorPaletteResponse color_palette_response;
+        FirmwareConfig firmware_config;
+        RemoteLog remote_log;
     } message; 
 } WireMessage;
 
@@ -407,11 +440,12 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define WireMessage_init_default                 {0, 0, {CommandParams_init_default}}
-#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}, false, {0, {0}}}
+#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}, {0, {0}}}
 #define TimeSync_init_default                    {0}
 #define Modifier_init_default                    {MovementType_SINE, 0, 50, 0, 0, 255}
 #define White_init_default                       {0}
 #define SingleColor_init_default                 {226}
+#define Calibrate_init_default                   {130, 130, 130}
 #define Pixel_init_default                       {0, 0}
 #define PixelRGB_init_default                    {130, 130, 130, 0}
 #define Rainbow_init_default                     {30, 100, 152}
@@ -427,20 +461,24 @@ extern "C" {
 #define MappedTriangle_init_default              {1, 0, 0, 255, 0, 128, 255}
 #define MappedParticles_init_default             {177, Shape2D_CIRCLE, 128, 128, 50, 50}
 #define MappedPingPong_init_default              {123, 0, 5}
-#define BeatEqualizer_init_default               {23, 0}
+#define PixelFunc_init_default                   {"sin(2*t-hypot(x-3.5,y-3.5))", 100}
+#define Debug_init_default                       {0, 0, 0}
 #define Twang_init_default                       {0}
 #define FairyLight_init_default                  {FairyPattern_ODD_EVEN, 20, 0}
 #define JoystickEvent_init_default               {0, 0, false, false, false, false}
-#define TargetMetrics_init_default               {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}, 0}
+#define TargetMetrics_init_default               {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}, 0, 0, 0, 0, "", 0, ""}
+#define RemoteLog_init_default                   {""}
 #define Color_init_default                       {0, 0, 0}
 #define ColorPaletteRequest_init_default         {_ColorPalette_MIN}
 #define ColorPaletteResponse_init_default        {_ColorPalette_MIN, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
+#define FirmwareConfig_init_default              {0u, true, false, true}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
-#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}, false, {0, {0}}}
+#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}, {0, {0}}}
 #define TimeSync_init_zero                       {0}
 #define Modifier_init_zero                       {_MovementType_MIN, 0, 0, 0, 0, 0}
 #define White_init_zero                          {0}
 #define SingleColor_init_zero                    {0}
+#define Calibrate_init_zero                      {0, 0, 0}
 #define Pixel_init_zero                          {0, 0}
 #define PixelRGB_init_zero                       {0, 0, 0, 0}
 #define Rainbow_init_zero                        {0, 0, 0}
@@ -456,27 +494,38 @@ extern "C" {
 #define MappedTriangle_init_zero                 {0, 0, 0, 0, 0, 0, 0}
 #define MappedParticles_init_zero                {0, _Shape2D_MIN, 0, 0, 0, 0}
 #define MappedPingPong_init_zero                 {0, 0, 0}
-#define BeatEqualizer_init_zero                  {0, 0}
+#define PixelFunc_init_zero                      {"", 0}
+#define Debug_init_zero                          {0, 0, 0}
 #define Twang_init_zero                          {0}
 #define FairyLight_init_zero                     {_FairyPattern_MIN, 0, 0}
 #define JoystickEvent_init_zero                  {0, 0, 0, 0, 0, 0}
-#define TargetMetrics_init_zero                  {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}, 0}
+#define TargetMetrics_init_zero                  {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}, 0, 0, 0, 0, "", 0, ""}
+#define RemoteLog_init_zero                      {""}
 #define Color_init_zero                          {0, 0, 0}
 #define ColorPaletteRequest_init_zero            {_ColorPalette_MIN}
 #define ColorPaletteResponse_init_zero           {_ColorPalette_MIN, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
+#define FirmwareConfig_init_zero                 {0, 0, 0, 0}
 
 /* Field tags (for use in manual encoding/decoding) */
-#define BeatEqualizer_color_tag                  1
-#define BeatEqualizer_band_tag                   2
+#define Calibrate_red_tag                        1
+#define Calibrate_green_tag                      2
+#define Calibrate_blue_tag                       3
 #define Color_r_tag                              1
 #define Color_g_tag                              2
 #define Color_b_tag                              3
 #define ColorPaletteRequest_color_palette_tag    1
 #define ColorPaletteResponse_color_palette_tag   1
 #define ColorPaletteResponse_colors_tag          2
+#define Debug_param1_tag                         1
+#define Debug_param2_tag                         2
+#define Debug_param3_tag                         3
 #define FairyLight_fairy_pattern_tag             1
 #define FairyLight_frequency_tag                 2
 #define FairyLight_fairy_index_tag               3
+#define FirmwareConfig_phash_tag                 1
+#define FirmwareConfig_calibration_fastled_tag   2
+#define FirmwareConfig_calibration_custom_tag    3
+#define FirmwareConfig_gamma_correction_tag      5
 #define FlickerSparkle_color_tag                 1
 #define FlickerSparkle_sparkle_width_tag         2
 #define FlickerSparkle_sparles_per_second_tag    3
@@ -539,6 +588,8 @@ extern "C" {
 #define PingPong_period_100ms_tag                6
 #define Pixel_color_tag                          1
 #define Pixel_led_index_tag                      2
+#define PixelFunc_function_tag                   1
+#define PixelFunc_color_distance_tag             2
 #define PixelRGB_red_tag                         1
 #define PixelRGB_green_tag                       2
 #define PixelRGB_blue_tag                        3
@@ -551,6 +602,7 @@ extern "C" {
 #define Rainbow_speed_tag                        1
 #define Rainbow_wave_size_tag                    2
 #define Rainbow_rainbow_size_tag                 3
+#define RemoteLog_message_tag                    1
 #define Render_shape_tag                         1
 #define Render_color_tag                         2
 #define Render_position_tag                      3
@@ -567,6 +619,12 @@ extern "C" {
 #define TargetMetrics_version_tag                4
 #define TargetMetrics_hashes_tag                 5
 #define TargetMetrics_max_strip_index_tag        6
+#define TargetMetrics_heap_size_tag              12
+#define TargetMetrics_free_heap_tag              13
+#define TargetMetrics_cpu_freq_mhz_tag           14
+#define TargetMetrics_chip_model_tag             15
+#define TargetMetrics_chip_revision_tag          16
+#define TargetMetrics_sdk_version_tag            17
 #define TimeSync_millis_tag                      1
 #define White_color_temperature_tag              1
 #define CommandParams_index_tag                  1
@@ -594,7 +652,9 @@ extern "C" {
 #define CommandParams_mapped_ping_pong_tag       23
 #define CommandParams_twang_tag                  24
 #define CommandParams_fairy_light_tag            25
-#define CommandParams_beat_equalizer_tag         26
+#define CommandParams_calibrate_tag              27
+#define CommandParams_pixel_func_tag             28
+#define CommandParams_debug_tag                  29
 #define CommandParams_hash_tag                   100
 #define WireMessage_sequence_tag                 1
 #define WireMessage_command_params_tag           2
@@ -603,6 +663,8 @@ extern "C" {
 #define WireMessage_target_metrics_tag           5
 #define WireMessage_color_palette_request_tag    6
 #define WireMessage_color_palette_response_tag   7
+#define WireMessage_firmware_config_tag          8
+#define WireMessage_remote_log_tag               9
 
 /* Struct field encoding specification for nanopb */
 #define WireMessage_FIELDLIST(X, a) \
@@ -612,7 +674,9 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (message,time_sync,message.time_sync),   3) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,joystick_event,message.joystick_event),   4) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,target_metrics,message.target_metrics),   5) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,color_palette_request,message.color_palette_request),   6) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (message,color_palette_response,message.color_palette_response),   7)
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,color_palette_response,message.color_palette_response),   7) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,firmware_config,message.firmware_config),   8) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,remote_log,message.remote_log),   9)
 #define WireMessage_CALLBACK NULL
 #define WireMessage_DEFAULT (const pb_byte_t*)"\x08\x00\x00"
 #define WireMessage_message_command_params_MSGTYPE CommandParams
@@ -621,6 +685,8 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (message,color_palette_response,message.color
 #define WireMessage_message_target_metrics_MSGTYPE TargetMetrics
 #define WireMessage_message_color_palette_request_MSGTYPE ColorPaletteRequest
 #define WireMessage_message_color_palette_response_MSGTYPE ColorPaletteResponse
+#define WireMessage_message_firmware_config_MSGTYPE FirmwareConfig
+#define WireMessage_message_remote_log_MSGTYPE RemoteLog
 
 #define CommandParams_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    index,             1) \
@@ -648,10 +714,12 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_particles,type_params.map
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,mapped_ping_pong,type_params.mapped_ping_pong),  23) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,twang,type_params.twang),  24) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fairy_light,type_params.fairy_light),  25) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,beat_equalizer,type_params.beat_equalizer),  26) \
-X(a, STATIC,   OPTIONAL, BYTES,    hash,            100)
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,calibrate,type_params.calibrate),  27) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel_func,type_params.pixel_func),  28) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,debug,type_params.debug),  29) \
+X(a, STATIC,   REQUIRED, BYTES,    hash,            100)
 #define CommandParams_CALLBACK NULL
-#define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\x00"
+#define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\xa2\x06\x00\x00"
 #define CommandParams_modifiers_MSGTYPE Modifier
 #define CommandParams_type_params_white_MSGTYPE White
 #define CommandParams_type_params_single_color_MSGTYPE SingleColor
@@ -672,7 +740,9 @@ X(a, STATIC,   OPTIONAL, BYTES,    hash,            100)
 #define CommandParams_type_params_mapped_ping_pong_MSGTYPE MappedPingPong
 #define CommandParams_type_params_twang_MSGTYPE Twang
 #define CommandParams_type_params_fairy_light_MSGTYPE FairyLight
-#define CommandParams_type_params_beat_equalizer_MSGTYPE BeatEqualizer
+#define CommandParams_type_params_calibrate_MSGTYPE Calibrate
+#define CommandParams_type_params_pixel_func_MSGTYPE PixelFunc
+#define CommandParams_type_params_debug_MSGTYPE Debug
 
 #define TimeSync_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UINT64,   millis,            1)
@@ -698,6 +768,13 @@ X(a, STATIC,   REQUIRED, INT32,    color_temperature,   1)
 X(a, STATIC,   REQUIRED, INT32,    color,             1)
 #define SingleColor_CALLBACK NULL
 #define SingleColor_DEFAULT (const pb_byte_t*)"\x08\xe2\x01\x00"
+
+#define Calibrate_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, INT32,    red,               1) \
+X(a, STATIC,   REQUIRED, INT32,    green,             2) \
+X(a, STATIC,   REQUIRED, INT32,    blue,              3)
+#define Calibrate_CALLBACK NULL
+#define Calibrate_DEFAULT (const pb_byte_t*)"\x08\x82\x01\x10\x82\x01\x18\x82\x01\x00"
 
 #define Pixel_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    color,             1) \
@@ -831,11 +908,18 @@ X(a, STATIC,   REQUIRED, INT32,    fade_distance,     3)
 #define MappedPingPong_CALLBACK NULL
 #define MappedPingPong_DEFAULT (const pb_byte_t*)"\x08\x7b\x10\x00\x18\x05\x00"
 
-#define BeatEqualizer_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, INT32,    color,             1) \
-X(a, STATIC,   REQUIRED, INT32,    band,              2)
-#define BeatEqualizer_CALLBACK NULL
-#define BeatEqualizer_DEFAULT (const pb_byte_t*)"\x08\x17\x10\x00\x00"
+#define PixelFunc_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, STRING,   function,          1) \
+X(a, STATIC,   REQUIRED, INT32,    color_distance,    2)
+#define PixelFunc_CALLBACK NULL
+#define PixelFunc_DEFAULT (const pb_byte_t*)"\x0a\x1b\x73\x69\x6e\x28\x32\x2a\x74\x2d\x68\x79\x70\x6f\x74\x28\x78\x2d\x33\x2e\x35\x2c\x79\x2d\x33\x2e\x35\x29\x29\x10\x64\x00"
+
+#define Debug_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, INT32,    param1,            1) \
+X(a, STATIC,   REQUIRED, INT32,    param2,            2) \
+X(a, STATIC,   REQUIRED, INT32,    param3,            3)
+#define Debug_CALLBACK NULL
+#define Debug_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x00\x18\x00\x00"
 
 #define Twang_FIELDLIST(X, a) \
 
@@ -865,9 +949,20 @@ X(a, STATIC,   REQUIRED, INT32,    fps,               2) \
 X(a, STATIC,   REQUIRED, INT32,    wifi_strength,     3) \
 X(a, STATIC,   REQUIRED, STRING,   version,           4) \
 X(a, STATIC,   REPEATED, BYTES,    hashes,            5) \
-X(a, STATIC,   REQUIRED, INT32,    max_strip_index,   6)
+X(a, STATIC,   REQUIRED, INT32,    max_strip_index,   6) \
+X(a, STATIC,   REQUIRED, UINT32,   heap_size,        12) \
+X(a, STATIC,   REQUIRED, UINT32,   free_heap,        13) \
+X(a, STATIC,   REQUIRED, UINT32,   cpu_freq_mhz,     14) \
+X(a, STATIC,   REQUIRED, STRING,   chip_model,       15) \
+X(a, STATIC,   REQUIRED, UINT32,   chip_revision,    16) \
+X(a, STATIC,   REQUIRED, STRING,   sdk_version,      17)
 #define TargetMetrics_CALLBACK NULL
 #define TargetMetrics_DEFAULT NULL
+
+#define RemoteLog_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, STRING,   message,           1)
+#define RemoteLog_CALLBACK NULL
+#define RemoteLog_DEFAULT NULL
 
 #define Color_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UINT32,   r,                 1) \
@@ -887,12 +982,21 @@ X(a, STATIC,   FIXARRAY, UINT32,   colors,            2)
 #define ColorPaletteResponse_CALLBACK NULL
 #define ColorPaletteResponse_DEFAULT NULL
 
+#define FirmwareConfig_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, UINT32,   phash,             1) \
+X(a, STATIC,   REQUIRED, BOOL,     calibration_fastled,   2) \
+X(a, STATIC,   REQUIRED, BOOL,     calibration_custom,   3) \
+X(a, STATIC,   REQUIRED, BOOL,     gamma_correction,   5)
+#define FirmwareConfig_CALLBACK NULL
+#define FirmwareConfig_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x01\x18\x00\x28\x01\x00"
+
 extern const pb_msgdesc_t WireMessage_msg;
 extern const pb_msgdesc_t CommandParams_msg;
 extern const pb_msgdesc_t TimeSync_msg;
 extern const pb_msgdesc_t Modifier_msg;
 extern const pb_msgdesc_t White_msg;
 extern const pb_msgdesc_t SingleColor_msg;
+extern const pb_msgdesc_t Calibrate_msg;
 extern const pb_msgdesc_t Pixel_msg;
 extern const pb_msgdesc_t PixelRGB_msg;
 extern const pb_msgdesc_t Rainbow_msg;
@@ -908,14 +1012,17 @@ extern const pb_msgdesc_t MappedShape_msg;
 extern const pb_msgdesc_t MappedTriangle_msg;
 extern const pb_msgdesc_t MappedParticles_msg;
 extern const pb_msgdesc_t MappedPingPong_msg;
-extern const pb_msgdesc_t BeatEqualizer_msg;
+extern const pb_msgdesc_t PixelFunc_msg;
+extern const pb_msgdesc_t Debug_msg;
 extern const pb_msgdesc_t Twang_msg;
 extern const pb_msgdesc_t FairyLight_msg;
 extern const pb_msgdesc_t JoystickEvent_msg;
 extern const pb_msgdesc_t TargetMetrics_msg;
+extern const pb_msgdesc_t RemoteLog_msg;
 extern const pb_msgdesc_t Color_msg;
 extern const pb_msgdesc_t ColorPaletteRequest_msg;
 extern const pb_msgdesc_t ColorPaletteResponse_msg;
+extern const pb_msgdesc_t FirmwareConfig_msg;
 
 /* Defines for backwards compatibility with code written before nanopb-0.4.0 */
 #define WireMessage_fields &WireMessage_msg
@@ -924,6 +1031,7 @@ extern const pb_msgdesc_t ColorPaletteResponse_msg;
 #define Modifier_fields &Modifier_msg
 #define White_fields &White_msg
 #define SingleColor_fields &SingleColor_msg
+#define Calibrate_fields &Calibrate_msg
 #define Pixel_fields &Pixel_msg
 #define PixelRGB_fields &PixelRGB_msg
 #define Rainbow_fields &Rainbow_msg
@@ -939,22 +1047,27 @@ extern const pb_msgdesc_t ColorPaletteResponse_msg;
 #define MappedTriangle_fields &MappedTriangle_msg
 #define MappedParticles_fields &MappedParticles_msg
 #define MappedPingPong_fields &MappedPingPong_msg
-#define BeatEqualizer_fields &BeatEqualizer_msg
+#define PixelFunc_fields &PixelFunc_msg
+#define Debug_fields &Debug_msg
 #define Twang_fields &Twang_msg
 #define FairyLight_fields &FairyLight_msg
 #define JoystickEvent_fields &JoystickEvent_msg
 #define TargetMetrics_fields &TargetMetrics_msg
+#define RemoteLog_fields &RemoteLog_msg
 #define Color_fields &Color_msg
 #define ColorPaletteRequest_fields &ColorPaletteRequest_msg
 #define ColorPaletteResponse_fields &ColorPaletteResponse_msg
+#define FirmwareConfig_fields &FirmwareConfig_msg
 
 /* Maximum encoded size of messages (where known) */
-#define BeatEqualizer_size                       22
+#define Calibrate_size                           33
 #define ColorPaletteRequest_size                 2
 #define ColorPaletteResponse_size                1538
 #define Color_size                               18
 #define CommandParams_size                       420
+#define Debug_size                               33
 #define FairyLight_size                          24
+#define FirmwareConfig_size                      12
 #define FlickerSparkle_size                      79
 #define Gravity_size                             46
 #define JoystickEvent_size                       30
@@ -966,14 +1079,16 @@ extern const pb_msgdesc_t ColorPaletteResponse_msg;
 #define MappedTriangle_size                      77
 #define Modifier_size                            57
 #define PingPong_size                            48
+#define PixelFunc_size                           53
 #define PixelRGB_size                            44
 #define Pixel_size                               22
 #define Rain_size                                46
 #define Rainbow_size                             33
+#define RemoteLog_size                           102
 #define Render_size                              35
 #define SingleColor_size                         11
 #define Sparkle_size                             46
-#define TargetMetrics_size                       125
+#define TargetMetrics_size                       195
 #define TimeSync_size                            11
 #define Twang_size                               0
 #define White_size                               11
@@ -988,14 +1103,14 @@ extern const pb_msgdesc_t ColorPaletteResponse_msg;
 namespace nanopb {
 template <>
 struct MessageDescriptor<WireMessage> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 7;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 9;
     static inline const pb_msgdesc_t* fields() {
         return &WireMessage_msg;
     }
 };
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 27;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 29;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
     }
@@ -1026,6 +1141,13 @@ struct MessageDescriptor<SingleColor> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 1;
     static inline const pb_msgdesc_t* fields() {
         return &SingleColor_msg;
+    }
+};
+template <>
+struct MessageDescriptor<Calibrate> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
+    static inline const pb_msgdesc_t* fields() {
+        return &Calibrate_msg;
     }
 };
 template <>
@@ -1134,10 +1256,17 @@ struct MessageDescriptor<MappedPingPong> {
     }
 };
 template <>
-struct MessageDescriptor<BeatEqualizer> {
+struct MessageDescriptor<PixelFunc> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 2;
     static inline const pb_msgdesc_t* fields() {
-        return &BeatEqualizer_msg;
+        return &PixelFunc_msg;
+    }
+};
+template <>
+struct MessageDescriptor<Debug> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
+    static inline const pb_msgdesc_t* fields() {
+        return &Debug_msg;
     }
 };
 template <>
@@ -1163,9 +1292,16 @@ struct MessageDescriptor<JoystickEvent> {
 };
 template <>
 struct MessageDescriptor<TargetMetrics> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 6;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 12;
     static inline const pb_msgdesc_t* fields() {
         return &TargetMetrics_msg;
+    }
+};
+template <>
+struct MessageDescriptor<RemoteLog> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 1;
+    static inline const pb_msgdesc_t* fields() {
+        return &RemoteLog_msg;
     }
 };
 template <>
@@ -1187,6 +1323,13 @@ struct MessageDescriptor<ColorPaletteResponse> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 2;
     static inline const pb_msgdesc_t* fields() {
         return &ColorPaletteResponse_msg;
+    }
+};
+template <>
+struct MessageDescriptor<FirmwareConfig> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 4;
+    static inline const pb_msgdesc_t* fields() {
+        return &FirmwareConfig_msg;
     }
 };
 }  // namespace nanopb

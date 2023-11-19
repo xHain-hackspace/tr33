@@ -48,7 +48,7 @@ void Commands::load_palettes()
   palettes[7] = wled_palettes[2];
   palettes[8] = wled_palettes[3];
   palettes[9] = wled_palettes[4];
-  palettes[10] = wled_palettes[5];
+  palettes[10] = wled_palettes[6];
 }
 
 CRGB Commands::color_from_palette(CommandParams cmd, uint8_t color_index)

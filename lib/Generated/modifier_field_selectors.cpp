@@ -316,15 +316,42 @@ int *Modifiers::value_from_type_param(CommandParams *cmd, uint8_t field_index)
     
     }
   
-  case CommandParams_beat_equalizer_tag:
+  case CommandParams_calibrate_tag:
     switch (field_index)
     {
     
     case MIN_INDEX + 0:
-      return &cmd->type_params.beat_equalizer.color;
+      return &cmd->type_params.calibrate.red;
     
     case MIN_INDEX + 1:
-      return &cmd->type_params.beat_equalizer.band;
+      return &cmd->type_params.calibrate.green;
+    
+    case MIN_INDEX + 2:
+      return &cmd->type_params.calibrate.blue;
+    
+    }
+  
+  case CommandParams_pixel_func_tag:
+    switch (field_index)
+    {
+    
+    case MIN_INDEX + 0:
+      return &cmd->type_params.pixel_func.color_distance;
+    
+    }
+  
+  case CommandParams_debug_tag:
+    switch (field_index)
+    {
+    
+    case MIN_INDEX + 0:
+      return &cmd->type_params.debug.param1;
+    
+    case MIN_INDEX + 1:
+      return &cmd->type_params.debug.param2;
+    
+    case MIN_INDEX + 2:
+      return &cmd->type_params.debug.param3;
     
     }
   

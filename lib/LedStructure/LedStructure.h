@@ -37,10 +37,19 @@
 
 class LedStructure
 {
+private:
+  static const float mapping[][4];
+
 public:
   static CRGB leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
-  static float mapping[][4];
   virtual void init();
+
+  // mapping
+  uint8_t mapping_sprip_index(uint16_t index);
+  int mapping_led(uint16_t index);
+  float mapping_x(uint16_t index);
+  float mapping_y(uint16_t index);
+  uint16_t mapping_size();
 
   // set leds
   virtual void set_led(uint8_t strip_index, int led, CRGB color);
@@ -56,20 +65,8 @@ public:
   // fairy lights
   virtual FairyLightsControl *get_fairy_light(uint8_t index);
 
-  // commands
-  void beats(uint8_t *data);
-  void random_walk(uint8_t *data);
-  void debug(uint8_t *data);
-  void fireworks(uint8_t *data);
-  void rotating_sectors(uint8_t *data);
-  void rotating_plane(uint8_t *data);
-  void twang(uint8_t *data);
-
   // events - rendered once
   void joystick(uint8_t *data);
-
-  // artnet
-  static void artnet_packet_callback(uint16_t universe, uint16_t length, uint8_t sequence, uint8_t *data);
 
   // misc
   virtual String get_name();

@@ -24,6 +24,9 @@ PB_BIND(White, White, AUTO)
 PB_BIND(SingleColor, SingleColor, AUTO)
 
 
+PB_BIND(Calibrate, Calibrate, AUTO)
+
+
 PB_BIND(Pixel, Pixel, AUTO)
 
 
@@ -69,7 +72,10 @@ PB_BIND(MappedParticles, MappedParticles, AUTO)
 PB_BIND(MappedPingPong, MappedPingPong, AUTO)
 
 
-PB_BIND(BeatEqualizer, BeatEqualizer, AUTO)
+PB_BIND(PixelFunc, PixelFunc, AUTO)
+
+
+PB_BIND(Debug, Debug, AUTO)
 
 
 PB_BIND(Twang, Twang, AUTO)
@@ -84,6 +90,9 @@ PB_BIND(JoystickEvent, JoystickEvent, AUTO)
 PB_BIND(TargetMetrics, TargetMetrics, AUTO)
 
 
+PB_BIND(RemoteLog, RemoteLog, AUTO)
+
+
 PB_BIND(Color, Color, AUTO)
 
 
@@ -91,6 +100,9 @@ PB_BIND(ColorPaletteRequest, ColorPaletteRequest, AUTO)
 
 
 PB_BIND(ColorPaletteResponse, ColorPaletteResponse, 2)
+
+
+PB_BIND(FirmwareConfig, FirmwareConfig, AUTO)
 
 
 

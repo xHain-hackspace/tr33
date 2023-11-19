@@ -34,10 +34,10 @@ void Commands::render_mappled_slope(LedStructure *leds, float x1, float y1, floa
   bool render_full = false;
   bool render_fade = false;
 
-  for (int i = 0; i < MAPPING_SIZE; i++)
+  for (int i = 0; i < leds->mapping_size(); i++)
   {
     // point (x,y) is above the line if y > slope*x + height
-    distance = leds->mapping[i][3] - (slope * leds->mapping[i][2] + height);
+    distance = leds->mapping_y(i) - (slope * leds->mapping_x(i) + height);
 
     // render above or below the line depending on which point is first on the x axis
     render_full = false;
@@ -98,11 +98,11 @@ void Commands::render_mappled_slope(LedStructure *leds, float x1, float y1, floa
     {
       if (slope_type == SlopeType_COLOR_SHIFT)
       {
-        leds->invert_led(leds->mapping[i][0], leds->mapping[i][1], current_brightness * 255);
+        leds->invert_led(leds->mapping_sprip_index(i), leds->mapping_led(i), current_brightness * 255);
       }
       else
       {
-        leds->fade_led(leds->mapping[i][0], leds->mapping[i][1], target_color, current_brightness * 255);
+        leds->fade_led(leds->mapping_sprip_index(i), leds->mapping_led(i), target_color, current_brightness * 255);
       }
     }
   }

@@ -68,6 +68,7 @@ public:
   static uint8_t joystick_x;
   static uint8_t joystick_y;
   static bool joystick_button;
+  static FirmwareConfig firmware_config;
 
   void init(LedStructure *leds);
   void process(uint8_t *command, int bytes);
@@ -87,6 +88,7 @@ public:
   // Commands
   void white(LedStructure *leds, CommandParams cmd);
   void single_color(LedStructure *leds, CommandParams cmd);
+  void calibrate(LedStructure *leds, CommandParams cmd);
   void pixel(LedStructure *leds, CommandParams cmd);
   void pixel_rgb(LedStructure *leds, CommandParams cmd);
   void rainbow(LedStructure *leds, CommandParams cmd);
@@ -102,15 +104,19 @@ public:
   void mapped_triangle(LedStructure *leds, CommandParams cmd);
   void mapped_particles(LedStructure *leds, CommandParams cmd);
   void mapped_ping_pong(LedStructure *leds, CommandParams cmd);
-  void beat_equalizer(LedStructure *leds, CommandParams cmd);
   void gravity(LedStructure *leds, CommandParams cmd);
   void twang(LedStructure *leds);
   void fairy_light(LedStructure *leds, CommandParams cmd);
+  void pixel_func(LedStructure *leds, CommandParams cmd);
+  void debug(LedStructure *leds, CommandParams cmd);
 
   // Events
   void gravity_event(LedStructure *leds, uint8_t *data);
 
   // float easing functions
+  static float ease_in_quad(float t);
+  static float ease_out_quad(float t);
+  static float ease_in_out_quad(float t);
   static float ease_in_cubic(float t);
   static float ease_out_cubic(float t);
   static float ease_in_out_cubic(float t);

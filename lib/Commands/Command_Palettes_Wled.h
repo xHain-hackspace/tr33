@@ -18,6 +18,18 @@
 
 #define WLED_PALETTE_COUNT 43
 
+DEFINE_GRADIENT_PALETTE(lava_gb){
+    0, 5, 31, 57,
+    64, 74, 36, 128,
+    128, 197, 58, 157,
+    255, 255, 142, 128};
+
+DEFINE_GRADIENT_PALETTE(cherry_melon){
+    0, 252, 222, 234,
+    64, 255, 77, 109,
+    128, 38, 89, 53,
+    255, 1, 40, 36};
+
 // DEFINE_GRADIENT_PALETTE(ib_jul01_gp){
 //     0, 194, 1, 1,
 //     94, 1, 29, 18,
@@ -464,7 +476,7 @@ DEFINE_GRADIENT_PALETTE(es_rivendell_15_gp){
 //     191, 42, 255, 45,
 //     255, 255, 255, 0};
 
-//Custom palette by Aircoookie
+// Custom palette by Aircoookie
 
 DEFINE_GRADIENT_PALETTE(Orange_Teal_gp){
     0, 0, 150, 92,
@@ -472,7 +484,7 @@ DEFINE_GRADIENT_PALETTE(Orange_Teal_gp){
     200, 255, 72, 0,
     255, 255, 72, 0};
 
-//Custom palette by Aircoookie
+// Custom palette by Aircoookie
 
 // DEFINE_GRADIENT_PALETTE(Tiamat_gp){
 //     0, 1, 2, 14,        //gc
@@ -487,7 +499,7 @@ DEFINE_GRADIENT_PALETTE(Orange_Teal_gp){
 //     240, 193, 213, 253, //gc from 203,239,253
 //     255, 255, 249, 255};
 
-//Custom palette by Aircoookie
+// Custom palette by Aircoookie
 
 // DEFINE_GRADIENT_PALETTE(April_Night_gp){
 //     0, 1, 5, 45, //deep blue
@@ -519,16 +531,16 @@ DEFINE_GRADIENT_PALETTE(Orangery_gp){
     210, 241, 82, 17,
     255, 213, 37, 4};
 
-//inspired by Mark Kriegsman https://gist.github.com/kriegsman/756ea6dcae8e30845b5a
-// DEFINE_GRADIENT_PALETTE(C9_gp){
-//     0, 184, 4, 0, //red
-//     60, 184, 4, 0,
-//     65, 144, 44, 2, //amber
-//     125, 144, 44, 2,
-//     130, 4, 96, 2, //green
-//     190, 4, 96, 2,
-//     195, 7, 7, 88, //blue
-//     255, 7, 7, 88};
+// inspired by Mark Kriegsman https://gist.github.com/kriegsman/756ea6dcae8e30845b5a
+//  DEFINE_GRADIENT_PALETTE(C9_gp){
+//      0, 184, 4, 0, //red
+//      60, 184, 4, 0,
+//      65, 144, 44, 2, //amber
+//      125, 144, 44, 2,
+//      130, 4, 96, 2, //green
+//      190, 4, 96, 2,
+//      195, 7, 7, 88, //blue
+//      255, 7, 7, 88};
 
 DEFINE_GRADIENT_PALETTE(Sakura_gp){
     0, 196, 19, 10,
@@ -538,20 +550,20 @@ DEFINE_GRADIENT_PALETTE(Sakura_gp){
     255, 223, 13, 17};
 
 DEFINE_GRADIENT_PALETTE(Aurora_gp){
-    0, 1, 5, 45, //deep blue
+    0, 1, 5, 45, // deep blue
     64, 0, 200, 23,
-    128, 0, 255, 0, //green
+    128, 0, 255, 0, // green
     170, 0, 243, 45,
     200, 0, 135, 7,
-    255, 1, 5, 45}; //deep blue
+    255, 1, 5, 45}; // deep blue
 
 DEFINE_GRADIENT_PALETTE(Atlantica_gp){
-    0, 0, 28, 112,   //#001C70
-    50, 32, 96, 255, //#2060FF
+    0, 0, 28, 112,   // #001C70
+    50, 32, 96, 255, // #2060FF
     100, 0, 243, 45,
-    150, 12, 95, 82,   //#0C5F52
-    200, 25, 190, 95,  //#19BE5F
-    255, 40, 170, 80}; //#28AA50
+    150, 12, 95, 82,   // #0C5F52
+    200, 25, 190, 95,  // #19BE5F
+    255, 40, 170, 80}; // #28AA50
 
 // DEFINE_GRADIENT_PALETTE(C9_2_gp){
 //     0, 6, 126, 2, //green
@@ -565,16 +577,16 @@ DEFINE_GRADIENT_PALETTE(Atlantica_gp){
 //     180, 137, 85, 2, //yellow
 //     255, 137, 85, 2};
 
-//C9, but brighter and with a less purple blue
-// DEFINE_GRADIENT_PALETTE(C9_new_gp){
-//     0, 255, 5, 0, //red
-//     60, 255, 5, 0,
-//     60, 196, 57, 2, //amber (start 61?)
-//     120, 196, 57, 2,
-//     120, 6, 126, 2, //green (start 126?)
-//     180, 6, 126, 2,
-//     180, 4, 30, 114, //blue (start 191?)
-//     255, 4, 30, 114};
+// C9, but brighter and with a less purple blue
+//  DEFINE_GRADIENT_PALETTE(C9_new_gp){
+//      0, 255, 5, 0, //red
+//      60, 255, 5, 0,
+//      60, 196, 57, 2, //amber (start 61?)
+//      120, 196, 57, 2,
+//      120, 6, 126, 2, //green (start 126?)
+//      180, 6, 126, 2,
+//      180, 4, 30, 114, //blue (start 191?)
+//      255, 4, 30, 114};
 
 // Gradient palette "temperature_gp", originally from
 // http://soliton.vm.bytemark.co.uk/pub/cpt-city/arendal/tn/temperature.png.index.html
@@ -615,7 +627,7 @@ DEFINE_GRADIENT_PALETTE(Atlantica_gp){
 // by name every time.
 const TProgmemRGBGradientPalettePtr wled_palettes[] = {
     // Sunset_Real_gp,              //13-00 Sunset
-    es_rivendell_15_gp, //14-01 Rivendell
+    es_rivendell_15_gp, // 14-01 Rivendell
     // es_ocean_breeze_036_gp,      //15-02 Breeze
     // rgi_15_gp,                   //16-03 Red & Blue
     // retro2_16_gp,                //17-04 Yellowout
@@ -645,14 +657,16 @@ const TProgmemRGBGradientPalettePtr wled_palettes[] = {
     // BlacK_Magenta_Red_gp,        //41-28 Magred
     // BlacK_Red_Magenta_Yellow_gp, //42-29 Yelmag
     // Blue_Cyan_Yellow_gp,         //43-30 Yelblu
-    Orange_Teal_gp, //44-31 Orange & Teal
+    Orange_Teal_gp, // 44-31 Orange & Teal
     // Tiamat_gp,                   //45-32 Tiamat
     // April_Night_gp,              //46-33 April Night
-    Orangery_gp, //47-34 Orangery
+    Orangery_gp, // 47-34 Orangery
     // C9_gp,                       //48-35 C9
-    Sakura_gp,    //49-36 Sakura
-    Aurora_gp,    //50-37 Aurora
-    Atlantica_gp, //51-38 Atlantica
+    Sakura_gp,    // 49-36 Sakura
+    Aurora_gp,    // 50-37 Aurora
+    Atlantica_gp, // 51-38 Atlantica
+    // lava_gb,
+    cherry_melon
     // C9_2_gp,                     //52-39 C9 2
     // C9_new_gp,                   //53-40 C9 New
     // temperature_gp,              //54-41 Temperature

@@ -1,7 +1,6 @@
 #include <Commands.h>
 #include <LedStructure.h>
 #include <command_schemas.pb.h>
-// #include <Modifiers.h>
 
 CRGB LedStructure::leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
 
@@ -61,13 +60,16 @@ void LedStructure::init()
   commands[0] = (CommandParams)CommandParams_init_default;
   commands[0].which_type_params = CommandParams_sparkle_tag;
   commands[0].type_params.sparkle = sparkle;
-  commands[0].color_palette = ColorPalette_FOREST;
-  commands[0].has_hash = true;
-  commands[0].hash.size = 1;
-  commands[0].hash.bytes[0] = 23;
+  commands[0].color_palette = ColorPalette_OCEAN;
 
-  // commands[0].modifiers[0].field_index = 1;
-  // commands[0].modifiers[0].field_index = 1;
+  // String init_program = String("sin(2*t-hypot(x-5,y-5))");
+  // String init_program = String("x/16");
+  // PixelFunc pixel_func = PixelFunc_init_default;
+  // init_program.toCharArray(pixel_func.function, 40);
+  // pixel_func.function_hash = 1;
+  // commands[0] = (CommandParams)CommandParams_init_default;
+  // commands[0].which_type_params = CommandParams_pixel_func_tag;
+  // commands[0].type_params.pixel_func = pixel_func;
 }
 
 //
@@ -98,6 +100,10 @@ CRGB LedStructure::get_led(uint8_t strip_index, int led)
   else if (strip_index <= STRIP_COUNT)
   {
     return leds[strip_index - 1][led];
+  }
+  else
+  {
+    return CRGB::Black;
   }
 }
 
@@ -167,44 +173,34 @@ uint8_t LedStructure::random_strip(uint8_t strip_index)
   }
 }
 
+uint8_t LedStructure::mapping_sprip_index(uint16_t index)
+{
+  return pgm_read_float(&mapping[index][0]);
+}
+
+int LedStructure::mapping_led(uint16_t index)
+{
+  return pgm_read_float(&mapping[index][1]);
+}
+
+float LedStructure::mapping_x(uint16_t index)
+{
+  return pgm_read_float(&mapping[index][2]);
+}
+
+float LedStructure::mapping_y(uint16_t index)
+{
+  return pgm_read_float(&mapping[index][3]);
+}
+
+uint16_t LedStructure::mapping_size()
+{
+  return MAPPING_SIZE;
+}
+
 FairyLightsControl *LedStructure::get_fairy_light(uint8_t index)
 {
   return nullptr;
-}
-
-void LedStructure::beats(uint8_t *data)
-{
-  return;
-}
-
-void LedStructure::random_walk(uint8_t *data)
-{
-  return;
-}
-
-void LedStructure::debug(uint8_t *data)
-{
-  return;
-}
-
-void LedStructure::fireworks(uint8_t *data)
-{
-  return;
-}
-
-void LedStructure::rotating_sectors(uint8_t *data)
-{
-  return;
-}
-
-void LedStructure::rotating_plane(uint8_t *data)
-{
-  return;
-}
-
-void LedStructure::joystick(uint8_t *data)
-{
-  return;
 }
 
 String LedStructure::get_name()

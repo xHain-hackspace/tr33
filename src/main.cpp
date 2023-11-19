@@ -4,8 +4,8 @@
 #include <FastLED.h>
 #include <Commands.h>
 #include <Twang.h>
-#include <wifi_main.h>
-// #include <uart_main.h>
+#include <Network.h>
+#include <ColorTools.h>
 
 #ifdef LED_STRUCTURE_TR33
 #include <Tr33.h>
@@ -51,7 +51,7 @@ Commands command_runner = Commands();
 
 void setup()
 {
-  Serial.begin(921600);
+  Serial.begin(115200);
   while (!Serial)
   {
     // do nothing
@@ -67,35 +67,14 @@ void setup()
 
   Serial.printf("Running on LED structure: %s\n", leds.get_name());
 
-#ifdef COMMANDS_VIA_WIFI
   Serial.println("Receiving Commands via WiFi. Running setup.");
-  wifi_setup();
-#endif
-#ifdef COMMANDS_VIA_UART_PINS
-  Serial.println("Receiving Commands via uart pins. Running setup.");
-  uart_setup();
-#endif
-#ifdef COMMANDS_VIA_UART_USB
-  Serial.println("Receiving Commands via uart usb. Running setup.");
-  uart_setup();
-#endif
+  Network::setup();
 
   Serial.println("Startup complete, going into render loop");
 }
 
 void loop()
 {
-
-#ifndef NO_WIFI
-  wifi_loop(command_runner);
-#endif
-
-#ifdef COMMANDS_VIA_UART_PINS
-  uart_loop(command_runner);
-#endif
-#ifdef COMMANDS_VIA_UART_USB
-  uart_loop(command_runner);
-#endif
-
+  Network::loop(command_runner);
   command_runner.run();
 }
