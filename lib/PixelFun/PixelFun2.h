@@ -235,57 +235,59 @@ private:
                 return fpm::trunc(eval(expr->funcCall.args[0], t, i, x, y));
 
             case FUNC_HYPOT:
-                return fpm::hypot(eval(expr->funcCall.args[0], t, i, x, y), eval(expr->funcCall.args[1], t, i, x, y));
+                fixed_16_16 a = eval(expr->funcCall.args[0], t, i, x, y);
+                fixed_16_16 b = eval(expr->funcCall.args[1], t, i, x, y);
+                return fpm::sqrt(a * a + b * b);
             }
-            // todo
-            // case EXPR_BINOP:
-            //     fixed_16_16 lhs = eval(expr->binop.a, t, i, x, y);
-            //     fixed_16_16 rhs = eval(expr->binop.b, t, i, x, y);
-            //     switch (expr->binop.op)
-            //     {
-            //     case BINOP_POW:
-            //         return fpm::pow(lhs, rhs);
-            //     case BINOP_MOD:
-            //         return fpm::fmod(lhs, rhs);
-            //     case BINOP_ADD:
-            //         return lhs + rhs;
-            //     case BINOP_SUB:
-            //         return lhs - rhs;
-            //     case BINOP_MUL:
-            //         return lhs * rhs;
-            //     case BINOP_DIV:
-            //         if (rhs == fixed_16_16(0))
-            //         {
-            //             return fixed_16_16(0);
-            //         }
-            //         return lhs / rhs;
-            //     case BINOP_LSHIFT:
-            //         return (float)((int)lhs << (int)rhs);
-            //     case BINOP_RSHIFT:
-            //         return (float)((int)lhs >> (int)rhs);
-            //     case BINOP_LTE:
-            //         return lhs <= rhs ? 1 : fixed_16_16(0);
-            //     case BINOP_GTE:
-            //         return lhs >= rhs ? 1 : fixed_16_16(0);
-            //     case BINOP_LT:
-            //         return lhs < rhs ? 1 : fixed_16_16(0);
-            //     case BINOP_GT:
-            //         return lhs > rhs ? 1 : fixed_16_16(0);
-            //     case BINOP_EQ:
-            //         return lhs == rhs ? 1 : fixed_16_16(0);
-            //     case BINOP_NEQ:
-            //         return lhs != rhs ? 1 : fixed_16_16(0);
-            //     case BINOP_OR:
-            //         return (lhs == 1 || rhs == 1) ? 1 : fixed_16_16(0);
-            //     case BINOP_BIT_OR:
-            //         return (float)((int)lhs | (int)rhs);
-            //     case BINOP_AND:
-            //         return (lhs == 1 && rhs == 1) ? 1 : fixed_16_16(0);
-            //     case BINOP_BIT_AND:
-            //         return (float)((int)lhs & (int)rhs);
-            //     case BINOP_BIT_XOR:
-            //         return (float)((int)lhs ^ (int)rhs);
-            //     }
+        case EXPR_BINOP:
+            fixed_16_16 lhs = eval(expr->binop.a, t, i, x, y);
+            fixed_16_16 rhs = eval(expr->binop.b, t, i, x, y);
+            switch (expr->binop.op)
+            {
+            case BINOP_POW:
+                return fpm::pow(lhs, rhs);
+            case BINOP_MOD:
+                return fpm::fmod(lhs, rhs);
+            case BINOP_ADD:
+                return lhs + rhs;
+            case BINOP_SUB:
+                return lhs - rhs;
+            case BINOP_MUL:
+                return lhs * rhs;
+            case BINOP_DIV:
+                if (rhs == fixed_16_16(0))
+                {
+                    return fixed_16_16(0);
+                }
+                return lhs / rhs;
+                // todo
+                //     case BINOP_LSHIFT:
+                //         return (float)((int)lhs << (int)rhs);
+                //     case BINOP_RSHIFT:
+                //         return (float)((int)lhs >> (int)rhs);
+                //     case BINOP_LTE:
+                //         return lhs <= rhs ? 1 : fixed_16_16(0);
+                //     case BINOP_GTE:
+                //         return lhs >= rhs ? 1 : fixed_16_16(0);
+                //     case BINOP_LT:
+                //         return lhs < rhs ? 1 : fixed_16_16(0);
+                //     case BINOP_GT:
+                //         return lhs > rhs ? 1 : fixed_16_16(0);
+                //     case BINOP_EQ:
+                //         return lhs == rhs ? 1 : fixed_16_16(0);
+                //     case BINOP_NEQ:
+                //         return lhs != rhs ? 1 : fixed_16_16(0);
+                //     case BINOP_OR:
+                //         return (lhs == 1 || rhs == 1) ? 1 : fixed_16_16(0);
+                //     case BINOP_BIT_OR:
+                //         return (float)((int)lhs | (int)rhs);
+                //     case BINOP_AND:
+                //         return (lhs == 1 && rhs == 1) ? 1 : fixed_16_16(0);
+                //     case BINOP_BIT_AND:
+                //         return (float)((int)lhs & (int)rhs);
+                //     case BINOP_BIT_XOR:
+                //         return (float)((int)lhs ^ (int)rhs);
+            }
         }
 
         return fixed_16_16(0);
