@@ -1,8 +1,9 @@
 #include <Commands.h>
-#include <PixelFun.h>
+#include <PixelFun2.h>
 #include <WiFi.h>
 #include <Network.h>
 #include <ColorTools.h>
+#include <libfixmath/fix16.h>
 
 #define MAX_MILLIS 21600000 // 16 * 60 * 60 * 1000
 // #define MAX_MILLIS 60000
@@ -67,7 +68,6 @@ void Commands::pixel_func(LedStructure *leds, CommandParams cmd)
 
   // only parse function if command hash has changed
   std::copy(std::begin(cmd.hash.bytes), std::end(cmd.hash.bytes), std::begin(current_hash));
-
   if (last_hash != current_hash)
   {
     last_hash = current_hash;
@@ -77,27 +77,32 @@ void Commands::pixel_func(LedStructure *leds, CommandParams cmd)
   change_colors(pixel_func);
 
   const uint32_t strip_length = leds->strip_length(cmd.strip_index);
-  const float current_time = float(millis() % MAX_MILLIS) / 1000.0;
+  const fix16_t current_time = fix16_div(fix16_from_int(millis()), fix16_from_int(1000));
 
   for (int i = 0; i < leds->mapping_size(); i++)
   {
-    const float x = leds->mapping_x(i);
-    const float y = leds->mapping_y(i);
-    const float index = (leds->mapping_sprip_index(i) - 1) * strip_length + leds->mapping_led(i);
+    const fix16_t x = fix16_from_float(leds->mapping_x(i));
+    const fix16_t y = fix16_from_float(leds->mapping_y(i));
+    const fix16_t index = (leds->mapping_sprip_index(i) - 1) * strip_length + leds->mapping_led(i);
 
-    float pixelfun_value = pixelFun.eval(current_time, index, x, y);
-    pixelfun_value = fminf(fmaxf(pixelfun_value, -1.0f), 1.0f);
+    fix16_t pixelfun_value = pixelFun.eval(current_time, index, x, y);
+    // pixelfun_value = fminf(fmaxf(pixelfun_value, -1.0f), 1.0f);
+
+    if (send_debug && i == 10)
+    {
+      // Network::remote_log("x: " + String(fix16_to_float(x)) + " y: " + String(fix16_to_float(y)) + " current_time: " + String(fix16_to_float(current_time)) + " value: " + String(fix16_to_float(pixelfun_value)));
+    }
 
     CRGB color;
 
     if (pixelfun_value < 0)
     {
-      uint8_t scale = ease_out_cubic(-pixelfun_value) * 255.0f;
+      uint8_t scale = ease_out_cubic(-fix16_to_float(pixelfun_value)) * 255.0f;
       color = colors[0].scale8(scale);
     }
     else if (pixelfun_value > 0)
     {
-      uint8_t scale = ease_out_cubic(pixelfun_value) * 255.0f;
+      uint8_t scale = ease_out_cubic(fix16_to_float(pixelfun_value)) * 255.0f;
       color = colors[1].scale8(scale);
     }
     else

@@ -16,7 +16,6 @@ FirmwareConfig Commands::firmware_config = FirmwareConfig_init_default;
 // debug
 uint32_t debug_interval = 1000;
 uint32_t last_debug = 0;
-bool send_debug = false;
 long durations[6];
 
 void Commands::init(LedStructure *init_leds)
@@ -98,7 +97,7 @@ void Commands::render_commands()
 {
   if (millis() - last_debug > debug_interval)
   {
-    send_debug = false;
+    send_debug = true;
     durations[0] = millis();
   }
 

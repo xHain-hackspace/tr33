@@ -62,6 +62,7 @@ class Commands
 private:
   static int64_t millis_offset;
   uint16_t effect_item_index = 0;
+  bool send_debug = false;
 
 public:
   LedStructure *leds;
