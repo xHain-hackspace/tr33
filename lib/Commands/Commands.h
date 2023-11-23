@@ -5,6 +5,7 @@
 #include <FastLED.h>
 #include <command_schemas.pb.h>
 #include <LedStructure.h>
+#include <fpm_math.hpp>
 
 #define COMMAND_COUNT 8
 #define COMMAND_HASH_SIZE 4
@@ -56,6 +57,8 @@ struct EffectItem
   uint32_t start_time;
 };
 extern EffectItem effect_items[EFFECT_ITEM_COUNT];
+
+using fpm::fixed_16_16;
 
 class Commands
 {
@@ -121,6 +124,12 @@ public:
   static float ease_in_cubic(float t);
   static float ease_out_cubic(float t);
   static float ease_in_out_cubic(float t);
+  static fixed_16_16 ease_in_quad(fixed_16_16 t);
+  static fixed_16_16 ease_out_quad(fixed_16_16 t);
+  static fixed_16_16 ease_in_out_quad(fixed_16_16 t);
+  static fixed_16_16 ease_in_cubic(fixed_16_16 t);
+  static fixed_16_16 ease_out_cubic(fixed_16_16 t);
+  static fixed_16_16 ease_in_out_cubic(fixed_16_16 t);
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
   // Render

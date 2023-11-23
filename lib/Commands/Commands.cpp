@@ -97,7 +97,7 @@ void Commands::render_commands()
 {
   if (millis() - last_debug > debug_interval)
   {
-    send_debug = true;
+    send_debug = false;
     durations[0] = millis();
   }
 

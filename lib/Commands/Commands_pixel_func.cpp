@@ -3,7 +3,6 @@
 #include <WiFi.h>
 #include <Network.h>
 #include <ColorTools.h>
-#include <fpm_fixed.hpp>
 #include <fpm_math.hpp>
 
 PixelFun<256> pixelFun;
@@ -63,7 +62,6 @@ void change_colors(PixelFunc pixel_func)
 void Commands::pixel_func(LedStructure *leds, CommandParams cmd)
 {
   PixelFunc pixel_func = cmd.type_params.pixel_func;
-
   // only parse function if command hash has changed
   std::copy(std::begin(cmd.hash.bytes), std::end(cmd.hash.bytes), std::begin(current_hash));
   if (last_hash != current_hash)
@@ -75,7 +73,7 @@ void Commands::pixel_func(LedStructure *leds, CommandParams cmd)
   change_colors(pixel_func);
 
   const uint32_t strip_length = leds->strip_length(cmd.strip_index);
-  const fixed_16_16 current_time = fixed_16_16(millis()) / fixed_16_16(1000);
+  const fixed_16_16 current_time = fixed_16_16(float(millis()) / 1000.0f);
 
   for (int i = 0; i < leds->mapping_size(); i++)
   {
@@ -88,29 +86,27 @@ void Commands::pixel_func(LedStructure *leds, CommandParams cmd)
 
     if (send_debug && i == 10)
     {
-      // Network::remote_log("x: " + String(fix16_to_float(x)) + " y: " + String(fix16_to_float(y)) + " current_time: " + String(fix16_to_float(current_time)) + " value: " + String(fix16_to_float(pixelfun_value)));
+      // Network::remote_log("x: " + String(static_cast<float>(x)) + " y: " + String(static_cast<float>(y)) + " current_time: " + String(static_cast<float>(current_time)) + " value: " + String(static_cast<float>(pixelfun_value)));
     }
 
     CRGB color;
-
     if (pixelfun_value < fixed_16_16(0))
     {
-      uint8_t scale = ease_out_cubic(-static_cast<float>(pixelfun_value)) * 255.0f;
-      color = colors[0].scale8(scale);
+      // fixed_16_16 scale = ease_out_cubic(-(pixelfun_value)) * fixed_16_16(255);
+      fixed_16_16 scale = pixelfun_value * fixed_16_16(-255);
+      color = colors[0].scale8(static_cast<uint8_t>(scale));
     }
     else if (pixelfun_value > fixed_16_16(0))
     {
-      uint8_t scale = ease_out_cubic(static_cast<float>(pixelfun_value)) * 255.0f;
-      color = colors[1].scale8(scale);
+      fixed_16_16 scale = pixelfun_value * fixed_16_16(255);
+      color = colors[1].scale8(static_cast<uint8_t>(scale));
     }
     else
     {
       color = CRGB(0, 0, 0);
     }
 
-    // color = color.scale8(cmd.brightness);
     ColorTools::gamma_correction(color);
-
     leds->fade_led(leds->mapping_sprip_index(i), leds->mapping_led(i), color, cmd.brightness);
   }
 }

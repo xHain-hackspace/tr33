@@ -61,6 +61,8 @@ void LedStructure::init()
   commands[0].which_type_params = CommandParams_sparkle_tag;
   commands[0].type_params.sparkle = sparkle;
   commands[0].color_palette = ColorPalette_OCEAN;
+  commands[0].hash.size = 1;
+  commands[0].hash.bytes[0] = 23;
 
   // String init_program = String("sin(2*t-hypot(x-5,y-5))");
   // String init_program = String("x/16");
@@ -183,14 +185,28 @@ int LedStructure::mapping_led(uint16_t index)
   return pgm_read_float(&mapping[index][1]);
 }
 
+static float mapping_x_range = MAPPING_X_MAX - MAPPING_X_MIN;
+static float mapping_y_range = MAPPING_Y_MAX - MAPPING_Y_MIN;
+static float scale = max(mapping_x_range, mapping_y_range) / 8.0f;
+
 float LedStructure::mapping_x(uint16_t index)
 {
-  return pgm_read_float(&mapping[index][2]);
+  float x = pgm_read_float(&mapping[index][2]);
+  x = (x - float(MAPPING_X_MIN)) / scale;
+  return x;
+
+  // go back to this once all mappings are scaled to 8
+  // return pgm_read_float(&mapping[index][2]);
 }
 
 float LedStructure::mapping_y(uint16_t index)
 {
-  return pgm_read_float(&mapping[index][3]);
+  float y = pgm_read_float(&mapping[index][3]);
+  y = (y - float(MAPPING_Y_MIN)) / scale;
+  return y;
+
+  // go back to this once all mappings are scaled to 8
+  // return pgm_read_float(&mapping[index][3]);
 }
 
 uint16_t LedStructure::mapping_size()

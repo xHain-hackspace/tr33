@@ -5,7 +5,6 @@
 #include <cctype>
 #include <cstring>
 #include <tuple>
-#include <fpm_fixed.hpp>
 #include <fpm_math.hpp>
 
 enum ExprType

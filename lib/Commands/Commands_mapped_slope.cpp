@@ -4,12 +4,13 @@ void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
 {
   MappedSlope mapped_slope = cmd.type_params.mapped_slope;
 
-  float brightness = float(cmd.brightness) / 255.0;
-  float x1 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(mapped_slope.x1) / 255.0 + MAPPING_X_MIN;
-  float y1 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - mapped_slope.y1) / 255.0 + MAPPING_Y_MIN;
-  float x2 = (MAPPING_X_MAX - MAPPING_X_MIN) * float(mapped_slope.x2) / 255.0 + MAPPING_X_MIN;
-  float y2 = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(255 - mapped_slope.y2) / 255.0 + MAPPING_Y_MIN;
-  float fade_distance = (MAPPING_Y_MAX - MAPPING_Y_MIN) * float(mapped_slope.fade_distance) / 255.0 / 0.5;
+  float brightness = float(cmd.brightness) / 255.0f;
+  float x1 = float(mapped_slope.x1) * 8.0f / 255.0f;
+  float y1 = float(255 - mapped_slope.y1) * 8.0f / 255.0f;
+  float x2 = float(mapped_slope.x2) * 8.0f / 255.0f;
+  float y2 = float(255 - mapped_slope.y2) * 8.0f / 255.0f;
+
+  float fade_distance = float(mapped_slope.fade_distance) / 255.0f;
   CRGB color = color_from_palette(cmd, mapped_slope.color);
 
   render_mappled_slope(leds, x1, y1, x2, y2, mapped_slope.slope_type, fade_distance, color, brightness);
