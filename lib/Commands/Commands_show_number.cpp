@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::show_number(LedStructure *leds, CommandParams cmd)
+void Commands::show_number(LedStructure *leds, const CommandParams &cmd)
 {
   uint8_t number = 0;
 

@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::kaleidoscope(LedStructure *leds, CommandParams cmd)
+void Commands::kaleidoscope(LedStructure *leds, const CommandParams &cmd)
 {
   uint16_t length = leds->strip_length(cmd.strip_index);
 

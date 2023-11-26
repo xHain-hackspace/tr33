@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::rainbow(LedStructure *leds, CommandParams cmd)
+void Commands::rainbow(LedStructure *leds, const CommandParams &cmd)
 {
   Rainbow rainbow = cmd.type_params.rainbow;
   uint8_t beat_brightness = 0;

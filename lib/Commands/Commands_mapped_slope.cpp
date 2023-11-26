@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::mapped_slope(LedStructure *leds, CommandParams cmd)
+void Commands::mapped_slope(LedStructure *leds, const CommandParams &cmd)
 {
   MappedSlope mapped_slope = cmd.type_params.mapped_slope;
 

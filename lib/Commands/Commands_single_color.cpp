@@ -1,7 +1,7 @@
 #include <Commands.h>
 #include <Modifiers.h>
 
-void Commands::single_color(LedStructure *leds, CommandParams cmd)
+void Commands::single_color(LedStructure *leds, const CommandParams &cmd)
 {
   SingleColor single_color = cmd.type_params.single_color;
 

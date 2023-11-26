@@ -90,29 +90,29 @@ public:
   void write_hashes(TargetMetrics *target_metrics);
 
   // Commands
-  void white(LedStructure *leds, CommandParams cmd);
-  void single_color(LedStructure *leds, CommandParams cmd);
-  void calibrate(LedStructure *leds, CommandParams cmd);
-  void pixel(LedStructure *leds, CommandParams cmd);
-  void pixel_rgb(LedStructure *leds, CommandParams cmd);
-  void rainbow(LedStructure *leds, CommandParams cmd);
-  void sparkle(LedStructure *leds, CommandParams cmd);
-  void flicker_sparkle(LedStructure *leds, CommandParams cmd);
-  void show_number(LedStructure *leds, CommandParams cmd);
-  void rain(LedStructure *leds, CommandParams cmd);
-  void render(LedStructure *leds, CommandParams cmd);
-  void ping_pong(LedStructure *leds, CommandParams cmd);
-  void kaleidoscope(LedStructure *leds, CommandParams cmd);
-  void mapped_slope(LedStructure *leds, CommandParams cmd);
-  void mapped_shape(LedStructure *leds, CommandParams cmd);
-  void mapped_triangle(LedStructure *leds, CommandParams cmd);
-  void mapped_particles(LedStructure *leds, CommandParams cmd);
-  void mapped_ping_pong(LedStructure *leds, CommandParams cmd);
-  void gravity(LedStructure *leds, CommandParams cmd);
+  void white(LedStructure *leds, const CommandParams &cmd);
+  void single_color(LedStructure *leds, const CommandParams &cmd);
+  void calibrate(LedStructure *leds, const CommandParams &cmd);
+  void pixel(LedStructure *leds, const CommandParams &cmd);
+  void pixel_rgb(LedStructure *leds, const CommandParams &cmd);
+  void rainbow(LedStructure *leds, const CommandParams &cmd);
+  void sparkle(LedStructure *leds, const CommandParams &cmd);
+  void flicker_sparkle(LedStructure *leds, const CommandParams &cmd);
+  void show_number(LedStructure *leds, const CommandParams &cmd);
+  void rain(LedStructure *leds, const CommandParams &cmd);
+  void render(LedStructure *leds, const CommandParams &cmd);
+  void ping_pong(LedStructure *leds, const CommandParams &cmd);
+  void kaleidoscope(LedStructure *leds, const CommandParams &cmd);
+  void mapped_slope(LedStructure *leds, const CommandParams &cmd);
+  void mapped_shape(LedStructure *leds, const CommandParams &cmd);
+  void mapped_triangle(LedStructure *leds, const CommandParams &cmd);
+  void mapped_particles(LedStructure *leds, const CommandParams &cmd);
+  void mapped_ping_pong(LedStructure *leds, const CommandParams &cmd);
+  void gravity(LedStructure *leds, const CommandParams &cmd);
   void twang(LedStructure *leds);
-  void fairy_light(LedStructure *leds, CommandParams cmd);
-  void pixel_func(LedStructure *leds, CommandParams cmd);
-  void debug(LedStructure *leds, CommandParams cmd);
+  void fairy_light(LedStructure *leds, const CommandParams &cmd);
+  void pixel_func(LedStructure *leds, const CommandParams &cmd);
+  void debug(LedStructure *leds, const CommandParams &cmd);
 
   // Events
   void gravity_event(LedStructure *leds, uint8_t *data);

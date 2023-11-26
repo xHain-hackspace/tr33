@@ -1,7 +1,7 @@
 #include <Commands.h>
 #include <Modifiers.h>
 
-void Commands::calibrate(LedStructure *leds, CommandParams cmd)
+void Commands::calibrate(LedStructure *leds, const CommandParams &cmd)
 {
   Calibrate calibrate = cmd.type_params.calibrate;
   FastLED.setCorrection(UncorrectedColor);

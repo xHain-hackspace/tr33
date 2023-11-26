@@ -148,6 +148,9 @@ message CommandParams {
   required ColorPalette color_palette = 5 [default = RAINBOW];
   repeated Modifier modifiers = 6 [(nanopb).max_count = 5];
   required bytes hash = 100 [default = "", (nanopb).max_size = 4];
+  required bytes color_1 = 101 [default = "\xFF\x00\x00", (nanopb).max_size = 3];
+  required bytes color_2 = 102 [default = "\x00\xFF\x00", (nanopb).max_size = 3];
+  required int32 color_distance = 103 [default = 128];
   oneof type_params {
     White white = 7;
     SingleColor single_color = 8;
@@ -319,7 +322,7 @@ message MappedPingPong {
 
 message PixelFunc {
   required string function = 1 [ default = "sin(2*t-hypot(x-3.5,y-3.5))", (nanopb).max_length = 40]; 
-  required int32 color_distance = 2 [ default = 100 ] ;
+  // required int32 color_distance = 2 [ default = 100 ];
 }
 
 message Debug {
@@ -363,12 +366,6 @@ message TargetMetrics {
 
 message RemoteLog {
   required string message = 1 [(nanopb).max_length = 100];
-}
-
-message Color {
-  required uint32 r = 1;
-  required uint32 g = 2;
-  required uint32 b = 3;
 }
 
 message ColorPaletteRequest {

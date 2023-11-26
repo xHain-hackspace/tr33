@@ -93,9 +93,6 @@ PB_BIND(TargetMetrics, TargetMetrics, AUTO)
 PB_BIND(RemoteLog, RemoteLog, AUTO)
 
 
-PB_BIND(Color, Color, AUTO)
-
-
 PB_BIND(ColorPaletteRequest, ColorPaletteRequest, AUTO)
 
 

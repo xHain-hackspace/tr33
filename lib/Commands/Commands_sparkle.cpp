@@ -3,7 +3,7 @@
 int last_sparkle_time[COMMAND_COUNT];
 uint32_t fade_in_duration_ms = 200;
 
-void Commands::sparkle(LedStructure *leds, CommandParams cmd)
+void Commands::sparkle(LedStructure *leds, const CommandParams &cmd)
 {
   Sparkle sparkle = cmd.type_params.sparkle;
 

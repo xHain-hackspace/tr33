@@ -143,12 +143,6 @@ typedef struct _Calibrate {
     int32_t blue; 
 } Calibrate;
 
-typedef struct _Color { 
-    uint32_t r; 
-    uint32_t g; 
-    uint32_t b; 
-} Color;
-
 typedef struct _ColorPaletteRequest { 
     ColorPalette color_palette; 
 } ColorPaletteRequest;
@@ -276,8 +270,7 @@ typedef struct _Pixel {
 } Pixel;
 
 typedef struct _PixelFunc { 
-    char function[41]; 
-    int32_t color_distance; 
+    char function[41]; /* required int32 color_distance = 2 [ default = 100 ]; */
 } PixelFunc;
 
 typedef struct _PixelRGB { 
@@ -352,6 +345,8 @@ typedef struct _White {
 } White;
 
 typedef PB_BYTES_ARRAY_T(4) CommandParams_hash_t;
+typedef PB_BYTES_ARRAY_T(3) CommandParams_color_1_t;
+typedef PB_BYTES_ARRAY_T(3) CommandParams_color_2_t;
 typedef struct _CommandParams { 
     int32_t index; 
     bool enabled; 
@@ -386,6 +381,9 @@ typedef struct _CommandParams {
         Debug debug;
     } type_params; 
     CommandParams_hash_t hash; 
+    CommandParams_color_1_t color_1; 
+    CommandParams_color_2_t color_2; 
+    int32_t color_distance; 
 } CommandParams;
 
 typedef struct _WireMessage { 
@@ -440,7 +438,7 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define WireMessage_init_default                 {0, 0, {CommandParams_init_default}}
-#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}, {0, {0}}}
+#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}, {0, {0}}, {3, {0xff,0x00,0x00}}, {3, {0x00,0xff,0x00}}, 128}
 #define TimeSync_init_default                    {0}
 #define Modifier_init_default                    {MovementType_SINE, 0, 50, 0, 0, 255}
 #define White_init_default                       {0}
@@ -461,19 +459,18 @@ extern "C" {
 #define MappedTriangle_init_default              {1, 0, 0, 255, 0, 128, 255}
 #define MappedParticles_init_default             {177, Shape2D_CIRCLE, 128, 128, 50, 50}
 #define MappedPingPong_init_default              {123, 0, 5}
-#define PixelFunc_init_default                   {"sin(2*t-hypot(x-3.5,y-3.5))", 100}
+#define PixelFunc_init_default                   {"sin(2*t-hypot(x-3.5,y-3.5))"}
 #define Debug_init_default                       {0, 0, 0}
 #define Twang_init_default                       {0}
 #define FairyLight_init_default                  {FairyPattern_ODD_EVEN, 20, 0}
 #define JoystickEvent_init_default               {0, 0, false, false, false, false}
 #define TargetMetrics_init_default               {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}, 0, 0, 0, 0, "", 0, ""}
 #define RemoteLog_init_default                   {""}
-#define Color_init_default                       {0, 0, 0}
 #define ColorPaletteRequest_init_default         {_ColorPalette_MIN}
 #define ColorPaletteResponse_init_default        {_ColorPalette_MIN, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
 #define FirmwareConfig_init_default              {0u, true, false, true}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
-#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}, {0, {0}}}
+#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}, {0, {0}}, {0, {0}}, {0, {0}}, 0}
 #define TimeSync_init_zero                       {0}
 #define Modifier_init_zero                       {_MovementType_MIN, 0, 0, 0, 0, 0}
 #define White_init_zero                          {0}
@@ -494,14 +491,13 @@ extern "C" {
 #define MappedTriangle_init_zero                 {0, 0, 0, 0, 0, 0, 0}
 #define MappedParticles_init_zero                {0, _Shape2D_MIN, 0, 0, 0, 0}
 #define MappedPingPong_init_zero                 {0, 0, 0}
-#define PixelFunc_init_zero                      {"", 0}
+#define PixelFunc_init_zero                      {""}
 #define Debug_init_zero                          {0, 0, 0}
 #define Twang_init_zero                          {0}
 #define FairyLight_init_zero                     {_FairyPattern_MIN, 0, 0}
 #define JoystickEvent_init_zero                  {0, 0, 0, 0, 0, 0}
 #define TargetMetrics_init_zero                  {"", 0, 0, "", 0, {{0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}, {0, {0}}}, 0, 0, 0, 0, "", 0, ""}
 #define RemoteLog_init_zero                      {""}
-#define Color_init_zero                          {0, 0, 0}
 #define ColorPaletteRequest_init_zero            {_ColorPalette_MIN}
 #define ColorPaletteResponse_init_zero           {_ColorPalette_MIN, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
 #define FirmwareConfig_init_zero                 {0, 0, 0, 0}
@@ -510,9 +506,6 @@ extern "C" {
 #define Calibrate_red_tag                        1
 #define Calibrate_green_tag                      2
 #define Calibrate_blue_tag                       3
-#define Color_r_tag                              1
-#define Color_g_tag                              2
-#define Color_b_tag                              3
 #define ColorPaletteRequest_color_palette_tag    1
 #define ColorPaletteResponse_color_palette_tag   1
 #define ColorPaletteResponse_colors_tag          2
@@ -589,7 +582,6 @@ extern "C" {
 #define Pixel_color_tag                          1
 #define Pixel_led_index_tag                      2
 #define PixelFunc_function_tag                   1
-#define PixelFunc_color_distance_tag             2
 #define PixelRGB_red_tag                         1
 #define PixelRGB_green_tag                       2
 #define PixelRGB_blue_tag                        3
@@ -656,6 +648,9 @@ extern "C" {
 #define CommandParams_pixel_func_tag             28
 #define CommandParams_debug_tag                  29
 #define CommandParams_hash_tag                   100
+#define CommandParams_color_1_tag                101
+#define CommandParams_color_2_tag                102
+#define CommandParams_color_distance_tag         103
 #define WireMessage_sequence_tag                 1
 #define WireMessage_command_params_tag           2
 #define WireMessage_time_sync_tag                3
@@ -717,9 +712,12 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fairy_light,type_params.fairy_li
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,calibrate,type_params.calibrate),  27) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel_func,type_params.pixel_func),  28) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,debug,type_params.debug),  29) \
-X(a, STATIC,   REQUIRED, BYTES,    hash,            100)
+X(a, STATIC,   REQUIRED, BYTES,    hash,            100) \
+X(a, STATIC,   REQUIRED, BYTES,    color_1,         101) \
+X(a, STATIC,   REQUIRED, BYTES,    color_2,         102) \
+X(a, STATIC,   REQUIRED, INT32,    color_distance,  103)
 #define CommandParams_CALLBACK NULL
-#define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\xa2\x06\x00\x00"
+#define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\xa2\x06\x00\xaa\x06\x03\xff\x00\x00\xb2\x06\x03\x00\xff\x00\xb8\x06\x80\x01\x00"
 #define CommandParams_modifiers_MSGTYPE Modifier
 #define CommandParams_type_params_white_MSGTYPE White
 #define CommandParams_type_params_single_color_MSGTYPE SingleColor
@@ -909,10 +907,9 @@ X(a, STATIC,   REQUIRED, INT32,    fade_distance,     3)
 #define MappedPingPong_DEFAULT (const pb_byte_t*)"\x08\x7b\x10\x00\x18\x05\x00"
 
 #define PixelFunc_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, STRING,   function,          1) \
-X(a, STATIC,   REQUIRED, INT32,    color_distance,    2)
+X(a, STATIC,   REQUIRED, STRING,   function,          1)
 #define PixelFunc_CALLBACK NULL
-#define PixelFunc_DEFAULT (const pb_byte_t*)"\x0a\x1b\x73\x69\x6e\x28\x32\x2a\x74\x2d\x68\x79\x70\x6f\x74\x28\x78\x2d\x33\x2e\x35\x2c\x79\x2d\x33\x2e\x35\x29\x29\x10\x64\x00"
+#define PixelFunc_DEFAULT (const pb_byte_t*)"\x0a\x1b\x73\x69\x6e\x28\x32\x2a\x74\x2d\x68\x79\x70\x6f\x74\x28\x78\x2d\x33\x2e\x35\x2c\x79\x2d\x33\x2e\x35\x29\x29\x00"
 
 #define Debug_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    param1,            1) \
@@ -964,13 +961,6 @@ X(a, STATIC,   REQUIRED, STRING,   message,           1)
 #define RemoteLog_CALLBACK NULL
 #define RemoteLog_DEFAULT NULL
 
-#define Color_FIELDLIST(X, a) \
-X(a, STATIC,   REQUIRED, UINT32,   r,                 1) \
-X(a, STATIC,   REQUIRED, UINT32,   g,                 2) \
-X(a, STATIC,   REQUIRED, UINT32,   b,                 3)
-#define Color_CALLBACK NULL
-#define Color_DEFAULT NULL
-
 #define ColorPaletteRequest_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UENUM,    color_palette,     1)
 #define ColorPaletteRequest_CALLBACK NULL
@@ -1019,7 +1009,6 @@ extern const pb_msgdesc_t FairyLight_msg;
 extern const pb_msgdesc_t JoystickEvent_msg;
 extern const pb_msgdesc_t TargetMetrics_msg;
 extern const pb_msgdesc_t RemoteLog_msg;
-extern const pb_msgdesc_t Color_msg;
 extern const pb_msgdesc_t ColorPaletteRequest_msg;
 extern const pb_msgdesc_t ColorPaletteResponse_msg;
 extern const pb_msgdesc_t FirmwareConfig_msg;
@@ -1054,7 +1043,6 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define JoystickEvent_fields &JoystickEvent_msg
 #define TargetMetrics_fields &TargetMetrics_msg
 #define RemoteLog_fields &RemoteLog_msg
-#define Color_fields &Color_msg
 #define ColorPaletteRequest_fields &ColorPaletteRequest_msg
 #define ColorPaletteResponse_fields &ColorPaletteResponse_msg
 #define FirmwareConfig_fields &FirmwareConfig_msg
@@ -1063,8 +1051,7 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define Calibrate_size                           33
 #define ColorPaletteRequest_size                 2
 #define ColorPaletteResponse_size                1538
-#define Color_size                               18
-#define CommandParams_size                       420
+#define CommandParams_size                       444
 #define Debug_size                               33
 #define FairyLight_size                          24
 #define FirmwareConfig_size                      12
@@ -1079,7 +1066,7 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define MappedTriangle_size                      77
 #define Modifier_size                            57
 #define PingPong_size                            48
-#define PixelFunc_size                           53
+#define PixelFunc_size                           42
 #define PixelRGB_size                            44
 #define Pixel_size                               22
 #define Rain_size                                46
@@ -1110,7 +1097,7 @@ struct MessageDescriptor<WireMessage> {
 };
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 29;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 32;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
     }
@@ -1257,7 +1244,7 @@ struct MessageDescriptor<MappedPingPong> {
 };
 template <>
 struct MessageDescriptor<PixelFunc> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 2;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 1;
     static inline const pb_msgdesc_t* fields() {
         return &PixelFunc_msg;
     }
@@ -1302,13 +1289,6 @@ struct MessageDescriptor<RemoteLog> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 1;
     static inline const pb_msgdesc_t* fields() {
         return &RemoteLog_msg;
-    }
-};
-template <>
-struct MessageDescriptor<Color> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
-    static inline const pb_msgdesc_t* fields() {
-        return &Color_msg;
     }
 };
 template <>

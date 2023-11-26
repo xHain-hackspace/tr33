@@ -3,7 +3,7 @@
 #include <FairyLightsControl.h>
 // #include "Scubar_config.h"
 
-void Commands::fairy_light(LedStructure *leds, CommandParams cmd)
+void Commands::fairy_light(LedStructure *leds, const CommandParams &cmd)
 {
     FairyLight fairy_light = cmd.type_params.fairy_light;
 

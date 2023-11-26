@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::white(LedStructure *leds, CommandParams cmd)
+void Commands::white(LedStructure *leds, const CommandParams &cmd)
 {
   CRGB color = CRGB(255, 255, 255);
 

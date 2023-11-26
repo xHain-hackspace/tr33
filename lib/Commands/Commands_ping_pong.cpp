@@ -3,7 +3,7 @@
 
 int last_value[COMMAND_COUNT];
 
-void Commands::ping_pong(LedStructure *leds, CommandParams cmd)
+void Commands::ping_pong(LedStructure *leds, const CommandParams &cmd)
 {
   PingPong ping_pong = cmd.type_params.ping_pong;
 

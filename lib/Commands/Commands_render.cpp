@@ -1,6 +1,6 @@
 #include <Commands.h>
 
-void Commands::render(LedStructure *leds, CommandParams cmd)
+void Commands::render(LedStructure *leds, const CommandParams &cmd)
 {
   Render render_p = cmd.type_params.render;
 

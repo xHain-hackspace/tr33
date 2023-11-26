@@ -335,9 +335,6 @@ int *Modifiers::value_from_type_param(CommandParams *cmd, uint8_t field_index)
     switch (field_index)
     {
     
-    case MIN_INDEX + 0:
-      return &cmd->type_params.pixel_func.color_distance;
-    
     }
   
   case CommandParams_debug_tag:
