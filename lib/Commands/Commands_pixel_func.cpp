@@ -38,27 +38,6 @@ void color_transition(const PixelFunc &pixel_func)
       colors[1] = blend(start_colors[1], target_colors[1], progress);
     }
   }
-
-  // Moved to controller
-  // else
-  // {
-  //   float distance = min_distance + float(pixel_func.color_distance) / 255.0f * (max_distance - min_distance);
-
-  //   if (transition_start_time == 0)
-  //   {
-  //     colors = ColorTools::random_color_pair(distance);
-  //     transition_start_time = millis();
-  //   }
-
-  //   if (millis() - transition_start_time > transition_interval_ms)
-  //   {
-  //     transition_start_time = millis();
-  //     in_transition = true;
-
-  //     start_colors = colors;
-  //     target_colors = ColorTools::random_color_pair(distance);
-  //   }
-  // }
 }
 
 void maybe_update_colors(const CommandParams &cmd)
@@ -75,7 +54,7 @@ void maybe_update_colors(const CommandParams &cmd)
   // start transition if colors have changed
   if (new_colors != colors)
   {
-    Network::remote_log("Updating colors to " + String(new_colors[0].r) + ", " + String(new_colors[0].g) + ", " + String(new_colors[0].b) + " and " + String(new_colors[1].r) + ", " + String(new_colors[1].g) + ", " + String(new_colors[1].b) + ".");
+    Network::remote_log("new colors: " + String(new_colors[0].r) + " " + String(new_colors[0].g) + " " + String(new_colors[0].b) + " " + String(new_colors[1].r) + " " + String(new_colors[1].g) + " " + String(new_colors[1].b));
     in_transition = true;
     transition_start_time = millis();
 

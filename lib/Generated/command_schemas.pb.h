@@ -270,7 +270,7 @@ typedef struct _Pixel {
 } Pixel;
 
 typedef struct _PixelFunc { 
-    char function[41]; /* required int32 color_distance = 2 [ default = 100 ]; */
+    char function[81]; /* required int32 color_distance = 2 [ default = 100 ]; */
 } PixelFunc;
 
 typedef struct _PixelRGB { 
@@ -383,7 +383,6 @@ typedef struct _CommandParams {
     CommandParams_hash_t hash; 
     CommandParams_color_1_t color_1; 
     CommandParams_color_2_t color_2; 
-    int32_t color_distance; 
 } CommandParams;
 
 typedef struct _WireMessage { 
@@ -438,7 +437,7 @@ extern "C" {
 
 /* Initializer values for message structs */
 #define WireMessage_init_default                 {0, 0, {CommandParams_init_default}}
-#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}, {0, {0}}, {3, {0xff,0x00,0x00}}, {3, {0x00,0xff,0x00}}, 128}
+#define CommandParams_init_default               {0, true, 255, 0, ColorPalette_RAINBOW, 0, {Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default, Modifier_init_default}, 0, {White_init_default}, {0, {0}}, {3, {0xff,0x00,0x00}}, {3, {0x00,0xff,0x00}}}
 #define TimeSync_init_default                    {0}
 #define Modifier_init_default                    {MovementType_SINE, 0, 50, 0, 0, 255}
 #define White_init_default                       {0}
@@ -470,7 +469,7 @@ extern "C" {
 #define ColorPaletteResponse_init_default        {_ColorPalette_MIN, {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}}
 #define FirmwareConfig_init_default              {0u, true, false, true}
 #define WireMessage_init_zero                    {0, 0, {CommandParams_init_zero}}
-#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}, {0, {0}}, {0, {0}}, {0, {0}}, 0}
+#define CommandParams_init_zero                  {0, 0, 0, 0, _ColorPalette_MIN, 0, {Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero, Modifier_init_zero}, 0, {White_init_zero}, {0, {0}}, {0, {0}}, {0, {0}}}
 #define TimeSync_init_zero                       {0}
 #define Modifier_init_zero                       {_MovementType_MIN, 0, 0, 0, 0, 0}
 #define White_init_zero                          {0}
@@ -650,7 +649,6 @@ extern "C" {
 #define CommandParams_hash_tag                   100
 #define CommandParams_color_1_tag                101
 #define CommandParams_color_2_tag                102
-#define CommandParams_color_distance_tag         103
 #define WireMessage_sequence_tag                 1
 #define WireMessage_command_params_tag           2
 #define WireMessage_time_sync_tag                3
@@ -714,10 +712,9 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel_func,type_params.pixel_fun
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,debug,type_params.debug),  29) \
 X(a, STATIC,   REQUIRED, BYTES,    hash,            100) \
 X(a, STATIC,   REQUIRED, BYTES,    color_1,         101) \
-X(a, STATIC,   REQUIRED, BYTES,    color_2,         102) \
-X(a, STATIC,   REQUIRED, INT32,    color_distance,  103)
+X(a, STATIC,   REQUIRED, BYTES,    color_2,         102)
 #define CommandParams_CALLBACK NULL
-#define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\xa2\x06\x00\xaa\x06\x03\xff\x00\x00\xb2\x06\x03\x00\xff\x00\xb8\x06\x80\x01\x00"
+#define CommandParams_DEFAULT (const pb_byte_t*)"\x10\x01\x18\xff\x01\x20\x00\xa2\x06\x00\xaa\x06\x03\xff\x00\x00\xb2\x06\x03\x00\xff\x00\x00"
 #define CommandParams_modifiers_MSGTYPE Modifier
 #define CommandParams_type_params_white_MSGTYPE White
 #define CommandParams_type_params_single_color_MSGTYPE SingleColor
@@ -1051,7 +1048,7 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define Calibrate_size                           33
 #define ColorPaletteRequest_size                 2
 #define ColorPaletteResponse_size                1538
-#define CommandParams_size                       444
+#define CommandParams_size                       436
 #define Debug_size                               33
 #define FairyLight_size                          24
 #define FirmwareConfig_size                      12
@@ -1066,7 +1063,7 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define MappedTriangle_size                      77
 #define Modifier_size                            57
 #define PingPong_size                            48
-#define PixelFunc_size                           42
+#define PixelFunc_size                           82
 #define PixelRGB_size                            44
 #define Pixel_size                               22
 #define Rain_size                                46
@@ -1097,7 +1094,7 @@ struct MessageDescriptor<WireMessage> {
 };
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 32;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 31;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
     }

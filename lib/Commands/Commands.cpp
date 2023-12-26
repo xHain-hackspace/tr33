@@ -95,11 +95,13 @@ void Commands::process(uint8_t *buffer, int bytes)
 
 void Commands::render_commands()
 {
+#ifdef DEBUG_LOGS
   if (millis() - last_debug > debug_interval)
   {
-    send_debug = false;
+    send_debug = true;
     durations[0] = millis();
   }
+#endif // DEBUG_LOGS
 
   for (int i = 0; i < COMMAND_COUNT; i++)
   {
@@ -193,13 +195,9 @@ void Commands::render_commands()
   if (send_debug)
   {
     durations[3] = millis();
-  }
-
-  if (send_debug)
-  {
     last_debug = millis();
-    send_debug = false;
     Network::remote_log("Durations. PixelFun: " + String(durations[2] - durations[1]) + " Total: " + String(durations[3] - durations[0]));
+    send_debug = false;
   }
 }
 
