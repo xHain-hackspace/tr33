@@ -54,7 +54,6 @@ void maybe_update_colors(const CommandParams &cmd)
   // start transition if colors have changed
   if (new_colors != colors)
   {
-    Network::remote_log("new colors: " + String(new_colors[0].r) + " " + String(new_colors[0].g) + " " + String(new_colors[0].b) + " " + String(new_colors[1].r) + " " + String(new_colors[1].g) + " " + String(new_colors[1].b));
     in_transition = true;
     transition_start_time = millis();
 
