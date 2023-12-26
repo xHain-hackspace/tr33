@@ -56,7 +56,7 @@ void Commands::mapped_render_ball(LedStructure *leds, float x, float y, float si
   }
 }
 
-void Commands::mapped_shape(LedStructure *leds, CommandParams cmd)
+void Commands::mapped_shape(LedStructure *leds, const CommandParams &cmd)
 {
   MappedShape mapped_shape = cmd.type_params.mapped_shape;
 

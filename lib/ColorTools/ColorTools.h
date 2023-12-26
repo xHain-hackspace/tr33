@@ -11,7 +11,7 @@ public:
     float L, a, b;
   };
 
-  static void gamma_correction(CRGB &color);
+  static void apply_gamma_correction(CRGB &color);
   static std::array<CRGB, 2> random_color_pair(float distance);
   static CRGB random_color();
 

@@ -5,6 +5,7 @@
 #include <FastLED.h>
 #include <command_schemas.pb.h>
 #include <LedStructure.h>
+#include <fpm_math.hpp>
 
 #define COMMAND_COUNT 8
 #define COMMAND_HASH_SIZE 4
@@ -57,11 +58,14 @@ struct EffectItem
 };
 extern EffectItem effect_items[EFFECT_ITEM_COUNT];
 
+using fpm::fixed_16_16;
+
 class Commands
 {
 private:
   static int64_t millis_offset;
   uint16_t effect_item_index = 0;
+  bool send_debug = false;
 
 public:
   LedStructure *leds;
@@ -86,29 +90,29 @@ public:
   void write_hashes(TargetMetrics *target_metrics);
 
   // Commands
-  void white(LedStructure *leds, CommandParams cmd);
-  void single_color(LedStructure *leds, CommandParams cmd);
-  void calibrate(LedStructure *leds, CommandParams cmd);
-  void pixel(LedStructure *leds, CommandParams cmd);
-  void pixel_rgb(LedStructure *leds, CommandParams cmd);
-  void rainbow(LedStructure *leds, CommandParams cmd);
-  void sparkle(LedStructure *leds, CommandParams cmd);
-  void flicker_sparkle(LedStructure *leds, CommandParams cmd);
-  void show_number(LedStructure *leds, CommandParams cmd);
-  void rain(LedStructure *leds, CommandParams cmd);
-  void render(LedStructure *leds, CommandParams cmd);
-  void ping_pong(LedStructure *leds, CommandParams cmd);
-  void kaleidoscope(LedStructure *leds, CommandParams cmd);
-  void mapped_slope(LedStructure *leds, CommandParams cmd);
-  void mapped_shape(LedStructure *leds, CommandParams cmd);
-  void mapped_triangle(LedStructure *leds, CommandParams cmd);
-  void mapped_particles(LedStructure *leds, CommandParams cmd);
-  void mapped_ping_pong(LedStructure *leds, CommandParams cmd);
-  void gravity(LedStructure *leds, CommandParams cmd);
+  void white(LedStructure *leds, const CommandParams &cmd);
+  void single_color(LedStructure *leds, const CommandParams &cmd);
+  void calibrate(LedStructure *leds, const CommandParams &cmd);
+  void pixel(LedStructure *leds, const CommandParams &cmd);
+  void pixel_rgb(LedStructure *leds, const CommandParams &cmd);
+  void rainbow(LedStructure *leds, const CommandParams &cmd);
+  void sparkle(LedStructure *leds, const CommandParams &cmd);
+  void flicker_sparkle(LedStructure *leds, const CommandParams &cmd);
+  void show_number(LedStructure *leds, const CommandParams &cmd);
+  void rain(LedStructure *leds, const CommandParams &cmd);
+  void render(LedStructure *leds, const CommandParams &cmd);
+  void ping_pong(LedStructure *leds, const CommandParams &cmd);
+  void kaleidoscope(LedStructure *leds, const CommandParams &cmd);
+  void mapped_slope(LedStructure *leds, const CommandParams &cmd);
+  void mapped_shape(LedStructure *leds, const CommandParams &cmd);
+  void mapped_triangle(LedStructure *leds, const CommandParams &cmd);
+  void mapped_particles(LedStructure *leds, const CommandParams &cmd);
+  void mapped_ping_pong(LedStructure *leds, const CommandParams &cmd);
+  void gravity(LedStructure *leds, const CommandParams &cmd);
   void twang(LedStructure *leds);
-  void fairy_light(LedStructure *leds, CommandParams cmd);
-  void pixel_func(LedStructure *leds, CommandParams cmd);
-  void debug(LedStructure *leds, CommandParams cmd);
+  void fairy_light(LedStructure *leds, const CommandParams &cmd);
+  void pixel_func(LedStructure *leds, const CommandParams &cmd);
+  void debug(LedStructure *leds, const CommandParams &cmd);
 
   // Events
   void gravity_event(LedStructure *leds, uint8_t *data);
@@ -120,6 +124,12 @@ public:
   static float ease_in_cubic(float t);
   static float ease_out_cubic(float t);
   static float ease_in_out_cubic(float t);
+  static fixed_16_16 ease_in_quad(fixed_16_16 t);
+  static fixed_16_16 ease_out_quad(fixed_16_16 t);
+  static fixed_16_16 ease_in_out_quad(fixed_16_16 t);
+  static fixed_16_16 ease_in_cubic(fixed_16_16 t);
+  static fixed_16_16 ease_out_cubic(fixed_16_16 t);
+  static fixed_16_16 ease_in_out_cubic(fixed_16_16 t);
   static uint8_t random_or_value(uint8_t value, uint8_t min, uint8_t max);
 
   // Render

@@ -1,13 +1,13 @@
 #include <Commands.h>
 
-void Commands::pixel(LedStructure *leds, CommandParams cmd)
+void Commands::pixel(LedStructure *leds, const CommandParams &cmd)
 {
   Pixel pixel = cmd.type_params.pixel;
 
   leds->fade_led(cmd, pixel.led_index, color_from_palette(cmd, pixel.color));
 }
 
-void Commands::pixel_rgb(LedStructure *leds, CommandParams cmd)
+void Commands::pixel_rgb(LedStructure *leds, const CommandParams &cmd)
 {
   PixelRGB pixel_rgb = cmd.type_params.pixel_rgb;
 

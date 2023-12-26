@@ -2,7 +2,7 @@
 #include <Modifiers.h>
 #include <ColorTools.h>
 
-void Commands::debug(LedStructure *leds, CommandParams cmd)
+void Commands::debug(LedStructure *leds, const CommandParams &cmd)
 {
   Debug debug = cmd.type_params.debug;
 
@@ -52,7 +52,7 @@ void Commands::debug(LedStructure *leds, CommandParams cmd)
   // color = CHSV(60, 200, 200);
   // CRGB color = CRGB(0, 255, 255);
   // CRGB color = CRGB::RoyalBlue;
-  ColorTools::gamma_correction(color);
+  ColorTools::apply_gamma_correction(color);
 
   for (int i = 0; i < leds->strip_length(cmd.strip_index); i++)
   {

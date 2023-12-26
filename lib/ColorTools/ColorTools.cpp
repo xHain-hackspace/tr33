@@ -95,7 +95,7 @@ float ColorTools::cie94_distance(CLAB &color1, CLAB &color2)
   return deltaE;
 }
 
-void ColorTools::gamma_correction(CRGB &color)
+void ColorTools::apply_gamma_correction(CRGB &color)
 {
   if (Commands::firmware_config.gamma_correction)
   {

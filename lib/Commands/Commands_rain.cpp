@@ -3,7 +3,7 @@
 float drop_duration = 10000; // ms
 uint32_t last_drop_time[COMMAND_COUNT];
 
-void Commands::rain(LedStructure *leds, CommandParams cmd)
+void Commands::rain(LedStructure *leds, const CommandParams &cmd)
 {
   Rain rain = cmd.type_params.rain;
 

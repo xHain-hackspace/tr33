@@ -2,6 +2,6 @@
 
 #include <LedStructure.h>
 
-float LedStructure::mapping[][4] = {};
+const float LedStructure::mapping[][4] PROGMEM = {};
 
 #endif

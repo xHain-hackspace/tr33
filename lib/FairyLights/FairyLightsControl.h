@@ -1,3 +1,6 @@
+#ifndef __FAIRYLIGHTSCONTROL_H_INCLUDED__
+#define __FAIRYLIGHTSCONTROL_H_INCLUDED__
+
 #pragma once
 #include <Arduino.h>
 #include <cstdint>
@@ -12,7 +15,8 @@
  * This type of arrangement can be controlled using an Half-bridge such as the L293/L293D with the SELECT pin connected
  * to one input, and via a NOT-gate to the second input, while the PWM pin is connected to ENABLE.
  */
-class FairyLightsControl {
+class FairyLightsControl
+{
 public:
     /**
      * Construct fairy lights control
@@ -28,7 +32,8 @@ public:
      */
     FairyLightsControl(uint8_t pwm_channel, uint8_t pwm_pin, uint8_t select_channel, uint8_t select_pin);
 
-    enum class LedSelection {
+    enum class LedSelection
+    {
         Odd,  //!< Turn on every odd light
         Even, //!< Turn on every even light
         All   //!< Turn on all lights
@@ -48,3 +53,5 @@ private:
     uint8_t pwm_channel_;
     uint8_t select_channel_;
 };
+
+#endif // __FAIRYLIGHTSCONTROL_H_INCLUDED__

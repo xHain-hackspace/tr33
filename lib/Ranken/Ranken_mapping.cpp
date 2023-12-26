@@ -2,7 +2,7 @@
 
 #include <LedStructure.h>
 // Mapping started on 15.12.2022, 21:57:14
-float LedStructure::mapping[][4] = {
+const float LedStructure::mapping[][4] PROGMEM = {
     {1, 0, 699.0211791992188, 631.198974609375},
     {1, 1, 1462.463134765625, 580.57080078125},
     {1, 2, 1464.67626953125, 583.9238891601562},

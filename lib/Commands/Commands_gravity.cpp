@@ -6,7 +6,7 @@
 
 uint32_t gravity_last_ball_ms[COMMAND_COUNT];
 
-void Commands::gravity(LedStructure *leds, CommandParams cmd)
+void Commands::gravity(LedStructure *leds, const CommandParams &cmd)
 {
   Gravity gravity = cmd.type_params.gravity;
   float frequency = float(gravity.ball_rate) / 1000.0;

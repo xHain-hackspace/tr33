@@ -4,7 +4,7 @@
 
 int last_flicker_sparkle[COMMAND_COUNT];
 
-void Commands::flicker_sparkle(LedStructure *leds, CommandParams cmd)
+void Commands::flicker_sparkle(LedStructure *leds, const CommandParams &cmd)
 {
     FlickerSparkle flicker_sparkle = cmd.type_params.flicker_sparkle;
 

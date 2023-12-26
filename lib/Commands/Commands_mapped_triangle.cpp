@@ -21,7 +21,7 @@ bool point_in_triange(float xp, float yp, float x1, float y1, float x2, float y2
   return !(has_neg && has_pos);
 }
 
-void Commands::mapped_triangle(LedStructure *leds, CommandParams cmd)
+void Commands::mapped_triangle(LedStructure *leds, const CommandParams &cmd)
 {
   MappedTriangle mapped_triangle = cmd.type_params.mapped_triangle;
 

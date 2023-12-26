@@ -17,7 +17,7 @@ Particle particles[PARTICLES_MAX_PARTICLES];
 
 long particles_last_update = 0;
 
-void Commands::mapped_particles(LedStructure *leds, CommandParams cmd)
+void Commands::mapped_particles(LedStructure *leds, const CommandParams &cmd)
 {
   MappedParticles mapped_particles = cmd.type_params.mapped_particles;
 
