@@ -38,9 +38,9 @@ Wolke leds = Wolke();
 #include <Scubar.h>
 Scubar leds;
 #endif
-#ifdef LED_STRUCTURE_TREPPE
-#include <Treppe.h>
-Treppe leds;
+#ifdef LED_STRUCTURE_TETRAEDER
+#include <Tetraeder.h>
+Tetraeder leds;
 #endif
 #ifdef LED_STRUCTURE_ARROW
 #include <Arrow.h>

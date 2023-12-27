@@ -11,7 +11,7 @@
 #define STRIP_PIN_10 12
 #define STRIP_PIN_11 18
 #define STRIP_PIN_12 5
-#define STRIP_PIXEL_COUNT 300
+#define STRIP_PIXEL_COUNT 118
 #define STRIP_COUNT 12
 
 // mapping

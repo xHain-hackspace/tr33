@@ -28,8 +28,8 @@
 #ifdef LED_STRUCTURE_SCUBAR
 #include <Scubar_config.h>
 #endif
-#ifdef LED_STRUCTURE_TREPPE
-#include <Treppe_config.h>
+#ifdef LED_STRUCTURE_TETRAEDER
+#include <Tetraeder_config.h>
 #endif
 #ifdef LED_STRUCTURE_ARROW
 #include <Arrow_config.h>
