@@ -98,7 +98,7 @@ std::array<int, 2> map(uint8_t strip_index, int led)
 CRGB Tetraeder::get_led(uint8_t strip_index, int led)
 {
   std::array<int, 2> mapped = map(strip_index, led);
-  leds[mapped[0]][mapped[1]];
+  return leds[mapped[0]][mapped[1]];
 }
 
 void Tetraeder::set_led(uint8_t strip_index, int led, CRGB color)
@@ -107,9 +107,29 @@ void Tetraeder::set_led(uint8_t strip_index, int led, CRGB color)
   leds[mapped[0]][mapped[1]] = color;
 }
 
+void Tetraeder::fade_led(CommandParams cmd, int led, CRGB target)
+{
+  fade_led(cmd.strip_index, led, target, cmd.brightness);
+}
+
+void Tetraeder::fade_led(uint8_t strip_index, int led, CRGB target, fract8 amount)
+{
+  if (led >= 0 && led < strip_length(strip_index))
+  {
+    CRGB current = get_led(strip_index, led);
+    CRGB faded = blend(current, target, amount);
+    set_led(strip_index, led, faded);
+  }
+}
+
 uint16_t Tetraeder::strip_length(uint8_t strip_index)
 {
   return EDGE_LENGTH;
+}
+
+uint16_t Tetraeder::pixel_count(uint8_t strip_index)
+{
+  return EDGE_LENGTH * EDGE_COUNT;
 }
 
 uint8_t Tetraeder::random_strip(uint8_t strip_index)

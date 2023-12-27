@@ -87,6 +87,9 @@ PB_BIND(FadeOut, FadeOut, AUTO)
 PB_BIND(FadeOutEvent, FadeOutEvent, AUTO)
 
 
+PB_BIND(RandomWalk, RandomWalk, AUTO)
+
+
 PB_BIND(Twang, Twang, AUTO)
 
 

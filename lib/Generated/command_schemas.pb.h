@@ -314,6 +314,14 @@ typedef struct _Rainbow {
     int32_t rainbow_size; 
 } Rainbow;
 
+typedef struct _RandomWalk { 
+    Shape1D shape; 
+    int32_t color; 
+    int32_t width; 
+    int32_t count; 
+    int32_t speed; 
+} RandomWalk;
+
 typedef struct _RemoteLog { 
     char message[101]; 
 } RemoteLog;
@@ -398,6 +406,7 @@ typedef struct _CommandParams {
         Calibrate calibrate;
         PixelFunc pixel_func;
         Debug debug;
+        RandomWalk random_walk;
         FadeOut fade_out;
     } type_params; 
     CommandParams_hash_t hash; 
@@ -483,6 +492,7 @@ extern "C" {
 #define Debug_init_default                       {0, 0, 0}
 #define FadeOut_init_default                     {0}
 #define FadeOutEvent_init_default                {Shape1D_BALL, 0, 20, 20, 210, 255, 10}
+#define RandomWalk_init_default                  {Shape1D_BALL, 65, 20, 1, 100}
 #define Twang_init_default                       {0}
 #define FairyLight_init_default                  {FairyPattern_ODD_EVEN, 20, 0}
 #define JoystickEvent_init_default               {0, 0, false, false, false, false}
@@ -518,6 +528,7 @@ extern "C" {
 #define Debug_init_zero                          {0, 0, 0}
 #define FadeOut_init_zero                        {0}
 #define FadeOutEvent_init_zero                   {_Shape1D_MIN, 0, 0, 0, 0, 0, 0}
+#define RandomWalk_init_zero                     {_Shape1D_MIN, 0, 0, 0, 0}
 #define Twang_init_zero                          {0}
 #define FairyLight_init_zero                     {_FairyPattern_MIN, 0, 0}
 #define JoystickEvent_init_zero                  {0, 0, 0, 0, 0, 0}
@@ -628,6 +639,11 @@ extern "C" {
 #define Rainbow_speed_tag                        1
 #define Rainbow_wave_size_tag                    2
 #define Rainbow_rainbow_size_tag                 3
+#define RandomWalk_shape_tag                     1
+#define RandomWalk_color_tag                     2
+#define RandomWalk_width_tag                     3
+#define RandomWalk_count_tag                     4
+#define RandomWalk_speed_tag                     6
 #define RemoteLog_message_tag                    1
 #define Render_shape_tag                         1
 #define Render_color_tag                         2
@@ -681,6 +697,7 @@ extern "C" {
 #define CommandParams_calibrate_tag              27
 #define CommandParams_pixel_func_tag             28
 #define CommandParams_debug_tag                  29
+#define CommandParams_random_walk_tag            30
 #define CommandParams_fade_out_tag               31
 #define CommandParams_hash_tag                   100
 #define CommandParams_color_1_tag                101
@@ -746,6 +763,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fairy_light,type_params.fairy_li
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,calibrate,type_params.calibrate),  27) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel_func,type_params.pixel_func),  28) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,debug,type_params.debug),  29) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,random_walk,type_params.random_walk),  30) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fade_out,type_params.fade_out),  31) \
 X(a, STATIC,   REQUIRED, BYTES,    hash,            100) \
 X(a, STATIC,   REQUIRED, BYTES,    color_1,         101) \
@@ -775,6 +793,7 @@ X(a, STATIC,   REQUIRED, BYTES,    color_2,         102)
 #define CommandParams_type_params_calibrate_MSGTYPE Calibrate
 #define CommandParams_type_params_pixel_func_MSGTYPE PixelFunc
 #define CommandParams_type_params_debug_MSGTYPE Debug
+#define CommandParams_type_params_random_walk_MSGTYPE RandomWalk
 #define CommandParams_type_params_fade_out_MSGTYPE FadeOut
 
 #define TimeSync_FIELDLIST(X, a) \
@@ -975,6 +994,15 @@ X(a, STATIC,   REQUIRED, INT32,    decay,             7)
 #define FadeOutEvent_CALLBACK NULL
 #define FadeOutEvent_DEFAULT (const pb_byte_t*)"\x10\x00\x18\x14\x20\x14\x28\xd2\x01\x30\xff\x01\x38\x0a\x00"
 
+#define RandomWalk_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, UENUM,    shape,             1) \
+X(a, STATIC,   REQUIRED, INT32,    color,             2) \
+X(a, STATIC,   REQUIRED, INT32,    width,             3) \
+X(a, STATIC,   REQUIRED, INT32,    count,             4) \
+X(a, STATIC,   REQUIRED, INT32,    speed,             6)
+#define RandomWalk_CALLBACK NULL
+#define RandomWalk_DEFAULT (const pb_byte_t*)"\x10\x41\x18\x14\x20\x01\x30\x64\x00"
+
 #define Twang_FIELDLIST(X, a) \
 
 #define Twang_CALLBACK NULL
@@ -1064,6 +1092,7 @@ extern const pb_msgdesc_t PixelFuncEvent_msg;
 extern const pb_msgdesc_t Debug_msg;
 extern const pb_msgdesc_t FadeOut_msg;
 extern const pb_msgdesc_t FadeOutEvent_msg;
+extern const pb_msgdesc_t RandomWalk_msg;
 extern const pb_msgdesc_t Twang_msg;
 extern const pb_msgdesc_t FairyLight_msg;
 extern const pb_msgdesc_t JoystickEvent_msg;
@@ -1101,6 +1130,7 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define Debug_fields &Debug_msg
 #define FadeOut_fields &FadeOut_msg
 #define FadeOutEvent_fields &FadeOutEvent_msg
+#define RandomWalk_fields &RandomWalk_msg
 #define Twang_fields &Twang_msg
 #define FairyLight_fields &FairyLight_msg
 #define JoystickEvent_fields &JoystickEvent_msg
@@ -1137,6 +1167,7 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define Pixel_size                               22
 #define Rain_size                                46
 #define Rainbow_size                             33
+#define RandomWalk_size                          46
 #define RemoteLog_size                           102
 #define Render_size                              35
 #define SingleColor_size                         11
@@ -1163,7 +1194,7 @@ struct MessageDescriptor<WireMessage> {
 };
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 32;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 33;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
     }
@@ -1341,6 +1372,13 @@ struct MessageDescriptor<FadeOutEvent> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 7;
     static inline const pb_msgdesc_t* fields() {
         return &FadeOutEvent_msg;
+    }
+};
+template <>
+struct MessageDescriptor<RandomWalk> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 5;
+    static inline const pb_msgdesc_t* fields() {
+        return &RandomWalk_msg;
     }
 };
 template <>

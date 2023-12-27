@@ -55,7 +55,8 @@ void LedStructure::init()
 
   Sparkle sparkle = Sparkle_init_default;
   sparkle.color = 0;
-  sparkle.sparle_rate = 50;
+  sparkle.sparle_rate = 15;
+  sparkle.duration = 150;
   sparkle.color_type = ColorType_RANDOM_COLOR;
   commands[0] = (CommandParams)CommandParams_init_default;
   commands[0].which_type_params = CommandParams_sparkle_tag;

@@ -172,6 +172,7 @@ message CommandParams {
     Calibrate calibrate = 27;
     PixelFunc pixel_func = 28;
     Debug debug = 29;
+    RandomWalk random_walk = 30;
     FadeOut fade_out = 31;
   }
   // legacy
@@ -351,6 +352,14 @@ message FadeOutEvent {
   required int32 color = 5 [default = 210];  
   required int32 brightness = 6 [default = 255];
   required int32 decay = 7 [default = 10];
+}
+
+message RandomWalk {
+  required Shape1D shape = 1 [default = BALL];
+  required int32 color = 2 [default = 65];
+  required int32 width = 3 [default = 20];  
+  required int32 count = 4 [default = 1, (nanopb).max_size=10];
+  required int32 speed = 6 [default = 100];
 }
 
 message Twang {

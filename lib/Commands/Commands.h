@@ -44,7 +44,7 @@
 
 extern CommandParams commands[COMMAND_COUNT];
 
-#define EFFECT_ITEM_COUNT 1200
+#define EFFECT_ITEM_COUNT 1700
 struct EffectItem
 {
   bool enabled;
@@ -52,6 +52,7 @@ struct EffectItem
   uint8_t strip_index;
   uint8_t command_index;
   uint8_t param_1;
+  uint8_t param_2;
   CRGB color;
   float center;
   uint32_t start_time;
@@ -113,6 +114,7 @@ public:
   void fairy_light(LedStructure *leds, const CommandParams &cmd);
   void pixel_func(LedStructure *leds, const CommandParams &cmd);
   void debug(LedStructure *leds, const CommandParams &cmd);
+  void random_walk(LedStructure *leds, const CommandParams &cmd);
 
   // Events
   void gravity_event(LedStructure *leds, uint8_t *data);

@@ -47,6 +47,7 @@ void Network::setup()
   };
 
   Serial.printf("Wlan begin... ");
+  // WiFi.begin("37C3", WPA2_AUTH_TTLS, "37C3", "37C3", "37C3");
   WiFi.begin(ssid, password);
 
   ota_setup();
@@ -120,8 +121,8 @@ void Network::loop(Commands commands)
     udp_up = false;
     ota_up = false;
     wifi_error_count++;
-    sleep(1);
-    if (wifi_error_count > 150)
+    delay(150);
+    if (wifi_error_count > 50)
     {
       ESP.restart();
     }

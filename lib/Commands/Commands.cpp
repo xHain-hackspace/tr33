@@ -168,6 +168,9 @@ void Commands::render_commands()
       case CommandParams_gravity_tag:
         gravity(leds, commands[i]);
         break;
+      case CommandParams_random_walk_tag:
+        random_walk(leds, commands[i]);
+        break;
       case CommandParams_twang_tag:
         twang(leds);
         break;

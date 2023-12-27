@@ -352,6 +352,24 @@ int *Modifiers::value_from_type_param(CommandParams *cmd, uint8_t field_index)
     
     }
   
+  case CommandParams_random_walk_tag:
+    switch (field_index)
+    {
+    
+    case MIN_INDEX + 0:
+      return &cmd->type_params.random_walk.color;
+    
+    case MIN_INDEX + 1:
+      return &cmd->type_params.random_walk.width;
+    
+    case MIN_INDEX + 2:
+      return &cmd->type_params.random_walk.count;
+    
+    case MIN_INDEX + 3:
+      return &cmd->type_params.random_walk.speed;
+    
+    }
+  
   case CommandParams_fade_out_tag:
     switch (field_index)
     {
