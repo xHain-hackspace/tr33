@@ -46,6 +46,10 @@ Tetraeder leds;
 #include <Arrow.h>
 Arrow leds;
 #endif
+#ifdef LED_STRUCTURE_MINICHROME
+#include <Minichrome.h>
+Minichrome leds;
+#endif
 
 Commands command_runner = Commands();
 

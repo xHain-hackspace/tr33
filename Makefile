@@ -87,3 +87,6 @@ tetraeder:
 arrow:
 	$(pio_binary) run --target upload -e arrow
 	
+minichrome:
+	$(pio_binary) run --target upload -e minichrome
+	
