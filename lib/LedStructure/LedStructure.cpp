@@ -60,9 +60,17 @@ void LedStructure::init()
   commands[0] = (CommandParams)CommandParams_init_default;
   commands[0].which_type_params = CommandParams_sparkle_tag;
   commands[0].type_params.sparkle = sparkle;
-  commands[0].color_palette = ColorPalette_OCEAN;
+  commands[0].color_palette = ColorPalette_ORANGERY;
   commands[0].hash.size = 1;
   commands[0].hash.bytes[0] = 23;
+
+  // Debug debug = Debug_init_default;
+
+  // commands[0] = (CommandParams)CommandParams_init_default;
+  // commands[0].which_type_params = CommandParams_debug_tag;
+  // commands[0].type_params.debug = debug;
+  // commands[0].hash.size = 1;
+  // commands[0].hash.bytes[0] = 23;
 
   // String init_program = String("sin(2*t-hypot(x-5,y-5))");
   // String init_program = String("x/16");
