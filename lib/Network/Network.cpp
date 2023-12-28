@@ -121,7 +121,7 @@ void Network::loop(Commands commands)
     udp_up = false;
     ota_up = false;
     wifi_error_count++;
-    delay(150);
+    delay(50);
     if (wifi_error_count > 50)
     {
       ESP.restart();

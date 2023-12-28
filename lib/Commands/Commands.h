@@ -53,6 +53,7 @@ struct EffectItem
   uint8_t command_index;
   uint8_t param_1;
   uint8_t param_2;
+  uint8_t param_3;
   CRGB color;
   float center;
   uint32_t start_time;
@@ -115,9 +116,11 @@ public:
   void pixel_func(LedStructure *leds, const CommandParams &cmd);
   void debug(LedStructure *leds, const CommandParams &cmd);
   void random_walk(LedStructure *leds, const CommandParams &cmd);
+  void fade_out(LedStructure *leds, const CommandParams &cmd);
 
   // Events
-  void gravity_event(LedStructure *leds, uint8_t *data);
+  // void gravity_event(LedStructure *leds, uint8_t *data);
+  void fade_out_event(LedStructure *leds, const FadeOutEvent &event);
 
   // float easing functions
   static float ease_in_quad(float t);

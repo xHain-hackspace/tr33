@@ -137,6 +137,10 @@ message WireMessage {
     ColorPaletteRequest color_palette_request = 6;
     ColorPaletteResponse color_palette_response = 7;
     FirmwareConfig firmware_config = 8;
+
+    // events
+    PixelFuncEvent pixel_func_event = 100;
+    FadeOutEvent fade_out_event = 101;
   }
 }
 

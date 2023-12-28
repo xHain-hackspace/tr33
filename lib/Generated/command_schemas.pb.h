@@ -426,6 +426,8 @@ typedef struct _WireMessage {
         ColorPaletteResponse color_palette_response;
         FirmwareConfig firmware_config;
         RemoteLog remote_log;
+        PixelFuncEvent pixel_func_event;
+        FadeOutEvent fade_out_event;
     } message; 
 } WireMessage;
 
@@ -711,6 +713,8 @@ extern "C" {
 #define WireMessage_color_palette_response_tag   7
 #define WireMessage_firmware_config_tag          8
 #define WireMessage_remote_log_tag               9
+#define WireMessage_pixel_func_event_tag         100
+#define WireMessage_fade_out_event_tag           101
 
 /* Struct field encoding specification for nanopb */
 #define WireMessage_FIELDLIST(X, a) \
@@ -722,7 +726,9 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (message,target_metrics,message.target_metric
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,color_palette_request,message.color_palette_request),   6) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,color_palette_response,message.color_palette_response),   7) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (message,firmware_config,message.firmware_config),   8) \
-X(a, STATIC,   ONEOF,    MESSAGE,  (message,remote_log,message.remote_log),   9)
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,remote_log,message.remote_log),   9) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,pixel_func_event,message.pixel_func_event), 100) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (message,fade_out_event,message.fade_out_event), 101)
 #define WireMessage_CALLBACK NULL
 #define WireMessage_DEFAULT (const pb_byte_t*)"\x08\x00\x00"
 #define WireMessage_message_command_params_MSGTYPE CommandParams
@@ -733,6 +739,8 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (message,remote_log,message.remote_log),   9)
 #define WireMessage_message_color_palette_response_MSGTYPE ColorPaletteResponse
 #define WireMessage_message_firmware_config_MSGTYPE FirmwareConfig
 #define WireMessage_message_remote_log_MSGTYPE RemoteLog
+#define WireMessage_message_pixel_func_event_MSGTYPE PixelFuncEvent
+#define WireMessage_message_fade_out_event_MSGTYPE FadeOutEvent
 
 #define CommandParams_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    index,             1) \
@@ -1187,7 +1195,7 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 namespace nanopb {
 template <>
 struct MessageDescriptor<WireMessage> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 9;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 11;
     static inline const pb_msgdesc_t* fields() {
         return &WireMessage_msg;
     }

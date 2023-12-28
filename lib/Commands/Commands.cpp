@@ -35,17 +35,21 @@ void Commands::handle_message(WireMessage msg)
 {
   switch (msg.which_message)
   {
+
   case WireMessage_command_params_tag:
     handle_command(msg.message.command_params);
     break;
+
   case WireMessage_time_sync_tag:
     millis_offset = msg.message.time_sync.millis - millis();
     break;
+
   case WireMessage_joystick_event_tag:
     joystick_x = msg.message.joystick_event.x;
     joystick_y = msg.message.joystick_event.y;
     joystick_button = msg.message.joystick_event.button1;
     break;
+
   case WireMessage_firmware_config_tag:
     if (msg.message.firmware_config.calibration_fastled != firmware_config.calibration_fastled || msg.message.firmware_config.calibration_custom != firmware_config.calibration_custom)
     {
@@ -64,7 +68,10 @@ void Commands::handle_message(WireMessage msg)
     }
 
     firmware_config = msg.message.firmware_config;
+    break;
 
+  case WireMessage_fade_out_event_tag:
+    fade_out_event(leds, msg.message.fade_out_event);
     break;
   }
 }
@@ -170,6 +177,9 @@ void Commands::render_commands()
         break;
       case CommandParams_random_walk_tag:
         random_walk(leds, commands[i]);
+        break;
+      case CommandParams_fade_out_tag:
+        fade_out(leds, commands[i]);
         break;
       case CommandParams_twang_tag:
         twang(leds);

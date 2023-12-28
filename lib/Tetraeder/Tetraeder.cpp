@@ -136,5 +136,5 @@ uint8_t Tetraeder::random_strip(uint8_t strip_index)
 
 uint8_t Tetraeder::get_max_strip_index()
 {
-  return EDGE_COUNT;
+  return EDGE_COUNT - 1;
 }
