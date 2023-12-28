@@ -75,7 +75,16 @@ PB_BIND(MappedPingPong, MappedPingPong, AUTO)
 PB_BIND(PixelFunc, PixelFunc, AUTO)
 
 
+PB_BIND(PixelFuncEvent, PixelFuncEvent, AUTO)
+
+
 PB_BIND(Debug, Debug, AUTO)
+
+
+PB_BIND(FadeOut, FadeOut, AUTO)
+
+
+PB_BIND(FadeOutEvent, FadeOutEvent, AUTO)
 
 
 PB_BIND(Twang, Twang, AUTO)

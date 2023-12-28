@@ -352,5 +352,11 @@ int *Modifiers::value_from_type_param(CommandParams *cmd, uint8_t field_index)
     
     }
   
+  case CommandParams_fade_out_tag:
+    switch (field_index)
+    {
+    
+    }
+  
   }
 }

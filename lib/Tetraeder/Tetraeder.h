@@ -18,4 +18,6 @@ public:
   CRGB get_led(uint8_t strip_index, int led);
   uint16_t strip_length(uint8_t strip_index);
   uint8_t random_strip(uint8_t strip_index);
+
+  uint8_t get_max_strip_index();
 };

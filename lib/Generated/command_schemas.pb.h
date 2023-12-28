@@ -129,6 +129,10 @@ typedef enum _ColorType {
 } ColorType;
 
 /* Struct definitions */
+typedef struct _FadeOut { 
+    char dummy_field;
+} FadeOut;
+
 typedef struct _Kaleidoscope { 
     char dummy_field;
 } Kaleidoscope;
@@ -157,6 +161,16 @@ typedef struct _Debug {
     int32_t param2; 
     int32_t param3; 
 } Debug;
+
+typedef struct _FadeOutEvent { 
+    Shape1D shape; 
+    int32_t strip_index; 
+    int32_t position; 
+    int32_t width; 
+    int32_t color; 
+    int32_t brightness; 
+    int32_t decay; 
+} FadeOutEvent;
 
 typedef struct _FairyLight { 
     FairyPattern fairy_pattern; 
@@ -273,6 +287,11 @@ typedef struct _PixelFunc {
     char function[81]; /* required int32 color_distance = 2 [ default = 100 ]; */
 } PixelFunc;
 
+typedef struct _PixelFuncEvent { 
+    int32_t a; 
+    int32_t b; 
+} PixelFuncEvent;
+
 typedef struct _PixelRGB { 
     int32_t red; 
     int32_t green; 
@@ -379,6 +398,7 @@ typedef struct _CommandParams {
         Calibrate calibrate;
         PixelFunc pixel_func;
         Debug debug;
+        FadeOut fade_out;
     } type_params; 
     CommandParams_hash_t hash; 
     CommandParams_color_1_t color_1; 
@@ -459,7 +479,10 @@ extern "C" {
 #define MappedParticles_init_default             {177, Shape2D_CIRCLE, 128, 128, 50, 50}
 #define MappedPingPong_init_default              {123, 0, 5}
 #define PixelFunc_init_default                   {"sin(2*t-hypot(x-3.5,y-3.5))"}
+#define PixelFuncEvent_init_default              {0, 0}
 #define Debug_init_default                       {0, 0, 0}
+#define FadeOut_init_default                     {0}
+#define FadeOutEvent_init_default                {Shape1D_BALL, 0, 20, 20, 210, 255, 10}
 #define Twang_init_default                       {0}
 #define FairyLight_init_default                  {FairyPattern_ODD_EVEN, 20, 0}
 #define JoystickEvent_init_default               {0, 0, false, false, false, false}
@@ -491,7 +514,10 @@ extern "C" {
 #define MappedParticles_init_zero                {0, _Shape2D_MIN, 0, 0, 0, 0}
 #define MappedPingPong_init_zero                 {0, 0, 0}
 #define PixelFunc_init_zero                      {""}
+#define PixelFuncEvent_init_zero                 {0, 0}
 #define Debug_init_zero                          {0, 0, 0}
+#define FadeOut_init_zero                        {0}
+#define FadeOutEvent_init_zero                   {_Shape1D_MIN, 0, 0, 0, 0, 0, 0}
 #define Twang_init_zero                          {0}
 #define FairyLight_init_zero                     {_FairyPattern_MIN, 0, 0}
 #define JoystickEvent_init_zero                  {0, 0, 0, 0, 0, 0}
@@ -511,6 +537,13 @@ extern "C" {
 #define Debug_param1_tag                         1
 #define Debug_param2_tag                         2
 #define Debug_param3_tag                         3
+#define FadeOutEvent_shape_tag                   1
+#define FadeOutEvent_strip_index_tag             2
+#define FadeOutEvent_position_tag                3
+#define FadeOutEvent_width_tag                   4
+#define FadeOutEvent_color_tag                   5
+#define FadeOutEvent_brightness_tag              6
+#define FadeOutEvent_decay_tag                   7
 #define FairyLight_fairy_pattern_tag             1
 #define FairyLight_frequency_tag                 2
 #define FairyLight_fairy_index_tag               3
@@ -581,6 +614,8 @@ extern "C" {
 #define Pixel_color_tag                          1
 #define Pixel_led_index_tag                      2
 #define PixelFunc_function_tag                   1
+#define PixelFuncEvent_a_tag                     1
+#define PixelFuncEvent_b_tag                     2
 #define PixelRGB_red_tag                         1
 #define PixelRGB_green_tag                       2
 #define PixelRGB_blue_tag                        3
@@ -646,6 +681,7 @@ extern "C" {
 #define CommandParams_calibrate_tag              27
 #define CommandParams_pixel_func_tag             28
 #define CommandParams_debug_tag                  29
+#define CommandParams_fade_out_tag               31
 #define CommandParams_hash_tag                   100
 #define CommandParams_color_1_tag                101
 #define CommandParams_color_2_tag                102
@@ -710,6 +746,7 @@ X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fairy_light,type_params.fairy_li
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,calibrate,type_params.calibrate),  27) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,pixel_func,type_params.pixel_func),  28) \
 X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,debug,type_params.debug),  29) \
+X(a, STATIC,   ONEOF,    MESSAGE,  (type_params,fade_out,type_params.fade_out),  31) \
 X(a, STATIC,   REQUIRED, BYTES,    hash,            100) \
 X(a, STATIC,   REQUIRED, BYTES,    color_1,         101) \
 X(a, STATIC,   REQUIRED, BYTES,    color_2,         102)
@@ -738,6 +775,7 @@ X(a, STATIC,   REQUIRED, BYTES,    color_2,         102)
 #define CommandParams_type_params_calibrate_MSGTYPE Calibrate
 #define CommandParams_type_params_pixel_func_MSGTYPE PixelFunc
 #define CommandParams_type_params_debug_MSGTYPE Debug
+#define CommandParams_type_params_fade_out_MSGTYPE FadeOut
 
 #define TimeSync_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, UINT64,   millis,            1)
@@ -908,12 +946,34 @@ X(a, STATIC,   REQUIRED, STRING,   function,          1)
 #define PixelFunc_CALLBACK NULL
 #define PixelFunc_DEFAULT (const pb_byte_t*)"\x0a\x1b\x73\x69\x6e\x28\x32\x2a\x74\x2d\x68\x79\x70\x6f\x74\x28\x78\x2d\x33\x2e\x35\x2c\x79\x2d\x33\x2e\x35\x29\x29\x00"
 
+#define PixelFuncEvent_FIELDLIST(X, a_) \
+X(a_, STATIC,   REQUIRED, INT32,    a,                 1) \
+X(a_, STATIC,   REQUIRED, INT32,    b,                 2)
+#define PixelFuncEvent_CALLBACK NULL
+#define PixelFuncEvent_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x00\x00"
+
 #define Debug_FIELDLIST(X, a) \
 X(a, STATIC,   REQUIRED, INT32,    param1,            1) \
 X(a, STATIC,   REQUIRED, INT32,    param2,            2) \
 X(a, STATIC,   REQUIRED, INT32,    param3,            3)
 #define Debug_CALLBACK NULL
 #define Debug_DEFAULT (const pb_byte_t*)"\x08\x00\x10\x00\x18\x00\x00"
+
+#define FadeOut_FIELDLIST(X, a) \
+
+#define FadeOut_CALLBACK NULL
+#define FadeOut_DEFAULT NULL
+
+#define FadeOutEvent_FIELDLIST(X, a) \
+X(a, STATIC,   REQUIRED, UENUM,    shape,             1) \
+X(a, STATIC,   REQUIRED, INT32,    strip_index,       2) \
+X(a, STATIC,   REQUIRED, INT32,    position,          3) \
+X(a, STATIC,   REQUIRED, INT32,    width,             4) \
+X(a, STATIC,   REQUIRED, INT32,    color,             5) \
+X(a, STATIC,   REQUIRED, INT32,    brightness,        6) \
+X(a, STATIC,   REQUIRED, INT32,    decay,             7)
+#define FadeOutEvent_CALLBACK NULL
+#define FadeOutEvent_DEFAULT (const pb_byte_t*)"\x10\x00\x18\x14\x20\x14\x28\xd2\x01\x30\xff\x01\x38\x0a\x00"
 
 #define Twang_FIELDLIST(X, a) \
 
@@ -1000,7 +1060,10 @@ extern const pb_msgdesc_t MappedTriangle_msg;
 extern const pb_msgdesc_t MappedParticles_msg;
 extern const pb_msgdesc_t MappedPingPong_msg;
 extern const pb_msgdesc_t PixelFunc_msg;
+extern const pb_msgdesc_t PixelFuncEvent_msg;
 extern const pb_msgdesc_t Debug_msg;
+extern const pb_msgdesc_t FadeOut_msg;
+extern const pb_msgdesc_t FadeOutEvent_msg;
 extern const pb_msgdesc_t Twang_msg;
 extern const pb_msgdesc_t FairyLight_msg;
 extern const pb_msgdesc_t JoystickEvent_msg;
@@ -1034,7 +1097,10 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define MappedParticles_fields &MappedParticles_msg
 #define MappedPingPong_fields &MappedPingPong_msg
 #define PixelFunc_fields &PixelFunc_msg
+#define PixelFuncEvent_fields &PixelFuncEvent_msg
 #define Debug_fields &Debug_msg
+#define FadeOut_fields &FadeOut_msg
+#define FadeOutEvent_fields &FadeOutEvent_msg
 #define Twang_fields &Twang_msg
 #define FairyLight_fields &FairyLight_msg
 #define JoystickEvent_fields &JoystickEvent_msg
@@ -1050,6 +1116,8 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define ColorPaletteResponse_size                1538
 #define CommandParams_size                       436
 #define Debug_size                               33
+#define FadeOutEvent_size                        68
+#define FadeOut_size                             0
 #define FairyLight_size                          24
 #define FirmwareConfig_size                      12
 #define FlickerSparkle_size                      79
@@ -1063,6 +1131,7 @@ extern const pb_msgdesc_t FirmwareConfig_msg;
 #define MappedTriangle_size                      77
 #define Modifier_size                            57
 #define PingPong_size                            48
+#define PixelFuncEvent_size                      22
 #define PixelFunc_size                           82
 #define PixelRGB_size                            44
 #define Pixel_size                               22
@@ -1094,7 +1163,7 @@ struct MessageDescriptor<WireMessage> {
 };
 template <>
 struct MessageDescriptor<CommandParams> {
-    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 31;
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 32;
     static inline const pb_msgdesc_t* fields() {
         return &CommandParams_msg;
     }
@@ -1247,10 +1316,31 @@ struct MessageDescriptor<PixelFunc> {
     }
 };
 template <>
+struct MessageDescriptor<PixelFuncEvent> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 2;
+    static inline const pb_msgdesc_t* fields() {
+        return &PixelFuncEvent_msg;
+    }
+};
+template <>
 struct MessageDescriptor<Debug> {
     static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 3;
     static inline const pb_msgdesc_t* fields() {
         return &Debug_msg;
+    }
+};
+template <>
+struct MessageDescriptor<FadeOut> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 0;
+    static inline const pb_msgdesc_t* fields() {
+        return &FadeOut_msg;
+    }
+};
+template <>
+struct MessageDescriptor<FadeOutEvent> {
+    static PB_INLINE_CONSTEXPR const pb_size_t fields_array_length = 7;
+    static inline const pb_msgdesc_t* fields() {
+        return &FadeOutEvent_msg;
     }
 };
 template <>
