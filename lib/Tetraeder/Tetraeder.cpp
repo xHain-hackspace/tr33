@@ -1,9 +1,6 @@
 #include <Tetraeder.h>
 #include <Tetraeder_config.h>
 
-#define NO_EDGE 42
-#define MINUS_NULL 43
-
 Tetraeder::Tetraeder()
 {
   FastLED.addLeds<NEOPIXEL, STRIP_PIN_1>(LedStructure::leds[0], STRIP_PIXEL_COUNT);
@@ -19,18 +16,6 @@ Tetraeder::Tetraeder()
   FastLED.addLeds<NEOPIXEL, STRIP_PIN_11>(LedStructure::leds[10], STRIP_PIXEL_COUNT);
   FastLED.addLeds<NEOPIXEL, STRIP_PIN_12>(LedStructure::leds[11], STRIP_PIXEL_COUNT);
 }
-
-int corners[CORNER_COUNT][6] = {
-    {MINUS_NULL, -1, -2, NO_EDGE, NO_EDGE, NO_EDGE},
-    {0, 3, -6, -7, -14, -5},
-    {1, -3, 4, -8, -9, -10},
-    {2, -4, 5, -12, -11, -13},
-    {6, 15, -20, NO_EDGE, NO_EDGE, NO_EDGE},
-    {15, 21, -22, 16, 7, 8},
-    {-16, 9, 17, NO_EDGE, NO_EDGE, NO_EDGE},
-    {22, 10, 11, -17, -23, 18},
-    {12, -18, 19, NO_EDGE, NO_EDGE, NO_EDGE},
-    {-19, 23, -21, 13, 14, 20}};
 
 std::array<int, 2> map(uint8_t strip_index, int led)
 {
@@ -94,6 +79,18 @@ std::array<int, 2> map(uint8_t strip_index, int led)
     return {1, led};
   }
 }
+
+int corners[CORNER_COUNT][6] = {
+    {MINUS_NULL, -1, -2, NO_EDGE, NO_EDGE, NO_EDGE},
+    {0, 3, -6, -7, -14, -5},
+    {1, -3, 4, -8, -9, -10},
+    {2, -4, 5, -12, -11, -13},
+    {6, 15, -20, NO_EDGE, NO_EDGE, NO_EDGE},
+    {15, 21, -22, 16, 7, 8},
+    {-16, 9, 17, NO_EDGE, NO_EDGE, NO_EDGE},
+    {22, 10, 11, -17, -23, 18},
+    {12, -18, 19, NO_EDGE, NO_EDGE, NO_EDGE},
+    {-19, 23, -21, 13, 14, 20}};
 
 CRGB Tetraeder::get_led(uint8_t strip_index, int led)
 {

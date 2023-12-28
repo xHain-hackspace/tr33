@@ -1,3 +1,6 @@
+#ifndef __TETRAEDER_H_INCLUDED__
+#define __TETRAEDER_H_INCLUDED__
+
 #include <Arduino.h>
 #include <FastLED.h>
 #include <command_schemas.pb.h>
@@ -6,6 +9,11 @@
 #define EDGE_COUNT 24
 #define EDGE_LENGTH 59
 #define CORNER_COUNT 10
+
+#define NO_EDGE 42
+#define MINUS_NULL 43
+
+extern int corners[CORNER_COUNT][6];
 
 class Tetraeder : public LedStructure
 {
@@ -24,3 +32,5 @@ public:
 
   uint8_t get_max_strip_index();
 };
+
+#endif // __TETRAEDER_H_INCLUDED__

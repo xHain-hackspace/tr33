@@ -144,6 +144,9 @@ public:
   static void mapped_render_ball(LedStructure *leds, float x, float y, float size, CRGB color, float brightness, float fade_distance);
   static void render_mappled_slope(LedStructure *leds, float x1, float y1, float x2, float y2, SlopeType slope_type, float fade_distance, CRGB color, float brightness);
 
+  // RandomWalk
+  void add_random_walk(uint8_t current_edge, uint dir, const CommandParams &cmd, CRGB color);
+
 private:
   void render_commands();
 };
