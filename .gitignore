@@ -11,3 +11,4 @@ protobuf/*
 .envrc
 .direnv
 shell.nix
+Secrets*.h
