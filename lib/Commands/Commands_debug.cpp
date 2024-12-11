@@ -15,7 +15,6 @@ void Commands::debug(LedStructure *leds, const CommandParams &cmd)
     {
       if (i <= j)
       {
-
         uint8_t hundrets = j / 100;
         uint8_t tens = (j % 100) / 10;
         uint8_t ones = (j % 10);

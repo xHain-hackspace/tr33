@@ -44,6 +44,7 @@ enum Var
     VAR_I,
     VAR_X,
     VAR_Y,
+    VAR_Z,
     VAR_PI,
     VAR_TAU,
 };
@@ -127,9 +128,9 @@ public:
         return false;
     }
 
-    fixed_16_16 eval(fixed_16_16 t, fixed_16_16 i, fixed_16_16 x, fixed_16_16 y)
+    fixed_16_16 eval(fixed_16_16 t, fixed_16_16 i, fixed_16_16 x, fixed_16_16 y, fixed_16_16 z)
     {
-        return eval(root, t, i, x, y);
+        return eval(root, t, i, x, y, z);
     }
 
     void printAST()
@@ -171,7 +172,7 @@ private:
         freeIndices[stackTop++] = idx;
     }
 
-    fixed_16_16 eval(Expr *expr, fixed_16_16 t, fixed_16_16 i, fixed_16_16 x, fixed_16_16 y)
+    fixed_16_16 eval(Expr *expr, fixed_16_16 t, fixed_16_16 i, fixed_16_16 x, fixed_16_16 y, fixed_16_16 z)
     {
         if (!expr)
         {
@@ -193,6 +194,8 @@ private:
                 return x;
             case VAR_Y:
                 return y;
+            case VAR_Z:
+                return z;
             case VAR_PI:
                 return fixed_16_16(PI);
             case VAR_TAU:
@@ -205,42 +208,42 @@ private:
             case FUNC_RANDOM:
                 return fixed_16_16(random(RAND_MAX)) / fixed_16_16(RAND_MAX);
             case FUNC_SIN:
-                return fpm::sin(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::sin(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_COS:
-                return fpm::cos(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::cos(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_TAN:
-                return fpm::tan(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::tan(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_ASIN:
-                return fpm::asin(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::asin(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_ACOS:
-                return fpm::acos(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::acos(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_ATAN:
-                return fpm::atan(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::atan(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_ATAN2:
-                return fpm::atan2(eval(expr->funcCall.args[0], t, i, x, y),
-                                  eval(expr->funcCall.args[1], t, i, x, y));
+                return fpm::atan2(eval(expr->funcCall.args[0], t, i, x, y, z),
+                                  eval(expr->funcCall.args[1], t, i, x, y, z));
             case FUNC_FLOOR:
-                return fpm::floor(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::floor(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_CEIL:
-                return fpm::ceil(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::ceil(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_ROUND:
-                return fpm::round(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::round(eval(expr->funcCall.args[0], t, i, x, y, z));
             case FUNC_FRACT:
             {
-                auto arg = eval(expr->funcCall.args[0], t, i, x, y);
+                auto arg = eval(expr->funcCall.args[0], t, i, x, y, z);
                 return arg - fpm::trunc(arg);
             }
             case FUNC_TRUNC:
-                return fpm::trunc(eval(expr->funcCall.args[0], t, i, x, y));
+                return fpm::trunc(eval(expr->funcCall.args[0], t, i, x, y, z));
 
             case FUNC_HYPOT:
-                fixed_16_16 a = eval(expr->funcCall.args[0], t, i, x, y);
-                fixed_16_16 b = eval(expr->funcCall.args[1], t, i, x, y);
+                fixed_16_16 a = eval(expr->funcCall.args[0], t, i, x, y, z);
+                fixed_16_16 b = eval(expr->funcCall.args[1], t, i, x, y, z);
                 return fpm::sqrt(a * a + b * b);
             }
         case EXPR_BINOP:
-            fixed_16_16 lhs = eval(expr->binop.a, t, i, x, y);
-            fixed_16_16 rhs = eval(expr->binop.b, t, i, x, y);
+            fixed_16_16 lhs = eval(expr->binop.a, t, i, x, y, z);
+            fixed_16_16 rhs = eval(expr->binop.b, t, i, x, y, z);
             switch (expr->binop.op)
             {
             case BINOP_POW:
@@ -778,6 +781,7 @@ private:
             {"i", VAR_I},
             {"x", VAR_X},
             {"y", VAR_Y},
+            {"z", VAR_Z},
             {"pi", VAR_PI},
             {"tau", VAR_TAU},
         };
@@ -969,6 +973,9 @@ private:
                 break;
             case VAR_Y:
                 Serial.println("Y");
+                break;
+            case VAR_Z:
+                Serial.println("Z");
                 break;
             case VAR_PI:
                 Serial.println("PI");

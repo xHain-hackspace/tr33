@@ -200,22 +200,17 @@ static float scale = max(mapping_x_range, mapping_y_range) / 8.0f;
 
 float LedStructure::mapping_x(uint16_t index)
 {
-  float x = pgm_read_float(&mapping[index][2]);
-  x = (x - float(MAPPING_X_MIN)) / scale;
-  return x;
-
-  // go back to this once all mappings are scaled to 8
-  // return pgm_read_float(&mapping[index][2]);
+  return pgm_read_float(&mapping[index][2]);
 }
 
 float LedStructure::mapping_y(uint16_t index)
 {
-  float y = pgm_read_float(&mapping[index][3]);
-  y = (y - float(MAPPING_Y_MIN)) / scale;
-  return y;
+  return pgm_read_float(&mapping[index][3]);
+}
 
-  // go back to this once all mappings are scaled to 8
-  // return pgm_read_float(&mapping[index][3]);
+float LedStructure::mapping_z(uint16_t index)
+{
+  return pgm_read_float(&mapping[index][4]);
 }
 
 uint16_t LedStructure::mapping_size()

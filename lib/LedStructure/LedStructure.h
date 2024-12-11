@@ -40,18 +40,18 @@
 
 class LedStructure
 {
-private:
-  static const float mapping[][4];
-
 public:
   static CRGB leds[STRIP_COUNT][STRIP_PIXEL_COUNT];
   virtual void init();
+  static const float mapping[][5];
 
   // mapping
   uint8_t mapping_sprip_index(uint16_t index);
   int mapping_led(uint16_t index);
   float mapping_x(uint16_t index);
   float mapping_y(uint16_t index);
+  float mapping_z(uint16_t index);
+
   uint16_t mapping_size();
 
   // set leds

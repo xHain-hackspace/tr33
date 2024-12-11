@@ -19,64 +19,59 @@ Tetraeder::Tetraeder()
 
 std::array<int, 2> map(uint8_t strip_index, int led)
 {
+  // EDGE_LENGTH - 1 - led
+  // 2 * EDGE_LENGTH - 1 - led
+
   switch (strip_index)
   {
   case 0:
-    return {4, led + EDGE_LENGTH};
+    return {7, EDGE_LENGTH - 1 - led};
   case 1:
-    return {3, led + EDGE_LENGTH};
-  case 2:
-    return {10, led + EDGE_LENGTH};
-
-  case 3:
-    return {3, led};
-  case 4:
-    return {10, led};
-  case 5:
-    return {4, led};
-
-  case 6:
-    return {7, led + EDGE_LENGTH};
-  case 7:
-    return {11, led + EDGE_LENGTH};
-  case 8:
-    return {6, led + EDGE_LENGTH};
-  case 9:
-    return {9, led + EDGE_LENGTH};
-
-  case 10:
-    return {5, led + EDGE_LENGTH};
-  case 11:
-    return {1, led + EDGE_LENGTH};
-  case 12:
-    return {0, led + EDGE_LENGTH};
-
-  case 13:
-    return {2, led + EDGE_LENGTH};
-  case 14:
-    return {8, led + EDGE_LENGTH};
-
-  case 15:
     return {11, led};
-  case 16:
-    return {9, led};
-
-  case 17:
-    return {5, led};
-  case 18:
-    return {0, led};
-
-  case 19:
-    return {2, led};
-  case 20:
-    return {7, led};
-
-  case 21:
-    return {8, led};
-  case 22:
-    return {6, led};
-  case 23:
+  case 2:
+    return {7, led + EDGE_LENGTH};
+  case 3:
+    return {8, led + EDGE_LENGTH};
+  case 4:
+    return {8, EDGE_LENGTH - 1 - led};
+  case 5:
+    return {11, led + EDGE_LENGTH};
+  case 6:
+    return {4, EDGE_LENGTH - 1 - led};
+  case 7:
+    return {3, led};
+  case 8:
+    return {4, led + EDGE_LENGTH};
+  case 9:
+    return {10, led + EDGE_LENGTH};
+  case 10:
+    return {10, EDGE_LENGTH - 1 - led};
+  case 11:
+    return {3, led + EDGE_LENGTH};
+  case 12:
+    return {2, EDGE_LENGTH - 1 - led};
+  case 13:
     return {1, led};
+  case 14:
+    return {2, led + EDGE_LENGTH};
+  case 15:
+    return {0, led + EDGE_LENGTH};
+  case 16:
+    return {0, EDGE_LENGTH - 1 - led};
+  case 17:
+    return {1, led + EDGE_LENGTH};
+  case 18:
+    return {6, EDGE_LENGTH - 1 - led};
+  case 19:
+    return {9, led};
+  case 20:
+    return {6, led + EDGE_LENGTH};
+  case 21:
+    return {5, led + EDGE_LENGTH};
+  case 22:
+    return {5, EDGE_LENGTH - 1 - led};
+  case 23:
+    return {9, led + EDGE_LENGTH};
   }
 }
 

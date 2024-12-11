@@ -84,9 +84,10 @@ void Commands::pixel_func(LedStructure *leds, const CommandParams &cmd)
   {
     const fixed_16_16 x = fixed_16_16(leds->mapping_x(i));
     const fixed_16_16 y = fixed_16_16(leds->mapping_y(i));
+    const fixed_16_16 z = fixed_16_16(leds->mapping_z(i));
     const fixed_16_16 index = fixed_16_16((leds->mapping_sprip_index(i) - 1) * strip_length + leds->mapping_led(i));
 
-    fixed_16_16 pixelfun_value = pixelFun.eval(current_time, index, x, y);
+    fixed_16_16 pixelfun_value = pixelFun.eval(current_time, index, x, y, z);
     pixelfun_value = min(max(pixelfun_value, fixed_16_16(-1)), fixed_16_16(1));
 
     if (send_debug && i == 10)

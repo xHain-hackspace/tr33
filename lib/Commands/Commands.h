@@ -44,7 +44,7 @@
 
 extern CommandParams commands[COMMAND_COUNT];
 
-#define EFFECT_ITEM_COUNT 1700
+#define EFFECT_ITEM_COUNT 2000
 struct EffectItem
 {
   bool enabled;
@@ -149,6 +149,8 @@ public:
 
   // RandomWalk
   void add_random_walk(uint8_t current_edge, uint dir, const CommandParams &cmd, CRGB color);
+
+  static ColorPalette color_palette_index_to_tag(uint8_t index);
 
 private:
   void render_commands();

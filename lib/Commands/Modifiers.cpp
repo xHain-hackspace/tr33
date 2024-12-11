@@ -18,7 +18,7 @@ void Modifiers::apply_all(CommandParams *cmd)
         break;
       case 1:
         apply(cmd->modifiers[i], &value, cmd->index);
-        cmd->color_palette = static_cast<ColorPalette>(value);
+        cmd->color_palette = Commands::color_palette_index_to_tag(value);
         break;
       case 2:
         apply(cmd->modifiers[i], &cmd->strip_index, cmd->index);

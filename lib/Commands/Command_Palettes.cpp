@@ -36,6 +36,37 @@ uint8_t tag_to_index(uint8_t tag)
   }
 }
 
+ColorPalette Commands::color_palette_index_to_tag(uint8_t index)
+{
+  switch (index)
+  {
+  case 0:
+    return ColorPalette_RAINBOW;
+  case 1:
+    return ColorPalette_FOREST;
+  case 2:
+    return ColorPalette_OCEAN;
+  case 3:
+    return ColorPalette_PARTY;
+  case 4:
+    return ColorPalette_SCOUTY;
+  case 5:
+    return ColorPalette_RIVENDELL;
+  case 6:
+    return ColorPalette_ORANGE_TEAL;
+  case 7:
+    return ColorPalette_ORANGERY;
+  case 8:
+    return ColorPalette_SAKURA;
+  case 9:
+    return ColorPalette_AURORA;
+  case 10:
+    return ColorPalette_ATLANTICA;
+  default:
+    return ColorPalette_RAINBOW;
+  }
+}
+
 void Commands::load_palettes()
 {
   palettes[0] = RainbowColors_p;
@@ -48,7 +79,7 @@ void Commands::load_palettes()
   palettes[7] = wled_palettes[2];
   palettes[8] = wled_palettes[3];
   palettes[9] = wled_palettes[4];
-  palettes[10] = wled_palettes[6];
+  palettes[10] = wled_palettes[5];
 }
 
 CRGB Commands::color_from_palette(CommandParams cmd, uint8_t color_index)

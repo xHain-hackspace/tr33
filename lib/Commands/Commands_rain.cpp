@@ -8,7 +8,7 @@ void Commands::rain(LedStructure *leds, const CommandParams &cmd)
   Rain rain = cmd.type_params.rain;
 
   float width = float(rain.width) / 8.0;
-  float frequency = float(rain.drop_density) * float(leds->pixel_count(cmd.strip_index)) / 2500.0; // drops per second (scaled with pixel count)
+  float frequency = float(rain.drop_density) * float(leds->pixel_count(cmd.strip_index)) / 3500.0; // drops per second (scaled with pixel count)
   float rate = float(rain.drop_speed) / 10.0;                                                      // drop speed
 
   uint32_t now = millis();
