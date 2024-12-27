@@ -37,6 +37,9 @@
 #ifdef LED_STRUCTURE_MINICHROME
 #include <Minichrome_config.h>
 #endif
+#ifdef LED_STRUCTURE_GARDEROBE
+#include <Garderobe_config.h>
+#endif
 
 class LedStructure
 {

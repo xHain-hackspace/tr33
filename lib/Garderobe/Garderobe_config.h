@@ -1,0 +1,21 @@
+// strip config
+#define STRIP_PIN_1 33
+#define STRIP_PIN_2 26
+#define STRIP_PIN_3 25
+#define STRIP_PIN_4 27
+#define STRIP_PIN_5 14
+#define STRIP_PIN_6 23
+#define STRIP_PIN_7 22
+#define STRIP_PIN_8 21
+#define STRIP_PIN_9 19
+#define STRIP_PIN_10 5
+
+#define STRIP_PIXEL_COUNT 247
+#define STRIP_COUNT 10
+
+// mapping
+#define MAPPING_X_MIN 66.12582397460938
+#define MAPPING_X_MAX 1822.238037109375
+#define MAPPING_Y_MIN 415.1724853515625
+#define MAPPING_Y_MAX 936.5053100585938
+#define MAPPING_SIZE 2238

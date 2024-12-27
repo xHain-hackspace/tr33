@@ -50,6 +50,10 @@ Arrow leds;
 #include <Minichrome.h>
 Minichrome leds;
 #endif
+#ifdef LED_STRUCTURE_GARDEROBE
+#include <Garderobe.h>
+Garderobe leds = Garderobe();
+#endif
 
 Commands command_runner = Commands();
 
