@@ -90,3 +90,5 @@ arrow:
 minichrome:
 	$(pio_binary) run --target upload -e minichrome
 	
+garderobe:
+	$(pio_binary) run --target upload -e garderobe
